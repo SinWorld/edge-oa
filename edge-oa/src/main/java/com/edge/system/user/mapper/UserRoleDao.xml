@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edge.system.user.dao.UserRoleDao">
+	<!-- 定义缓存 一般是一级缓存，如果用同一个sqlsession 那么相同查询直接会从缓存中查找 <cache size="1024" flushInterval="60000" 
+		eviction="LRU" readOnly="false"></cache> -->
+	<!--查询该用户是否已有角色  -->
+	<select id="userRoleList" parameterType="Integer" resultType="UserRole">
+		select * from cwgl_user_role r
+		<where>
+			r.user_id=#{userId}
+		</where>
+	</select>
+	
+	<!--删除该用户的所有角色  -->
+	<delete id="deleteUserRole"  parameterType="Integer">
+		delete from cwgl_user_role r
+		<where>
+			r.user_id=#{userId}
+		</where>
+	</delete>
+	
+	<!--新增用户的角色  -->
+	<insert id="saveUserRole" parameterType="UserRole">
+		insert into cwgl_user_role(USER_ROLE_ID,USER_ID,ROLE_ID)
+		values(seq_user_role_id.nextval,#{user_id},#{role_id})
+	</insert>
+
+</mapper>

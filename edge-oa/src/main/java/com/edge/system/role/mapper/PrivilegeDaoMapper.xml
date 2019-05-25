@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edge.system.role.dao.PrivilegeDao">
+	<!-- 定义缓存 一般是一级缓存，如果用同一个sqlsession 那么相同查询直接会从缓存中查找 <cache size="1024" flushInterval="60000" 
+		eviction="LRU" readOnly="false"></cache> -->
+	<!--查询顶级权限  -->
+	<select id="privilegeTopList" resultType="Privilege">
+		select * from cwgl_privilege p
+		<where>
+			p.parent_id is null
+		</where>
+	</select>
+	
+	<!--根据父类主键查询子类权限  -->
+	<select id="privilegeChildrenList" resultType="Privilege" parameterType="Integer">
+		select * from cwgl_privilege p
+		<where>
+			p.parent_id=#{parent_id}
+		</where>
+	</select>
+	
+	<!--查询该角色是否存在功能权限  -->
+	<select id="rolePrivilegeList" resultType="Role_Privilege" parameterType="Integer">
+		select * from cwgl_role_privilege p
+		<where>
+			p.role_id=#{roleId}
+		</where>
+	</select>
+	
+	<!-- 删除某个角色的所有功能权限 -->
+	<delete id="deleteRolePrivilege" parameterType="Integer">
+		delete  from cwgl_role_privilege p 
+		<where>
+		 	p.role_id=#{roleId}
+		</where>
+	</delete>
+	
+	<!--新增功能权限  -->
+	<insert id="saveRolePrivilege" parameterType="Role_Privilege">
+		insert into cwgl_role_privilege(ROLE_PRIVILEGE_ID,ROLE_ID,PRIVILEGE_ID)
+		values(role_privilege_Id.nextval,#{role_Id},#{privilege_Id})
+	</insert>
+	
+	
+</mapper>

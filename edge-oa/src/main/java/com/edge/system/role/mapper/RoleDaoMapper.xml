@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edge.system.role.dao.RoleDao">
+	<!-- 定义缓存 一般是一级缓存，如果用同一个sqlsession 那么相同查询直接会从缓存中查找 <cache size="1024" flushInterval="60000" 
+		eviction="LRU" readOnly="false"></cache> -->
+	
+	<!--新增角色  -->
+	<insert id="saveRole" parameterType="Role">
+		insert into cwgl_role
+		(ROLE_ID,ROLE_NAME,ROLE_INFOR,IS_DELETE,AUTHORIZED)
+		values(seq_role_id.nextval,#{role_name},#{role_infor},#{is_delete},#{authorized})
+	</insert>
+	
+	<!--分页查询角色-->
+	<select id="queryRole" parameterType="QueryVo" resultType="Role">
+		select * from (select row_.*, rownum rownum_ from (select * from
+		cwgl_role order by role_id desc ) row_
+		<where>
+			rownum &lt;=#{size} and is_delete=0
+		</where>
+		)
+		<where>
+			rownum_ &gt;=#{page}
+		</where>
+	</select>
+	
+	<!--查询角色总数量 -->
+	<select id="queryRoleCount" resultType="Integer">
+		select count(1) from cwgl_role r
+		<where>
+			r.is_delete=0
+		</where>
+	</select>
+	
+	<!--根据主键查询角色  -->
+	<select id="queryRoleById" parameterType="Integer" resultType="Role">
+		select * from cwgl_role r
+		<where>
+			r.role_id=#{roleId}
+		</where>
+	</select>
+	
+	<!--修改角色  -->
+	<update id="editRole" parameterType="Role">
+		update cwgl_role r
+		<set>
+			<if test="role_name!=null">
+			    r.role_name=#{role_name},
+			</if>
+			<if test="role_infor!=null">
+				r.role_infor=#{role_infor}
+			</if>
+			<where>
+				r.role_id=#{role_id}
+			</where>
+		</set>
+	</update>
+	
+	<!--删除角色  逻辑删除 -->
+	<update id="deleteRoleById" parameterType="Integer">
+		update cwgl_role r
+		<set>
+			<if test="flag==true">
+			    r.is_delete=1
+			</if>
+			<if test="flag==false">
+				  r.is_delete=0
+			</if>
+			<where>
+				r.role_id=#{roleId}
+			</where>
+		</set>
+	</update>
+</mapper>

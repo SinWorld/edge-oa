@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edge.system.user.dao.UserDao">
+	<!-- 定义缓存 一般是一级缓存，如果用同一个sqlsession 那么相同查询直接会从缓存中查找 <cache size="1024" flushInterval="60000" 
+		eviction="LRU" readOnly="false"></cache> -->
+
+	<!--新增用户 -->
+	<insert id="saveUser" parameterType="User">
+		insert into cwgl_user
+		(USER_ID,USER_LOGIN_NAME,USER_NAME,USER_PASSWORD,USER_PHONE,USER_EMAIL,USER_GENDER,USER_DEPARTMENT_ID,USER_IS_DELETE)
+		values(seq_user_id.nextval,#{user_login_name},#{user_name},#{user_password},#{user_phone},#{user_email},#{user_gender},#{user_department_id})
+	</insert>
+	
+	<!--分页显示用户-->
+	<select id="userList" parameterType="QueryVo" resultType="User">
+		select * from (select row_.*, rownum rownum_ from (select * from
+		cwgl_user order by user_id desc ) row_
+		<where>
+			rownum &lt;=#{size} and user_is_delete=0
+		</where>
+		)
+		<where>
+			rownum_ &gt;=#{page}
+		</where>
+	</select>
+	
+	<!--查询用户总数量 -->
+	<select id="queryUserCount" resultType="Integer">
+		select count(1) from cwgl_user u
+		<where>
+			u.user_is_delete=0
+		</where>
+	</select>
+	
+	<!--根据Id查询当前用户  -->
+	<select id="queryUserById" parameterType="Integer" resultType="User">
+		select * from cwgl_user u
+		<where>
+			u.user_id=#{user_id}
+		</where>
+	</select>
+	
+	<!--编辑用户  -->
+	<update id="editUser" parameterType="User">
+		update cwgl_user u
+		<set>
+			<if test="user_login_name!=null">
+				u.user_login_name=#{user_login_name},
+			</if>
+			<if test="user_name!=null">
+				u.user_name=#{user_name},
+			</if>
+			<if test="user_password!=null">
+				u.user_password=#{user_password},
+			</if>
+			<if test="user_phone!=null">
+				u.user_phone=#{user_phone},
+			</if>
+			<if test="user_email!=null">
+				u.user_email=#{user_email},
+			</if>
+			<if test="user_gender!=null">
+				u.user_gender=#{user_gender},
+			</if>
+			<if test="user_department_id!=null">
+				u.user_department_id=#{user_department_id},
+			</if>
+			<if test="user_is_delete==true">
+				u.user_is_delete=1
+			</if>
+			<if test="user_is_delete==false">
+				u.user_is_delete=0
+			</if>
+		</set>
+		<where>
+			u.user_id=#{user_id}
+		</where>
+	</update>
+	
+	<!--多表关联查询用户的角色名称  -->
+	<select id="userRoleNames" parameterType="Integer" resultType="String">
+		select r.role_name from cwgl_user_role u
+		  left join cwgl_role r
+		    on r.role_id = u.role_id
+		   <where>
+		   		  u.user_id =#{user_id}
+		   </where>
+	</select>
+</mapper>

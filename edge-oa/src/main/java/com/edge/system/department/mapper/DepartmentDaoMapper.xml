@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edge.system.department.dao.DepartmentDao">
+	<!-- 定义缓存 一般是一级缓存，如果用同一个sqlsession 那么相同查询直接会从缓存中查找 <cache size="1024" flushInterval="60000" 
+		eviction="LRU" readOnly="false"></cache> -->
+	
+	<!--分页查询部门-->
+	<select id="queryDepartment" parameterType="QueryVo" resultType="Department">
+		select * from (select row_.*, rownum rownum_ from (select * from
+		cwgl_department order by dep_id desc ) row_
+		<where>
+			rownum &lt;=#{size} and dep_is_delete=0
+		</where>
+		)
+		<where>
+			rownum_ &gt;=#{page}
+		</where>
+	</select>
+	
+	<!--查询部门总数量总数量 -->
+	<select id="departmentCount" resultType="Integer">
+		select count(1) from cwgl_department 
+		<where>
+			dep_is_delete=0
+		</where>
+	</select>
+	
+	<!--初始化部门机构树  -->
+	<select id="initDepartmentTree" resultType="Department">
+		select * from cwgl_department d
+		<where>
+			d.dep_parentid is null and d.dep_is_delete=0
+		</where>
+	</select>
+	
+	<!--初始化子部门机构树  -->
+	<select id="initChildrenTree" parameterType="Integer" resultType="Department">
+		select * from cwgl_department d
+		<where>
+			d.dep_parentid=#{dep_id} and d.dep_is_delete=0
+		</where>
+	</select>
+	
+	<!--根据主键查询该部门   -->
+	<select id="queryDepartmentById" parameterType="Integer" resultType="Department">
+		select * from cwgl_department d
+		<where>
+			d.dep_id=#{dep_id} and d.dep_is_delete=0
+		</where>
+	</select>
+	
+	
+	<!--根据传递的主键查询部门和子部门的数量  -->
+	<select id="queryDepartCountById" parameterType="Integer" resultType="Integer">
+		select count(1) from cwgl_department d
+		<where>
+			(d.dep_id=#{dep_id} or d.dep_parentid=#{dep_id}) and d.dep_is_delete=0
+		</where>
+	</select>
+	
+	<!--按条件分页查询部门-->
+	<select id="queryDepartmenListById" parameterType="QueryVo" resultType="Department">
+		select * from (select row_.*, rownum rownum_ from (select * from
+		cwgl_department order by dep_id asc ) row_
+		<where>
+			rownum &lt;=#{size} and (dep_id=#{dep_id} or dep_parentid=#{dep_id}) and dep_is_delete=0
+		</where>
+		)
+		<where>
+			rownum_ &gt;=#{page}
+		</where>
+	</select>
+	
+	<!--新增部门  -->
+	<insert id="saveDepartment" parameterType="Department">
+		insert into cwgl_department(DEP_ID,DEP_NAME,DEP_DESCRIPTION,DEP_PARENTID,DEP_IS_DELETE)
+		values(seq_dep_id.nextval,#{dep_name},#{dep_description},#{dep_parentid},#{dep_is_delete})
+	</insert>
+	
+	<!--查询所有的顶级部门  -->
+	<select id="topList" resultType="Department">
+		select * from cwgl_department c
+		<where>
+			c.dep_parentid is null and c.dep_is_delete=0
+		</where>
+	</select>
+	
+	<!--编辑部门  -->
+	<update id="editDepartment" parameterType="Department">
+		update cwgl_department c
+		<set>
+			<if test="dep_parentid!=null">
+				c.dep_parentid=#{dep_parentid},
+			</if>
+			<if test="dep_name!=null">
+				c.dep_name=#{dep_name},
+			</if>
+			<if test="dep_description!=null">
+				c.dep_description=#{dep_description},
+			</if>
+			<if test="dep_is_delete==false">
+				c.dep_is_delete=0
+			</if>
+			<if test="dep_is_delete==true">
+				c.dep_is_delete=1
+			</if>
+		</set>
+		<where>
+			c.dep_id=#{dep_id, jdbcType=NUMERIC}
+		</where>
+	</update>
+		
+</mapper>
