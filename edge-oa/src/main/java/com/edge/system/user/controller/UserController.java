@@ -19,6 +19,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.edge.system.department.entity.Department;
 import com.edge.system.department.service.inter.DepartmentService;
 import com.edge.system.user.entity.User;
+import com.edge.system.user.service.inter.UserRoleService;
 import com.edge.system.user.service.inter.UserService;
 import com.edge.utils.EmailUtil;
 import com.edge.utils.Page;
@@ -40,6 +41,9 @@ public class UserController {
 
 	@Resource
 	private DepartmentService departmentService;
+	
+	@Resource
+	private UserRoleService userRoleService;
 
 	// 跳转至用户列表页
 	@RequestMapping(value = "initUserList.do")
@@ -137,6 +141,8 @@ public class UserController {
 		User user = userService.queryUserById(user_id);
 		user.setUser_is_delete(true);
 		userService.editUser(user);
+		//删除该用户的同时也删除该用户的所有角色
+		userRoleService.deleteUserRole(user_id);
 		mv.setViewName("redirect:initUserList.do");
 		return mv;
 	}

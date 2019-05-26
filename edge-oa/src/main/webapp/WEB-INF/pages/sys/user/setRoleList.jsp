@@ -1,167 +1,151 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>角色管理</title>
+<title>角色授予</title>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
+<%@page isELIgnored="false"%>
+<link rel="stylesheet" type="text/css" href="../jquery-easyui-1.7.0/themes/default/easyui.css"/>
+<link rel="stylesheet" type="text/css" href="../jquery-easyui-1.7.0/themes/icon.css"/>
+<script type="text/javascript" src="../jquery-easyui-1.7.0/jquery.min.js"></script>
+<script type="text/javascript" src="../jquery-easyui-1.7.0/jquery.easyui.min.js"></script>
 <link rel="stylesheet" href="../layui-v2.4.5/layui/css/layui.css">
-<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
-<%@page isELIgnored="false" %>
 </head>
 <body onload="refreshAndClose()">
-<form id="form" method="post">
-	<input type="hidden" value='<c:url value="/"/>' id="url">
-	<input type="hidden" id="selectId" value="" name="selectId">
-	<input type="hidden" id="userId" value="${user_id}" name="userId">
-	<input type="hidden" id="flag" value="${flag}">
-	<!-- <div class="layui-btn-group demoTable">
-  		<button class="layui-btn" data-type="getCheckData" type="button">提交</button>
-	</div> -->
-	<table class="layui-hide" id="test" lay-filter="test"></table>
- </form>
-<script type="text/html" id="toolbarDemo">
-    <div class="layui-btn-container">
-     	<button class="layui-btn layui-btn-sm" lay-event="getCheckData" type="button">提交</button>
-    </div>
-</script>
- 
-<script src="../layui-v2.4.5/layui/layui.js" charset="utf-8"></script>
-<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 --> 
- <script type="text/javascript" src="../jquery/jquery-3.3.1.js"></script>
-<script>
-layui.use(['table','form'], function(){
-  var table = layui.table;
-  var $ = layui.$;
-  var url=$('#url').val();
-  var form= layui.form;
-  table.render({
-    elem: '#test'
-    ,url:url+'role/roleList.do'
-    ,title: '角色管理'
-    ,cols: [[
-       {type:'checkbox',width:"10%"}
-      ,{field:'index', width:"8%", title: '序号', sort: true,type:'numbers'}
-      ,{field:'role_name', width:"22%",align:'center', title: '角色名称'}
-      ,{field:'role_infor', width:"60%", align:'center', title: '角色说明'}
-    ]]
-    ,page: true
-    ,id:'idTest'
-    ,toolbar: '#toolbarDemo'
-	,done: function(res, curr, count){
- 	    //如果是异步请求数据方式，res即为你接口返回的信息。
- 	    //如果是直接赋值的方式，res即为：{data: [], count: 99} data为当前页数据、count为数据总长度
- 	   //ajax请求后台获取当前用户的所有角色
- 	   var userId=$('#userId').val();
- 	   $.ajax({
-   				url : "<c:url value='/userRole/checkedUserRole.do'/>",
-   				type : "post",
-   				dataType : 'json',
-   				async : false,
-   				data : {
-   					"userId" : userId
-   				},
-   				error : function() {
-   					alert("出错");
-   				},
-   				success : function(data) {
-   					//遍历结果集
-   					for(var i=0;i<data.length;i++){
-   						//取出结果集中所有的角色主键
-   						var roleId=data[i].roleId;
-   					 	//遍历res中的结果集
-   				 	    for(var j=0;j<res.data.length;j++){
-   				 	    	//取出表格数据中所有的角色主键
-   				 	    	var id=res.data[j].role_id;
-   				 	    	//若结果集中的主键等于数据表格中的主键值则设置复选框为选中
-   				 	    	if(roleId==id){
-   				 	    	$('input[name="layTableCheckbox"]')[j+1].checked=true;
-				 	    		
-   				 	    	}
-   				 	    } 
-   					}
-   					form.render();
-   				}
-   			});
- 	   
- 	    
- 	    //得到当前页码
- 	    console.log(curr); 
- 	    
- 	    //得到数据总量
- 	    console.log(count);
- 	  }
-  });
-	/* active = {
-	   getCheckData: function(){ //获取选中数据
-	     var checkStatus = table.checkStatus('idTest');
-	     var data = checkStatus.data;
-	     var form=document.getElementById('form');
-	  	 //用于存储所有选中状态的数据主键
-		 var selectId=$('#selectId').val();
-	     //layer.alert(JSON.stringify(data));
-	     //遍历选中结果集
-	     for(var i=0;i<data.length;i++){
-	    	//得到所有的选中状态数据的主键 用于拼接在字符串中
-			 if(undefined!=selectId){
-				//获取角色主键
-				 var roleId=data[i].role_id;
-					 selectId=selectId+","+roleId;
-			 }else{
-					selectId=roleId;
-			 }
-	     }
-	     $('#selectId').val(selectId);
-			var ids=$('#selectId').val()
-			var roleId=ids.substring(1,ids.length);
-			$('#selectId').val(roleId);
-			//提交表单
-			form.action=url+"userRole/setUserRole.do";
-			form.submit();
-	   }
-   }; */
-	/*  $('.demoTable .layui-btn').on('click', function(){
-	   var type = $(this).data('type');
-	   active[type] ? active[type].call(this) : '';
-	 }); */
-	 
-	 //头工具栏事件
-	    table.on('toolbar(test)', function(res){
-	    	 var checkStatus = table.checkStatus(res.config.id);
-	    	 var data=checkStatus.data;
-	    	 var form=document.getElementById('form');
-	 	  	 //用于存储所有选中状态的数据主键
-	 		 var selectId=$('#selectId').val();
-	 	     //layer.alert(JSON.stringify(data));
-	 	     //遍历选中结果集
-	 	     for(var i=0;i<data.length;i++){
-	 	    	//得到所有的选中状态数据的主键 用于拼接在字符串中
-	 			 if(undefined!=selectId){
-	 				//获取角色主键
-	 				 var roleId=data[i].role_id;
-	 					 selectId=selectId+","+roleId;
-	 			 }else{
-	 					selectId=roleId;
-	 			 }
-	 	     }
-	 	     $('#selectId').val(selectId);
-	 			var ids=$('#selectId').val()
-	 			var roleId=ids.substring(1,ids.length);
-	 			$('#selectId').val(roleId);
-	 			//提交表单
-	 			form.action=url+"userRole/setUserRole.do";
-	 			form.submit();
-	    });
-	 
+	<div>
+		<span style="color: red">&nbsp;&nbsp;正在为【${userName}】配置角色</span>
+	</div>
+	<form id="form" method="post">
+		<div style="padding-bottom: 10%; border: 1px solid #000; background: #FFFACD" class="layui-form-item">
+			<!-- <span><h2 style="text-align: center;">权限机构</h2></span>-->	
+			<input type="hidden" id="selectId" value="" name="selectId">
+			<input type="hidden" id="user_id" value="${user_id}" name="userId">
+			<input type="hidden" id="flag" value="${flag}">
+			<input type="hidden" value='<c:url value="/"/>' id="url">	
+			<div id="tree" style="width:30%;margin-top: 2%">
+				全选:<input type="checkbox" id="allCheckked" onchange="allSelect()">
+				<ul id="tt"></ul>
+			</div>
+			<div class="layui-form-item" style="text-align: center;">
+				<div class="layui-input-block">
+					<button class="layui-btn" lay-submit="" lay-filter="demo1"
+						style="width: 15%; margin-top: 10px;" type="button" onclick="setRole()">立即提交</button>
+				</div>
+			</div>
+		</div>
+	</form>
+	<script src="../layui-v2.4.5/layui/layui.js" charset="utf-8"></script>
+	<script>
+	layui.use(['form', 'layedit', 'laydate'], function(){
+	  var form = layui.form
+	  ,layer = layui.layer
+	  ,layedit = layui.layedit
+	  ,laydate = layui.laydate;
+	  form.render();
+	  initTree();
 });
-
-function refreshAndClose(){
-	var flag=$('#flag').val();
-	if(flag){
-		window.parent.location.reload();
-		window.close();
+	
+	function initTree(){
+		//初始化角色
+		  $.ajax({  
+			    type: "post",  
+			    url:  "<c:url value='/userRole/allRoleList.do'/>",
+			    dataType: 'json',
+			    async:false,
+			    error:function(){
+			    	alert("出错");
+			    },
+			    success: function (data) {  
+			    	$("#tt").tree({  
+			           	data:data,
+			           	dnd: false, //可拖放
+			    		lines: true, //显示树线条
+			    		checkbox: true, //显示复选框
+			    		animate: true,//展开动画效果
+			    		cascadeCheck:false,
+			    		onLoadSuccess:function(node,data){//数据加载成功出发
+			    			var userId=$('#user_id').val();
+			    			$.ajax({  
+			    			    type: "post",  
+			    			    url:  "<c:url value='/userRole/defaultRole.do'/>",
+			    			    dataType: 'json',
+			    			    async:false,
+			    			    data:{"userId":userId},
+			    			    error:function(){
+			    			    	//alert("出错");
+			    			    },
+			    			    success: function (msg) { 
+			    			    	//遍历结果集
+			    			    	for(var i=0;i<msg.length;i++){
+			    			    		//根据结果集中的权限主键去查询对应的树结构中的节点并设置为选中
+			    			    		var node = $('#tt').tree('find', msg[i].role_id);
+			    			    		//node.checkState='checked';
+			    			    		$('#tt').tree("check",node.target);
+			    			    	}
+			    			    }  
+			    			});
+			    		}
+			        });  
+			    }  
+			});
 	}
-}
-</script>
+			
+	//复选框选中
+	  function allSelect(){
+		var select=document.getElementById("allCheckked");
+		var flag=select.checked;
+		//得到树中的所有子节点
+		var nodes = $("#tt").tree("getChildren");
+		if(flag){
+				//遍历所有节点 并设置为选中
+				for(var i=0;i<nodes.length;i++){
+					$('#tt').tree("check",nodes[i].target);
+				}
+		}else{
+				//遍历所有节点 并设置为不选中
+				for(var i=0;i<nodes.length;i++){
+					$('#tt').tree("uncheck",nodes[i].target);
+				}
+		}
+	}
+	
+	//获取所有选中的节点数据
+	function setRole(){
+		//获取当前表单
+		var form=document.getElementById('form');
+		var url=$('#url').val();
+		//获取所有选中的节点
+		var allChildren=$("#tt").tree('getChecked','checked');
+		//用于存储所有选中节点的主键
+		var selectId=$('#selectId').val();
+		//遍历所有的子节点
+		for(var i=0;i<allChildren.length;i++){
+			//得到所有的子节点主键 用于拼接在字符串中
+			 if(undefined!=selectId){
+				 var childrenId=allChildren[i].id;
+					 selectId=selectId+","+childrenId;
+			 }else{
+					selectId=childrenId;
+			 }
+		}
+		$('#selectId').val(selectId);
+		var ids=$('#selectId').val()
+		var allRoleIds=ids.substring(1,ids.length);
+		$('#selectId').val(allRoleIds);
+		//提交表单
+		form.action=url+"userRole/setUserRole.do";
+		form.submit();
+	}
+	
+	function refreshAndClose(){
+		var flag=$('#flag').val();
+		if(flag){
+			window.parent.location.reload();
+			window.close();
+		}
+	}
+</script>	
 </body>
 </html>

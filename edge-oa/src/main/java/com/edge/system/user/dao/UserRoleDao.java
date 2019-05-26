@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.edge.system.role.entity.Role;
 import com.edge.system.user.entity.UserRole;
 
 public interface UserRoleDao {
@@ -15,4 +16,7 @@ public interface UserRoleDao {
 
 	// 新增用户的角色
 	public void saveUserRole(UserRole userRole);
+
+	// 查询所有角色
+	public List<Role> roleList();
 }

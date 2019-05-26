@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edge.login.dao.LoginDao">
+	<!-- 定义缓存 一般是一级缓存，如果用同一个sqlsession 那么相同查询直接会从缓存中查找 <cache size="1024" flushInterval="60000" 
+		eviction="LRU" readOnly="false"></cache> -->
+	<!--登录时 根据用户名和密码去校验用户 -->
+	<select id="checkUser" resultType="User" parameterType="String">
+		select * from cwgl_user u
+		<where>
+			u.user_login_name=#{loginName} and u.user_password=#{password}
+		</where>
+	</select>
+</mapper>

@@ -95,30 +95,36 @@ layui.use('table', function(){
      	  	content:[url+"user/initEditUser.do?user_id="+user_id,'yes']
    	  	});
     }else if(obj.event === 'detail'){
-    	$.ajax({
-    		type : "post",
-    		url : "<c:url value='/user/resertPassword.do'/>",
-    		async : false,
-    		dataType : 'json',
-    		data:{"user_id":user_id},
-    		error : function() {
-    			alert("出错");
-    		},
-    		success : function(msg) {
-    			if(msg.flag=='success'){
-    				layer.msg('您当前密码已被管理员重置,新密码已发送至您邮箱!!!');
-    			}
-    		}
-    	});
+    	layer.confirm('您确定要重置该用户的密码吗？', {
+			  btn: ['确定','取消'], //按钮
+			  title:'提示'},function(index){
+				  $.ajax({
+			    		type : "post",
+			    		url : "<c:url value='/user/resertPassword.do'/>",
+			    		async : false,
+			    		dataType : 'json',
+			    		data:{"user_id":user_id},
+			    		error : function() {
+			    			alert("出错");
+			    		},
+			    		success : function(msg) {
+			    			if(msg.flag=='success'){
+			    				layer.msg('您当前密码已被管理员重置,新密码已发送至您邮箱!!!');
+			    			}
+			    		}
+			    	});
+				  layer.close(index);
+			  }
+		  );
     }else if(obj.event === 'setRole'){
     	layer.open({
      	  	type:2,
      	  	title:'设置角色',
-     	  	area: ['60%','70%'],
+     	  	area: ['50%','70%'],
      	  	shadeClose: false,
       		resize:false,
       	    anim: 1,
-     	  	content:[url+"user/initSetRole.do?user_id="+user_id,'yes']
+     	  	content:[url+"userRole/initRoleList.do?user_id="+user_id,'yes']
    	  	});
     }
   });

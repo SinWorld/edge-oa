@@ -25,4 +25,5 @@ public interface UserDao {
 	
 	//查询用户列表中所有的用户对应的角色
 	public List<String> userRoleNames(@Param("user_id")Integer user_id);
+	
 }

@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
+import com.edge.system.role.entity.Role;
 import com.edge.system.user.dao.UserRoleDao;
 import com.edge.system.user.entity.UserRole;
 import com.edge.system.user.service.inter.UserRoleService;
@@ -29,6 +30,11 @@ public class UserRoleServiceImpl implements UserRoleService {
 	// 新增用户角色
 	public void saveUserRole(UserRole userRole) {
 		userRoleDao.saveUserRole(userRole);
+	}
+
+	// 查询所有的角色
+	public List<Role> roleList() {
+		return userRoleDao.roleList();
 	}
 
 }

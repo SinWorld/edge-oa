@@ -26,5 +26,13 @@
 		insert into cwgl_user_role(USER_ROLE_ID,USER_ID,ROLE_ID)
 		values(seq_user_role_id.nextval,#{user_id},#{role_id})
 	</insert>
+	
+	<!--查询所有的角色  -->
+	<select id="roleList" resultType="Role">
+		select * from cwgl_role  
+		<where>
+			is_delete=0
+		</where>
+	</select>
 
 </mapper>

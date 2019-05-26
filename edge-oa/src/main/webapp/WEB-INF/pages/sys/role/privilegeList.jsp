@@ -12,8 +12,6 @@
 <script type="text/javascript" src="../jquery-easyui-1.7.0/jquery.min.js"></script>
 <script type="text/javascript" src="../jquery-easyui-1.7.0/jquery.easyui.min.js"></script>
 <link rel="stylesheet" href="../layui-v2.4.5/layui/css/layui.css">
-<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
-<%@page isELIgnored="false" %>
 </head>
 <body onload="refreshAndClose()">
 	<div>
@@ -78,7 +76,7 @@
 			    			    async:false,
 			    			    data:{"roleId":roleId},
 			    			    error:function(){
-			    			    	alert("出错");
+			    			    	//alert("出错");
 			    			    },
 			    			    success: function (msg) { 
 			    			    	//遍历结果集
