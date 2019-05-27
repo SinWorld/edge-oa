@@ -9,7 +9,7 @@
 	<!--分页查询部门-->
 	<select id="queryDepartment" parameterType="QueryVo" resultType="Department">
 		select * from (select row_.*, rownum rownum_ from (select * from
-		cwgl_department order by dep_id desc ) row_
+		cwgl_department order by dep_id asc ) row_
 		<where>
 			rownum &lt;=#{size} and dep_is_delete=0
 		</where>
@@ -76,7 +76,7 @@
 	<!--新增部门  -->
 	<insert id="saveDepartment" parameterType="Department">
 		insert into cwgl_department(DEP_ID,DEP_NAME,DEP_DESCRIPTION,DEP_PARENTID,DEP_IS_DELETE)
-		values(seq_dep_id.nextval,#{dep_name},#{dep_description},#{dep_parentid},#{dep_is_delete})
+		values(seq_dep_id.nextval,#{dep_name},#{dep_description},#{dep_parentid,jdbcType=NUMERIC},#{dep_is_delete})
 	</insert>
 	
 	<!--查询所有的顶级部门  -->

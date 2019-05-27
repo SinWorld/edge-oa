@@ -31,7 +31,7 @@
     <ul class="layui-nav layui-layout-right">
       <li class="layui-nav-item">
         <a href="javascript:;">
-          <img  class="layui-nav-img" id="userName">
+           <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
       			${userName}
         </a>
         <input type="hidden" value="${userId}" id="userId">

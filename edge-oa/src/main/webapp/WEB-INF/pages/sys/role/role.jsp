@@ -12,7 +12,7 @@
 <body>
 <form id="form" method="post">
 	<input type="hidden" value='<c:url value="/"/>' id="url">
- 	<span id="qx"><textarea rows="" cols="100%" id="sjqx">${sjqxs}</textarea></span>
+ 	<span id="qx"><textarea  rows="" cols="100%" id="sjqx">${sjqxs}</textarea></span>
  	<table class="layui-hide" id="test" lay-filter="test"></table>
  </form>
 <script type="text/html" id="toolbarDemo">
@@ -33,6 +33,7 @@
  <script type="text/javascript" src="../jquery/jquery-3.3.1.js"></script>
 <script>
 layui.use(['form','table'], function(){
+  gnyc();	
   var table = layui.table;
   var url=$('#url').val();
   var form = layui.form;
@@ -56,6 +57,7 @@ layui.use(['form','table'], function(){
     //得到三级权限json串
     var sjqxs=$('#sjqx').val();
     //将json串转化为json对象
+    var flag=false;
     if(sjqxs!=""){
 	   	 var JsonObject = JSON.parse(sjqxs);
 	   	 //遍历该对象
@@ -69,7 +71,6 @@ layui.use(['form','table'], function(){
 	   	   		}
 	   	   	}
     }
-    var flag=false;
     if(flag){
     	 if(obj.event=='getCheckData'){
         	 layer.open({
@@ -101,6 +102,7 @@ layui.use(['form','table'], function(){
     //将json串转化为json对象
     //new出数组
     var array = new Array()
+    var flag=false;
     if(sjqxs!=""){
     	 var JsonObject = JSON.parse(sjqxs);
     	 	 //遍历该对象
@@ -120,7 +122,6 @@ layui.use(['form','table'], function(){
     	   		}
     	   	}
     }
-    var flag=false;
     if(obj.event === 'del'){
     	for(var i=0;i<array.length;i++){
 			if(array[i]==1){
@@ -169,7 +170,7 @@ layui.use(['form','table'], function(){
     	}
     }else if(obj.event === 'detail'){
     	for(var i=0;i<array.length;i++){
-			if(array[i]==1){
+			if(array[i]==3){
 				flag=true;
 			}
 		}
@@ -192,7 +193,6 @@ layui.use(['form','table'], function(){
     	}
     }
   });
-  gnyc();
 });
 
 function gnyc(){

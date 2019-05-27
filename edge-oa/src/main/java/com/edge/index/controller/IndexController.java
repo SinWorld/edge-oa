@@ -31,14 +31,8 @@ public class IndexController {
 		HttpSession session = request.getSession();
 		// 从session中得到当前登录用户的主键
 		Integer userId = (Integer) session.getAttribute("userId");
-		// 通过用户主键查询用户
-		User user = userService.queryUserById(userId);
-		if ("admin".equals(user.getUser_login_name())) {
-			return "index/index";
-		} else {
-			this.userAllPrivilege(userId, model, session);
-			return "index/index";
-		}
+		this.userAllPrivilege(userId, model, session);
+		return "index/index";
 
 	}
 

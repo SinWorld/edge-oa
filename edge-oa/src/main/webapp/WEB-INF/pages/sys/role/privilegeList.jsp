@@ -105,6 +105,22 @@
 					    			}
 				    			}
 			    			}
+			    			//得到当前节点的父节点
+			    			var parent=$('#tt').tree('getParent', node.target);
+			    			var array=new Array();
+			    			//遍历其子节点
+			    			if(parent!=null){
+				    			var children=parent.children;
+				    			for(var i=0;i<children.length;i++){
+				    				//若所有子节点全部取消选中则其父节点也取消选中
+				    				if(children[i].checked==false){
+				    					array.push(1);
+				    				}
+				    			}
+				    			if(array.length==children.length){
+				    				 $('#tt').tree("uncheck",parent.target);
+				    			}
+			    			}
 			    		}
 			        });  
 			    }  

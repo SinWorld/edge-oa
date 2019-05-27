@@ -20,6 +20,13 @@
 				// console.log(data.field);
 				var userName = $('#loginName').val();
 				var password = $('#password').val();
+				if(userName==""){
+					layer.msg('登录名不能为空');
+					return;
+				}if(password==""){
+					layer.msg('密码不能为空');
+					return;
+				}
 				$.ajax({
 					url : '<c:url value="/login/doLogin.do"/>',
 					data : {
@@ -57,7 +64,7 @@
 		<div class="header">
 			
 		</div>
-		<div class="design-w3l">
+		<div class="design-w3l" style="margin-top: 5%">
 			<div class="mail-form-agile">
 				<form action="#" method="post">
 					<input type="text" id="loginName" placeholder="登录名" required=""/>

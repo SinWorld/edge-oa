@@ -92,7 +92,7 @@ public class DepartmentController {
 			Map<String, Object> map = new LinkedHashMap<String, Object>();
 			// new出JSONArray数组存储二级部门
 			JSONArray jsonArrays = new JSONArray();
-			// new出JSONArray数组存储二级部门
+			// new出JSONArray数组存储三级部门
 			JSONArray sunJsonArray = new JSONArray();
 			// 向map中添加元素
 			map.put("id", tree.getDep_id());
