@@ -10,7 +10,7 @@
 	<insert id="saveUser" parameterType="User">
 		insert into cwgl_user
 		(USER_ID,USER_LOGIN_NAME,USER_NAME,USER_PASSWORD,USER_PHONE,USER_EMAIL,USER_GENDER,USER_DEPARTMENT_ID,USER_IS_DELETE)
-		values(seq_user_id.nextval,#{user_login_name},#{user_name},#{user_password},#{user_phone},#{user_email},#{user_gender},#{user_department_id})
+		values(seq_user_id.nextval,#{user_login_name},#{user_name},#{user_password},#{user_phone},#{user_email},#{user_gender},#{user_department_id,jdbcType=NUMERIC},#{user_is_delete})
 	</insert>
 	
 	<!--分页显示用户-->

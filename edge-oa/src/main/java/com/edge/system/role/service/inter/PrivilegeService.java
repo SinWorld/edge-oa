@@ -9,17 +9,17 @@ import com.edge.system.role.entity.Role_Privilege;
 
 public interface PrivilegeService {
 	// 查询顶级权限
-	public List<Privilege> privilegeTopList();
+	public List<Privilege> privilegeTopLists();
 
 	// 根据父类权限主键查询子类权限
-	public List<Privilege> privilegeChildrenList(Integer parent_id);
+	public List<Privilege> privilegeChildrenLists(Integer parent_id);
 
 	// 查询某个角色是否存在功能权限
-	public List<Role_Privilege> rolePrivilegeList(@Param("roleId") Integer roleId);
+	public List<Role_Privilege> rolePrivilegeLists(@Param("roleId") Integer roleId);
 
 	// 删除某个角色的所有功能权限
-	public void deleteRolePrivilege(@Param("roleId") Integer roleId);
+	public void deleteRolePrivileges(@Param("roleId") Integer roleId);
 
 	// 新增功能权限
-	public void saveRolePrivilege(Role_Privilege role_Privilege);
+	public void saveRolePrivileges(Role_Privilege role_Privilege);
 }

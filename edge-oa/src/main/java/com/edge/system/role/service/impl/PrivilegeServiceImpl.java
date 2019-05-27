@@ -17,27 +17,27 @@ public class PrivilegeServiceImpl implements PrivilegeService {
 	private PrivilegeDao privilegeDao;
 
 	// 查询所有顶级权限
-	public List<Privilege> privilegeTopList() {
+	public List<Privilege> privilegeTopLists() {
 		return privilegeDao.privilegeTopList();
 	}
 
 	// 根据父类权限主键查询子类权限
-	public List<Privilege> privilegeChildrenList(Integer parent_id) {
+	public List<Privilege> privilegeChildrenLists(Integer parent_id) {
 		return privilegeDao.privilegeChildrenList(parent_id);
 	}
 
 	// 查询某个角色是否存在功能权限
-	public List<Role_Privilege> rolePrivilegeList(Integer roleId) {
+	public List<Role_Privilege> rolePrivilegeLists(Integer roleId) {
 		return privilegeDao.rolePrivilegeList(roleId);
 	}
 
 	// 删除某个角色的所有功能权限
-	public void deleteRolePrivilege(Integer roleId) {
+	public void deleteRolePrivileges(Integer roleId) {
 		privilegeDao.deleteRolePrivilege(roleId);
 	}
 
 	// 新增功能权限
-	public void saveRolePrivilege(Role_Privilege role_Privilege) {
+	public void saveRolePrivileges(Role_Privilege role_Privilege) {
 		privilegeDao.saveRolePrivilege(role_Privilege);
 	}
 }

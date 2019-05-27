@@ -1,5 +1,8 @@
 package com.edge.system.role.entity;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * 权限实体类
  * 
@@ -11,6 +14,16 @@ public class Privilege {
 	private String privilege_name;// 权限名称
 	private String privilege_url;// 功能url
 	private Integer parent_id;// 父级权限
+
+	private Set<Privilege> children = new HashSet<Privilege>();// 辅助属性 下级权限
+
+	public Set<Privilege> getChildren() {
+		return children;
+	}
+
+	public void setChildren(Privilege children) {
+		this.children.add(children);
+	}
 
 	public Integer getPrivilege_id() {
 		return privilege_id;

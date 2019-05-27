@@ -52,22 +52,16 @@
       <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
       <ul class="layui-nav layui-nav-tree"  lay-filter="test">
       <li class="layui-nav-item"><a href="">首页</a></li>
+      <c:forEach items="${privilegeTopList}" var="p">
         <li class="layui-nav-item">
-          <a class="" href="javascript:;">系统管理</a>
-          <dl class="layui-nav-child">
-            <dd><a  data-url='<c:url value="/role/initRoleList"/>' mytitle="角色管理" id="role">角色管理</a></dd>
-            <dd><a mytitle="角色管理" id="department">部门管理</a></dd>
-            <dd><a mytitle="用户管理" id="userManage">用户管理</a></dd>
-          </dl>
+          <a class="" href="javascript:;">${p.privilege_name}</a>
+          <c:forEach items="${p.children}" var="c">
+	           <dl class="layui-nav-child">
+	            <dd><a  href='<c:url value="${c.privilege_url}"/>' mytitle="${c.privilege_name}"  target="iframe_a">${c.privilege_name}</a></dd>
+	          </dl>
+          </c:forEach> 
         </li>
-        <li class="layui-nav-item">
-          <a href="javascript:;">内网OA</a>
-          <dl class="layui-nav-child">
-            <dd><a href="javascript:;">首页</a></dd>
-          </dl>
-        </li>
-        <li class="layui-nav-item"><a href="">云市场</a></li>
-        <li class="layui-nav-item"><a href="">发布商品</a></li>
+    </c:forEach> 
       </ul>
     </div>
   </div>
@@ -77,7 +71,7 @@
    <%--  <div style="padding: 15px;">
     	<iframe src='<c:url value="/user/banner"/>' style="width: 100%" id="banner" frameborder="0" scrolling="no" onload="this.height=100"></iframe>
     </div> --%>
-    <iframe id="iframe-page-content"  width="100%"  frameborder="no" border="0" marginwidth="0" marginheight=" 0" scrolling="no" allowtransparency="yes"></iframe>
+    <iframe name="iframe_a" id="iframe-page-content"  width="100%" height="100%" frameborder="no" border="0" marginwidth="0" marginheight=" 0" scrolling="no" allowtransparency="yes"></iframe>
     
   </div>
   
@@ -108,28 +102,28 @@ function reinitIframe(){
 }
 	
 		//角色管理
-		$('#role').click(function(){
+		/* $('#role').click(function(){
 			var height=document.documentElement.clientHeight;
 			document.getElementById('iframe-page-content').style.height=height+'px';
 			var url='<c:url value="/role/initRoleList.do"/>';
 			$("#iframe-page-content").attr('src',url);
-		});	
+		});	 */
 		
 		//部门管理
-		$('#department').click(function(){
+		/* $('#department').click(function(){
 			var height=document.documentElement.clientHeight;
 			document.getElementById('iframe-page-content').style.height=height+'px';
 			var url='<c:url value="/department/initDepartmentList.do"/>';
 			$("#iframe-page-content").attr('src',url);
-		});
+		}); */
 		
 		//用户管理
-		$('#userManage').click(function(){
+		/* $('#userManage').click(function(){
 				var height=document.documentElement.clientHeight;
 				document.getElementById('iframe-page-content').style.height=height+'px';
 				var url='<c:url value="/user/initUserList.do"/>';
 				$("#iframe-page-content").attr('src',url);
-			});
+			}); */
 </script>
 </body>
 </html>

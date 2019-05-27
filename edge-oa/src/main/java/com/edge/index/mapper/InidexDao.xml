@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edge.index.dao.IndexDao">
+	<!-- 定义缓存 一般是一级缓存，如果用同一个sqlsession 那么相同查询直接会从缓存中查找 <cache size="1024" flushInterval="60000" 
+		eviction="LRU" readOnly="false"></cache> -->
+		
+	<!--用户登录到首页时根据用户主键查询当前用户的所有顶级权限  -->
+	<select id="userPrivilegeList" parameterType="Integer" resultType="Privilege">
+		select * from cwgl_privilege pr
+		<where>
+			pr.privilege_id in (select p.privilege_id
+                             from cwgl_user_role r
+                             left join cwgl_role_privilege p
+                               on r.role_id = p.role_id
+                               <where>
+                              		 r.user_id =#{user_id}
+                               </where>
+                            ) and pr.parent_id is null
+ 			order by pr.privilege_id asc
+		</where>
+	</select>
+	
+	
+	<!--查询当前用户所有顶级权限下的二级子权限 -->
+	<select id="ejChildrenList" parameterType="Integer" resultType="Privilege">
+		select * from cwgl_privilege pr
+		<where>
+			pr.privilege_id in (select p.privilege_id
+                             from cwgl_user_role r
+                             left join cwgl_role_privilege p
+                               on r.role_id = p.role_id
+                            <where>
+                            	r.user_id =#{user_id}
+                            </where> ) and pr.parent_id=#{parent_id}
+ 			order by pr.privilege_id asc
+		</where>
+	</select>
+</mapper>

@@ -31,7 +31,7 @@ public class RoleController {
 	private RoleServiceInter roleServiceInter;
 	@Resource
 	private PrivilegeService privilegeService;
-
+	//初始化角色新增页面
 	@RequestMapping(value = "/initSaveRole.do")
 	public String initSaveRole() {
 		return "sys/role/saveRole";
@@ -104,7 +104,7 @@ public class RoleController {
 		boolean flag = true;
 		roleServiceInter.deleteRoleById(roleId, flag);
 		// 删除该角色的同时也删除该角色的所有权限(物理删除)
-		privilegeService.deleteRolePrivilege(roleId);
+		privilegeService.deleteRolePrivileges(roleId);
 		mv.setViewName("redirect:initRoleList.do");
 		return mv;
 	}

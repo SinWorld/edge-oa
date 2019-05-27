@@ -50,7 +50,7 @@ public class PrivilegeController {
 		// new出JSONArray数组存储顶级权限
 		JSONArray jsonArray = new JSONArray();
 		// 得到所有的顶级权限
-		List<Privilege> trees = privilegeService.privilegeTopList();
+		List<Privilege> trees = privilegeService.privilegeTopLists();
 		// 遍历所有顶级权限集合
 		for (Privilege tree : trees) {
 			// new出map集合
@@ -62,7 +62,7 @@ public class PrivilegeController {
 			map.put("text", tree.getPrivilege_name());
 			map.put("state", "open");
 			// 查询当前权限的二级权限
-			List<Privilege> childrenTrees = privilegeService.privilegeChildrenList(tree.getPrivilege_id());
+			List<Privilege> childrenTrees = privilegeService.privilegeChildrenLists(tree.getPrivilege_id());
 			// 遍历当前二级权限
 			for (Privilege treePrivilege : childrenTrees) {
 				// new出map集合
@@ -75,7 +75,7 @@ public class PrivilegeController {
 				childrenMap.put("state", "open");
 				jsonArrays.add(childrenMap);
 				// 查询当前权限的三级权限
-				List<Privilege> sanjiQX = privilegeService.privilegeChildrenList(treePrivilege.getPrivilege_id());
+				List<Privilege> sanjiQX = privilegeService.privilegeChildrenLists(treePrivilege.getPrivilege_id());
 				// 遍历三级权限
 				for (Privilege sjqx : sanjiQX) {
 					// new出map集合
@@ -102,10 +102,10 @@ public class PrivilegeController {
 		//当前是否配置了权限
 		int hashCode = selectId.hashCode();
 		// 1.查询该角色有无该功能的权限
-		List<Role_Privilege> rolePrivilegeList = privilegeService.rolePrivilegeList(Integer.parseInt(roleId.trim()));
+		List<Role_Privilege> rolePrivilegeList = privilegeService.rolePrivilegeLists(Integer.parseInt(roleId.trim()));
 		// 2.若有则将该角色的所有的功能权限清楚，重新添加
 		if (rolePrivilegeList.size() > 0 && null != rolePrivilegeList) {
-			privilegeService.deleteRolePrivilege(Integer.parseInt(roleId.trim()));
+			privilegeService.deleteRolePrivileges(Integer.parseInt(roleId.trim()));
 			if(hashCode!=0) {
 				// 遍历该数组
 				for (String id : selectIds) {
@@ -114,7 +114,7 @@ public class PrivilegeController {
 					// 设置其属性
 					role_Privilege.setPrivilege_Id(Integer.parseInt(id.trim()));
 					role_Privilege.setRole_Id(Integer.parseInt(roleId.trim()));
-					privilegeService.saveRolePrivilege(role_Privilege);
+					privilegeService.saveRolePrivileges(role_Privilege);
 				}
 			}	
 		} else {
@@ -126,7 +126,7 @@ public class PrivilegeController {
 					// 设置其属性
 					role_Privilege.setPrivilege_Id(Integer.parseInt(id.trim()));
 					role_Privilege.setRole_Id(Integer.parseInt(roleId.trim()));
-					privilegeService.saveRolePrivilege(role_Privilege);
+					privilegeService.saveRolePrivileges(role_Privilege);
 				}
 			}
 		}
@@ -141,7 +141,7 @@ public class PrivilegeController {
 		// new出JSONArray数组对象
 		JSONArray jsonArray = new JSONArray();
 		// 根据角色主键去查询该角色所有的权限集合
-		List<Role_Privilege> rolePrivilegeList = privilegeService.rolePrivilegeList(roleId);
+		List<Role_Privilege> rolePrivilegeList = privilegeService.rolePrivilegeLists(roleId);
 		//遍历该集合将对象添加到JSONArray数组中
 		for (Role_Privilege role_Privilege : rolePrivilegeList) {
 			jsonArray.add(role_Privilege);

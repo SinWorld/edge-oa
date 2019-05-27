@@ -12,16 +12,17 @@
 <body>
 <form id="form" method="post">
 	<input type="hidden" value='<c:url value="/"/>' id="url">
-	<table class="layui-hide" id="test" lay-filter="test"></table>
+ 	<span id="qx"><textarea rows="" cols="100%" id="sjqx">${sjqxs}</textarea></span>
+ 	<table class="layui-hide" id="test" lay-filter="test"></table>
  </form>
 <script type="text/html" id="toolbarDemo">
   <div class="layui-btn-container">
-    <button class="layui-btn layui-btn-sm" lay-event="getCheckData" type="button">新增</button>
+    <button class="layui-btn layui-btn-sm" lay-event="getCheckData" type="button" id="add">新增</button>
   </div>
 </script>
  
 <script type="text/html" id="barDemo">
-  <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail" name="defaultAD">授权</a>
+  <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail" name="defaultAD" >授权</a>
   <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
   <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
@@ -31,9 +32,10 @@
 <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 --> 
  <script type="text/javascript" src="../jquery/jquery-3.3.1.js"></script>
 <script>
-layui.use('table', function(){
+layui.use(['form','table'], function(){
   var table = layui.table;
   var url=$('#url').val();
+  var form = layui.form;
   table.render({
     elem: '#test'
     ,url:url+'role/roleList.do'
@@ -51,17 +53,42 @@ layui.use('table', function(){
   //头工具栏事件
   table.on('toolbar(test)', function(obj){
     var url=$('#url').val();
-    if(obj.event=='getCheckData'){
-    	 layer.open({
-      	  	type:2,
-      	  	title:'新增角色',
-      	  	area: ['50%','60%'],
-      		shadeClose: false,
-      		resize:false,
-      	    anim: 1,
-      	  	content:[url+"role/initSaveRole.do",'yes']
-    	  	});
+    //得到三级权限json串
+    var sjqxs=$('#sjqx').val();
+    //将json串转化为json对象
+    if(sjqxs!=""){
+	   	 var JsonObject = JSON.parse(sjqxs);
+	   	 //遍历该对象
+	   	   	for(var i=0;i<JsonObject.length;i++){
+	   	   		//得到obj中的权限名称
+	   	   		var qxmc=JsonObject[i].privilege_name;
+	   	   		//判断权限名称的名字来控制按钮显示、隐藏
+	   	   		if(qxmc=='角色添加'){
+	   	   			flag=true;
+	   	   			break;
+	   	   		}
+	   	   	}
     }
+    var flag=false;
+    if(flag){
+    	 if(obj.event=='getCheckData'){
+        	 layer.open({
+          	  	type:2,
+          	  	title:'新增角色',
+          	  	area: ['50%','60%'],
+          		shadeClose: false,
+          		resize:false,
+          	    anim: 1,
+          	  	content:[url+"role/initSaveRole.do",'yes']
+        	  	});
+        }
+    }else{
+    	layer.alert('无此功能的权限，请联系管理员授权', {
+			icon : 7
+		});
+		return;
+    }
+   
   });
   
   //监听行工具事件
@@ -69,41 +96,108 @@ layui.use('table', function(){
     var data = obj.data;
     var url=$('#url').val();
     var roleId=data.role_id;
-    //console.log(obj)
+    //得到三级权限json串
+    var sjqxs=$('#sjqx').val();
+    //将json串转化为json对象
+    //new出数组
+    var array = new Array()
+    if(sjqxs!=""){
+    	 var JsonObject = JSON.parse(sjqxs);
+    	 	 //遍历该对象
+    	   	for(var i=0;i<JsonObject.length;i++){
+    	   		//得到obj中的权限名称
+    	   		var qxmc=JsonObject[i].privilege_name;
+    	   		//判断权限名称的名字来控制按钮显示、隐藏
+    	   		if(qxmc=='角色删除'){
+    	   			array.push(1);
+    	   			continue;
+    	   		}else if(qxmc=='角色编辑'){
+    	   			array.push(2);
+    	   			continue;
+    	   		}else if(qxmc=='角色授权'){
+    	   			array.push(3);
+    	   			continue;
+    	   		}
+    	   	}
+    }
+    var flag=false;
     if(obj.event === 'del'){
-    	 layer.confirm('您确定要删除该角色吗？', {
-			  btn: ['确定','取消'], //按钮
-			  title:'提示'},function(index){
-				  //获取表单
-				  var form=document.getElementById('form');
-				  form.action=url+"role/deleteRole.do?roleId="+roleId;
-				  form.submit();
-				  layer.close(index);
-			  }
-		  );
+    	for(var i=0;i<array.length;i++){
+			if(array[i]==1){
+				flag=true;
+			}
+		}
+    	if(flag){
+    		layer.confirm('您确定要删除该角色吗？', {
+  			  btn: ['确定','取消'], //按钮
+  			  title:'提示'},function(index){
+  				  //获取表单
+  				  var form=document.getElementById('form');
+  				  form.action=url+"role/deleteRole.do?roleId="+roleId;
+  				  form.submit();
+  				  layer.close(index);
+  			  }
+  		  );
+    	}
+    	if(flag==false){
+    		layer.alert('无此功能的权限，请联系管理员授权', {
+				icon : 7
+			});
+    		return;
+    	}
     } else if(obj.event === 'edit'){
-    	layer.open({
-     	  	type:2,
-     	  	title:'编辑角色',
-     	  	area: ['50%','60%'],
-     		shadeClose: false,
-      		resize:false,
-      	    anim: 1,
-     	  	content:[url+"role/initEditRole.do?roleId="+roleId,'yes']
-   	  	});
+    	for(var i=0;i<array.length;i++){
+			if(array[i]==2){
+				flag=true;
+			}
+		}
+    	if(flag){
+    		layer.open({
+         	  	type:2,
+         	  	title:'编辑角色',
+         	  	area: ['50%','60%'],
+         		shadeClose: false,
+          		resize:false,
+          	    anim: 1,
+         	  	content:[url+"role/initEditRole.do?roleId="+roleId,'yes']
+       	  	});
+    	}if(flag==false){
+    		layer.alert('无此功能的权限，请联系管理员授权', {
+				icon : 7
+			});
+    		return;
+    	}
     }else if(obj.event === 'detail'){
-    	layer.open({
-     	  	type:2,
-     	  	title:'角色授权',
-     	  	area: ['100%','100%'],
-     		shadeClose: false,
-      		resize:false,
-      	    anim: 1,
-     	  	content:[url+"privilege/initPrivilegeList.do?roleId="+roleId,'yes']
-   	  	});
+    	for(var i=0;i<array.length;i++){
+			if(array[i]==1){
+				flag=true;
+			}
+		}
+    	if(flag){
+    		layer.open({
+         	  	type:2,
+         	  	title:'角色授权',
+         	  	area: ['100%','100%'],
+         		shadeClose: false,
+          		resize:false,
+          	    anim: 1,
+         	  	content:[url+"privilege/initPrivilegeList.do?roleId="+roleId,'yes']
+       	  	});
+    	}
+    	if(flag==false){
+    		layer.alert('无此功能的权限，请联系管理员授权', {
+				icon : 7
+			});
+    		return;
+    	}
     }
   });
+  gnyc();
 });
+
+function gnyc(){
+	$('#qx').hide()
+}
 </script>
 </body>
 </html>

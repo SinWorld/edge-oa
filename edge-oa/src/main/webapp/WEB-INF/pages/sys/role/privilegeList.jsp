@@ -95,12 +95,14 @@
 			    			if(node.checkState=='checked'){
 			    				var parentNode = $('#tt').tree('getParent', node.target);
 				    			//获取当前节点父节点的父节点
-				    		   var topNode=$('#tt').tree('getParent', parentNode.target);
 				    			if(parentNode!=null){
-				    				  $('#tt').tree("check",parentNode.target);
-				    			}
-				    			if(topNode!=null){
-				    				  $('#tt').tree("check",topNode.target);
+					    		   var topNode=$('#tt').tree('getParent', parentNode.target);
+					    			if(parentNode!=null){
+					    				  $('#tt').tree("check",parentNode.target);
+					    			}
+					    			if(topNode!=null){
+					    				  $('#tt').tree("check",topNode.target);
+					    			}
 				    			}
 			    			}
 			    		}

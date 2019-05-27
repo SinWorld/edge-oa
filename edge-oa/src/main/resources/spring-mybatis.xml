@@ -44,6 +44,7 @@
 				<value>classpath*:com/edge/system/department/mapper/*.xml</value>
 				<value>classpath*:com/edge/system/user/mapper/*.xml</value>
 				<value>classpath*:com/edge/login/mapper/*.xml</value>
+				<value>classpath*:com/edge/index/mapper/*.xml</value>
 			</array>
 		</property>
 	</bean>
@@ -51,9 +52,15 @@
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
 		<!-- 给出需要扫描的Dao接口 -->
 		<property name="basePackage"
-			value="com.edge.system.role.dao;com.edge.system.department.dao;com.edge.system.user.dao;com.edge.login.dao" />
+			value="com.edge.system.role.dao;com.edge.system.department.dao;
+			com.edge.system.user.dao;com.edge.login.dao;com.edge.index.dao" />
 		<!--注入SqlSessionFactory -->
 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
 	</bean>
+
+	<!-- 启用注解 -->
+	<context:annotation-config />
+	<!-- 自动扫描该包，使SpringMVC认为包下用了@controller注解的类是控制器 -->
+	<context:component-scan base-package="com.edge" />
 
 </beans>
