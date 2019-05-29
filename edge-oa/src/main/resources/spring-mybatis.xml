@@ -45,15 +45,19 @@
 				<value>classpath*:com/edge/system/user/mapper/*.xml</value>
 				<value>classpath*:com/edge/login/mapper/*.xml</value>
 				<value>classpath*:com/edge/index/mapper/*.xml</value>
+				<value>classpath*:com/edge/procedure/ProcessDefinition/mapper/*.xml
+				</value>
 			</array>
 		</property>
 	</bean>
+
 	<!--4:配置扫描Dao接口包,动态实现DAO接口,注入到spring容器 -->
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
 		<!-- 给出需要扫描的Dao接口 -->
 		<property name="basePackage"
 			value="com.edge.system.role.dao;com.edge.system.department.dao;
-			com.edge.system.user.dao;com.edge.login.dao;com.edge.index.dao" />
+			com.edge.system.user.dao;com.edge.login.dao;com.edge.index.dao;
+			com.edge.procedure.ProcessDefinition.dao" />
 		<!--注入SqlSessionFactory -->
 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
 	</bean>
@@ -62,5 +66,24 @@
 	<context:annotation-config />
 	<!-- 自动扫描该包，使SpringMVC认为包下用了@controller注解的类是控制器 -->
 	<context:component-scan base-package="com.edge" />
+
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- 配置一个spring提供的对象，用于创建一个流程引擎配置对象 -->
+	<bean id="processEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration">
+		<property name="transactionManager" ref="transactionManager" />
+		<property value="true" name="databaseSchemaUpdate" />
+		<!-- 必须注入数据源对象 -->
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+
+	<!-- 创建流程引擎对象 -->
+	<bean id="processEngine" class="org.activiti.spring.ProcessEngineFactoryBean">
+		<property name="processEngineConfiguration" ref="processEngineConfiguration"></property>
+	</bean>
+
 
 </beans>

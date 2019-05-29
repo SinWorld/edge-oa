@@ -62,5 +62,11 @@ public class IndexController {
 		model.addAttribute("privilegeTopList", userPrivilegeList);
 
 	}
+	
+	//跳转至首页显示代办、已办、已完成
+	@RequestMapping(value="/headPage.do")
+	public String headPage() {
+		return "index/headPage";
+	}
 
 }
