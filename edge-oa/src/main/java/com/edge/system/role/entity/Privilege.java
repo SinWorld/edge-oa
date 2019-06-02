@@ -1,7 +1,7 @@
 package com.edge.system.role.entity;
 
-import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * 权限实体类
@@ -9,15 +9,15 @@ import java.util.Set;
  * @author NingCG
  *
  */
-public class Privilege {
+public class Privilege implements Comparable<Privilege> {
 	private Integer privilege_id;// 主键
 	private String privilege_name;// 权限名称
 	private String privilege_url;// 功能url
 	private Integer parent_id;// 父级权限
 
-	private Set<Privilege> children = new HashSet<Privilege>();// 辅助属性 下级权限
+	private TreeSet<Privilege> children = new TreeSet<Privilege>();// 辅助属性 下级权限
 
-	public Set<Privilege> getChildren() {
+	public TreeSet<Privilege> getChildren() {
 		return children;
 	}
 
@@ -60,7 +60,15 @@ public class Privilege {
 	@Override
 	public String toString() {
 		return "Privilege [privilege_id=" + privilege_id + ", privilege_name=" + privilege_name + ", privilege_url="
-				+ privilege_url + ", parent_id=" + parent_id + "]";
+				+ privilege_url + ", parent_id=" + parent_id + ", children=" + children + "]";
+	}
+
+	public int compareTo(Privilege p) {
+		if (this.privilege_id > p.privilege_id) {
+			return 1;
+		} else {
+			return -1;
+		}
 	}
 
 }

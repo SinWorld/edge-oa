@@ -47,14 +47,14 @@
 				</div>
 			</div>
 
-			<div class="layui-form-item" style="margin-bottom: 0px;">
+		<!-- 	<div class="layui-form-item" style="margin-bottom: 0px;">
 				<label class="layui-form-label" style="width: 15%">用户密码</label>
 				<div class="layui-input-block">
 					<input type="password" name="user_password" lay-verify="user_password"
 						autocomplete="off" class="layui-input" style="width: 64.5%" id="user_password">
 					 <span id="clearUser_password" class="close"><i class="layui-icon layui-icon-close-fill"></i></span>
 				</div>
-			</div>
+			</div> -->
 			
 			<div class="layui-form-item" style="float: right;position: relative;right:52%; margin-bottom: 0px;width: 38%" >
 				<label class="layui-form-label" style="width: 15%">性别</label>
@@ -150,12 +150,6 @@ layui.use(['form', 'layedit', 'laydate'], function(){
 		    if(/^\d+\d+\d$/.test(value)){
 		      return '用户名不能全为数字';
 		    }
-		  } 
-	   	
-	   	,user_password: function(value, item){ //value：表单的值、item：表单的DOM对象
-	   		if(value==""){
-		     	 return '密码不能为空';
-		     }
 		  } 
 	   	
 	   	,user_phone: function(value, item){ //value：表单的值、item：表单的DOM对象

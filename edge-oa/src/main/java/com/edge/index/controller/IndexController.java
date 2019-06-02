@@ -1,6 +1,7 @@
 package com.edge.index.controller;
 
 import java.util.List;
+import java.util.TreeSet;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.alibaba.fastjson.JSONArray;
 import com.edge.index.service.inter.IndexService;
 import com.edge.system.role.entity.Privilege;
-import com.edge.system.user.entity.User;
 import com.edge.system.user.service.inter.UserService;
 
 @Controller
@@ -31,7 +31,10 @@ public class IndexController {
 		HttpSession session = request.getSession();
 		// 从session中得到当前登录用户的主键
 		Integer userId = (Integer) session.getAttribute("userId");
-		this.userAllPrivilege(userId, model, session);
+		Boolean flag =(Boolean)session.getAttribute("kg");
+		if(flag) {
+			this.userAllPrivilege(userId, model, session);
+		}
 		return "index/index";
 
 	}
@@ -40,11 +43,13 @@ public class IndexController {
 	public void userAllPrivilege(Integer userId, Model model, HttpSession session) {
 		// 查询当前登录用户的所有顶级权限权限
 		List<Privilege> userPrivilegeList = indexService.userPrivilegeList(userId);
+		TreeSet<Privilege> topList=new TreeSet<Privilege>();
 		// new出JSONArry对象用于存储所有的三级权限
 		JSONArray jsonArray = new JSONArray();
 		// 遍历顶级权限集合
 		// 查询当前登录用户的所有顶级权限下的二级子权限
 		for (Privilege privilege : userPrivilegeList) {
+			topList.add(privilege);
 			List<Privilege> ejChildrenList = indexService.ejChildrenList(userId, privilege.getPrivilege_id());
 			// 遍历二级子权限集合 将二级子权限添加到权限对象的set集合中
 			for (Privilege ej : ejChildrenList) {
@@ -59,7 +64,9 @@ public class IndexController {
 		}
 		// 将三级权限存入session中
 		session.setAttribute("sjqxs", jsonArray.toString().trim());
-		model.addAttribute("privilegeTopList", userPrivilegeList);
+		//用于用户在不退出登录的情况下控制加载权限菜单
+		session.setAttribute("kg", false);
+		model.addAttribute("privilegeTopList", topList);
 
 	}
 	

@@ -15,19 +15,6 @@
   <div class="layui-header">
     <div class="layui-logo"  style="font-size: 30px;">内网OA</div>
     <!-- 头部区域（可配合layui已有的水平导航） -->
-    <ul class="layui-nav layui-layout-left">
-      <li class="layui-nav-item"><a href="">1111</a></li>
-      <li class="layui-nav-item"><a href="">商品管理</a></li>
-      <li class="layui-nav-item"><a href="">用户</a></li>
-      <li class="layui-nav-item">
-        <a href="javascript:;">其它系统</a>
-        <dl class="layui-nav-child">
-          <dd><a href="">邮件管理</a></dd>
-          <dd><a href="">消息管理</a></dd>
-          <dd><a href="">授权管理</a></dd>
-        </dl>
-      </li>
-    </ul>
     <ul class="layui-nav layui-layout-right">
       <li class="layui-nav-item">
         <a href="javascript:;">
@@ -35,8 +22,6 @@
       			${userName}
         </a>
         <input type="hidden" value="${userId}" id="userId">
-        <input type="hidden" value="${image}">
-        <input type="hidden" id="ts">
    		<input type="hidden" value='<c:url value="/"/>' id="url">
         <dl class="layui-nav-child">
           <dd><a onclick="userShow()">基本资料</a></dd>

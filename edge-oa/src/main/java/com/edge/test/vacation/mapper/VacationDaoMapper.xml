@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edge.test.vacation.dao.VacationDao">
+	<!-- 定义缓存 一般是一级缓存，如果用同一个sqlsession 那么相同查询直接会从缓存中查找 <cache size="1024" flushInterval="60000" 
+		eviction="LRU" readOnly="false"></cache> -->
+
+	<!--分页查询角色 -->
+	<select id="vacationList" parameterType="QueryVo" resultType="Vacation">
+		select * from (select row_.*, rownum rownum_ from (select * from
+		cwgl_vacation order by vacation_id desc ) row_
+		<where>
+			rownum &lt;=#{size} and user_id=#{user_id}
+		</where>
+		)
+		<where>
+			rownum_ &gt;=#{page}
+		</where>
+	</select>
+
+	<!--查询角色总数量 -->
+	<select id="vacationCount" resultType="Integer">
+		select count(1) from cwgl_vacation
+		<where>
+			user_id=#{user_id}
+		</where>
+	</select>
+
+	<!--新增请假记录 -->
+	<insert id="addVacation" parameterType="Vacation">
+		insert into
+		cwgl_vacation(VACATION_ID,DAYS,BEGINDATE,REASON,USER_ID,REMARK,STATE)
+		values(seq_vacation_id.nextval,#{days},#{beginDate},#{reason},#{user_id},#{remark},#{state})
+	</insert>
+
+	<!--根据主键查询当前请假记录 -->
+	<select id="queryVacationById" resultType="Vacation"
+		parameterType="Integer">
+		select * from cwgl_vacation
+		<where>
+			vacation_id=#{vacation_id}
+		</where>
+	</select>
+
+	<!--分页查询我的代办 -->
+	<select id="queryMyTask" parameterType="QueryVo" resultType="MyTask">
+		select * from (select row_.*, rownum rownum_ from (select * from
+		act_ru_task order by create_time_ desc ) row_
+		<where>
+			rownum &lt;=#{size} and assignee_=#{user_name}
+		</where>
+		)
+		<where>
+			rownum_ &gt;=#{page}
+		</where>
+	</select>
+
+	<!--查询我的代办数量 -->
+	<select id="myTaskCount" parameterType="String" resultType="Integer">
+		select count(1) from act_ru_task
+		<where>
+			assignee_=#{user_name}
+		</where>
+	</select>
+
+	<!--分页查询已完办 -->
+	<select id="queryTaskYWC" parameterType="QueryVo" resultType="TaskYWC">
+		select * from (select row_.*, rownum rownum_ from (select
+			t.name_,t.assignee_,t.form_key_,p.id_,p.business_key_,p.start_time_,p.end_time_
+		from act_hi_taskinst t
+		left join act_hi_procinst p
+		on t.proc_inst_id_ = p.id_
+		<where>
+			p.end_time_ is not null order by p.end_time_ desc
+		</where>
+		) row_
+		<where>
+			rownum &lt;=#{size} and form_key_ is null
+		</where>
+		)
+		<where>
+			rownum_ &gt;=#{page}
+		</where>
+	</select>
+
+	<!--查询已完成数量 -->
+	<select id="TaskYWCCount" resultType="Integer">
+		select count(1)
+		from act_hi_taskinst t
+		left join act_hi_procinst p
+		on t.proc_inst_id_ = p.id_
+		<where>
+			t.form_key_ is null and p.end_time_ is not null
+		</where>
+	</select>
+
+	<!--查询当前用户添加请假申请最大主键值 -->
+	<select id="vacationMaxId" resultType="Integer" parameterType="Integer">
+		select max(vacation_id) from cwgl_vacation
+		<where>
+			user_id=#{user_id}
+		</where>
+	</select>
+
+	<!--查询当前我的任务 -->
+	<select id="queryAllMyTask" parameterType="String" resultType="MyTask">
+		select * from act_ru_task t
+		<where>t.assignee_=#{user_name}</where>
+	</select>
+	
+	<!--根据流程实例Id去查询历史任务批注  -->
+	<select id="queryReviewOpinions" parameterType="String" resultType="ReviewOpinion">
+		select * from act_hi_comment t
+		<where>
+			t.proc_inst_id_=#{proc_Inst_id}
+		</where>
+	</select>
+	
+
+</mapper>

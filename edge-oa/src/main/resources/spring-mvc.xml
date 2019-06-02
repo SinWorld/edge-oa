@@ -12,12 +12,12 @@
                          http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">  
                          
       <!-- 配置登陆拦截器 -->
-	 <!-- <mvc:interceptors>
+	 <mvc:interceptors>
 	 	<mvc:interceptor>
 	 		<mvc:mapping path="/**"/>
-	 		<bean class="com.hmp.interceptor.LoginInterceptor" />
+	 		<bean class="com.edge.listener.LoginInterceptor" />
 	 	</mvc:interceptor>
-	 </mvc:interceptors> -->
+	 </mvc:interceptors>
 	 
 	 <!-- 启用注解  -->
     <context:annotation-config />

@@ -16,6 +16,7 @@ public class User {
 	private Integer user_gender;// 性别
 	private Integer user_department_id;// 所属部门
 	private Boolean user_is_delete;// 是否删除
+	private Integer user_leader;// 上级领导
 
 	// 辅助属性 显示部门名称
 	private String user_department_name;
@@ -110,13 +111,21 @@ public class User {
 		this.user_department_name = user_department_name;
 	}
 
+	public Integer getUser_leader() {
+		return user_leader;
+	}
+
+	public void setUser_leader(Integer user_leader) {
+		this.user_leader = user_leader;
+	}
+
 	@Override
 	public String toString() {
 		return "User [user_id=" + user_id + ", user_login_name=" + user_login_name + ", user_name=" + user_name
 				+ ", user_password=" + user_password + ", user_phone=" + user_phone + ", user_email=" + user_email
 				+ ", user_gender=" + user_gender + ", user_department_id=" + user_department_id + ", user_is_delete="
-				+ user_is_delete + ", user_department_name=" + user_department_name + ", userRoleName=" + userRoleName
-				+ "]";
+				+ user_is_delete + ", user_leader=" + user_leader + ", user_department_name=" + user_department_name
+				+ ", userRoleName=" + userRoleName + "]";
 	}
 
 }

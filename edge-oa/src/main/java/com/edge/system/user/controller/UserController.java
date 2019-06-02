@@ -61,6 +61,7 @@ public class UserController {
 	@RequestMapping(value = "/saveUser.do")
 	public String saveUser(User user, Model model) {
 		user.setUser_is_delete(false);
+		user.setUser_password("000000".trim());	
 		userService.saveUser(user);
 		model.addAttribute("flag", true);
 		return "sys/user/saveUser";

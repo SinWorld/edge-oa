@@ -62,7 +62,7 @@ public class HistoryDateTest {
 	 */
 	@Test
 	public void test4() {
-		String taskId = "7502";
+		String taskId = "10";
 		pe.getTaskService().complete(taskId);
 	}
 

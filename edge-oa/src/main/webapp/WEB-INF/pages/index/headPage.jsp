@@ -13,25 +13,22 @@
 <div class="layui-tab">
   <ul class="layui-tab-title">
     <li class="layui-this">代办</li>
-    <li>已办</li>
     <li>已完成</li>
   </ul>
   <div class="layui-tab-content">
     <div class="layui-tab-item layui-show">
     	<input type="hidden" value='<c:url value="/"/>' id="url">
-     	<table class="layui-hide" id="db" lay-filter="test"></table>
+     	<table class="layui-hide" id="db" lay-filter="db"></table>
     </div>
    
     <div class="layui-tab-item">
-    	<table class="layui-hide" id="yb" lay-filter="test"></table>
+    	<table class="layui-hide" id="ywc" lay-filter="ywc"></table>
     </div>
   </div>
 </div>
-<script type="text/html" id="barDemo">
-  <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail" name="defaultAD" >授权</a>
-  <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-</script>
+<!--  <script type="text/html" id="dbcz">
+  <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="show" name="defaultAD" >查看</a>
+</script>-->
 <script src="../jquery/jquery-3.3.1.js"></script>
 <script src="../layui-v2.4.5/layui/layui.js"></script>
 <script  type="text/javascript">
@@ -43,33 +40,93 @@ layui.use(['element','form','table'], function(){
   var form = layui.form;
   table.render({
     elem: '#db'
-    ,url:url+'role/roleList.do'
-    ,toolbar: '#toolbarDemo'
-    ,title: '角色管理'
+    ,url:url+'vacation/myTaskList.do'
+    ,title: '我的代办'
     ,cols: [[
        {field:'index', width:"8%", title: '序号', sort: true,type:'numbers'}
-      ,{field:'role_name', width:"22%",align:'center', title: '角色名称'}
-      ,{field:'role_infor', width:"55%", align:'center', title: '角色说明'}
-      ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:"15%",align:'center'}
+      ,{field:'taskDecription', width:"55%", title: '代办任务描述'}
+      ,{field:'ASSIGNEE_', width:"15%", align:'center', title: '办理人'}
+      ,{field:'startTime', width:"22%", align:'center', title: '创建日期'}
+    /*   ,{fixed: 'right', title:'操作', toolbar: '#dbcz', width:"10%",align:'center'} */
     ]]
     ,page: true
   });
   //…
   table.render({
-	    elem: '#yb'
-	    ,url:url+'user/userList.do'
-	    ,toolbar: '#toolbarDemo'
-	    ,title: '用户管理'
+	    elem: '#ywc'
+	    ,url:url+'vacation/taskListYWC.do'
+	    ,title: '已完成'
 	    ,cols: [[
 	       {field:'index', width:"8%", title: '序号', sort: true,type:'numbers'}
-	      ,{field:'user_login_name', width:"18%",align:'center', title: '登录名'}
-	      ,{field:'user_name', width:"17%", align:'center', title: '姓名'}
-	      ,{field:'user_department_name', width:"17%", align:'center', title: '所属部门'}
-	      ,{field:'userRoleName', width:"20%", align:'center', title: '角色'}
-	      ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:"20%",align:'center'}
+	       ,{field:'taskDecription', width:"42%", title: '已完成任务描述'}
+	       ,{field:'ASSIGNEE_', width:"10%", align:'center', title: '发起人'}
+	       ,{field:'beginTime', width:"20%", align:'center', title: '创建日期'}
+	      ,{field:'endTime', width:"20%", align:'center', title: '结束日期'}
 	    ]]
 	    ,page: true
 	  });
+  
+  //我的代办 监听行工具事件
+  table.on('row(db)', function(obj){
+    var data = obj.data;
+    var url=$('#url').val();
+    var id=data.ID_;
+    //console.log(obj)
+	//查看请假
+	  $.ajax({  
+		    type: "post",  
+		    url:  "<c:url value='/vacation/querVacationId.do'/>",
+		    dataType: 'json',
+		    async:false,
+		    data:{"task_id":id},
+		    error:function(){
+		    	alert("出错");
+		    },
+		    success: function (data) {  
+		    	 layer.open({
+			       	  	type:2,
+			       	  	title:'请假信息',
+			       	  	area: ['100%','100%'],
+			       		shadeClose: false,
+			       		resize:false,
+			       	    anim: 1,
+			       	  	content:[url+"vacation/vacationShow.do?id="+data.id+"&task_id="+data.taskId,'yes']
+		     	  });
+		    }  
+		});
+  });
+  
+  //已代办 监听行工具事件
+  table.on('row(ywc)', function(obj){
+    var data = obj.data;
+    var url=$('#url').val();
+    var id=data.BUSINESS_KEY_;
+    //历史流程实例Id
+    var proIndeId=data.ID_;
+    //console.log(obj)
+	//查看请假
+	  $.ajax({  
+		    type: "post",  
+		    url:  "<c:url value='/vacation/querywcVacationId.do'/>",
+		    dataType: 'json',
+		    async:false,
+		    data:{"task_id":id,"proIndeId":proIndeId},
+		    error:function(){
+		    	alert("出错");
+		    },
+		    success: function (data) {  
+		    	 layer.open({
+			       	  	type:2,
+			       	  	title:'请假信息',
+			       	  	area: ['100%','100%'],
+			       		shadeClose: false,
+			       		resize:false,
+			       	    anim: 1,
+			       	  	content:[url+"vacation/vacationYWCShow.do?id="+data.id+"&proIndeId="+data.proIndeId,,'yes']
+		     	  });
+		    }  
+		});
+  });
 });
 </script>
 </body>

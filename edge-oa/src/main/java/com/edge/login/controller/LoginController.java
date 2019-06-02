@@ -48,6 +48,8 @@ public class LoginController {
 					// 跳转至index首页，并将用户名、用户主键存入session
 					session.setAttribute("userName", user.getUser_name());
 					session.setAttribute("userId", user.getUser_id());
+					//用于用户在不退出登录的情况下控制加载权限菜单
+					session.setAttribute("kg", true);
 					jsonObject.put("flag", "success");
 					return jsonObject.toString();
 				} else {
