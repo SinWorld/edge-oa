@@ -25,9 +25,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONObject;
 import com.edge.system.user.entity.User;
 import com.edge.system.user.service.inter.UserService;
-import com.edge.test.vacation.entity.MyTask;
-import com.edge.test.vacation.entity.ReviewOpinion;
-import com.edge.test.vacation.entity.TaskYWC;
+import com.edge.test.vacation.entity.MyTasks;
+import com.edge.test.vacation.entity.ReviewOpinions;
+import com.edge.test.vacation.entity.TaskYWCS;
 import com.edge.test.vacation.entity.Vacation;
 import com.edge.test.vacation.service.inter.VacationService;
 import com.edge.utils.Page;
@@ -58,9 +58,7 @@ public class VacationController {
 	// 分页查询请假列表数据
 	@RequestMapping(value = "/vacationList.do")
 	@ResponseBody
-	public String vacationList(Integer page, HttpServletRequest request) {
-		HttpSession session = request.getSession();
-		Integer userId = (Integer) session.getAttribute("userId");
+	public String vacationList(Integer page) {
 		// new出QueryVo查询对象
 		QueryVo vo = new QueryVo();
 		// 获得Page对象
@@ -72,15 +70,14 @@ public class VacationController {
 			vo.setPage((page - 1) * vo.getSize() + 1);
 			vo.setStartRow((pages.getPage()));
 			vo.setSize(page * 10);
-			vo.setUser_id(userId);
 		}
 		// 总页数
-		pages.setTotal(vacationService.vacationCount(userId));
+		pages.setTotal(vacationService.vacationCount());
 		pages.setRows(vacationService.vacationList(vo));
 		Gson gson = new Gson();
 		map.put("code", 0);
 		map.put("msg", "");
-		map.put("count", vacationService.vacationCount(userId));
+		map.put("count", vacationService.vacationCount());
 		map.put("data", pages.getRows());
 		String json = gson.toJson(map);
 		return json.toString();
@@ -107,9 +104,9 @@ public class VacationController {
 		model.addAttribute("flag", true);
 		// 启动流程实例
 		vacationService.saveStartProcess(vacationService.vacationMaxId(userId), user_name);
-		List<MyTask> allMyTask = vacationService.queryAllMyTask(user_name);
+		List<MyTasks> allMyTask = vacationService.queryAllMyTask(user_name);
 		// 遍历我的任务处理所有我的代办
-		for (MyTask myTask : allMyTask) {
+		for (MyTasks myTask : allMyTask) {
 			vacationService.saveTask(myTask.getID_(), request);
 		}
 		return "procedure/vacation/addVacation";
@@ -141,7 +138,7 @@ public class VacationController {
 		// new出QueryVo查询对象
 		QueryVo vo = new QueryVo();
 		// 获得Page对象
-		Page<MyTask> pages = new Page<MyTask>();
+		Page<MyTasks> pages = new Page<MyTasks>();
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
 		// 每页数
 		if (vo != null) {
@@ -159,9 +156,9 @@ public class VacationController {
 		map.put("msg", "");
 		map.put("count", vacationService.myTaskCount(user_name));
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 设置日期格式
-		List<MyTask> myTasks = pages.getRows();
+		List<MyTasks> myTasks = pages.getRows();
 		// 遍历该集合 设置代办集合
-		for (MyTask myTask : myTasks) {
+		for (MyTasks myTask : myTasks) {
 			String taskDecription = "【" + myTask.getNAME_() + "】" + "  " + "【" + "任务名称:员工请假" + "】";
 			String startTime = df.format(myTask.getCREATE_TIME_());
 			myTask.setTaskDecription(taskDecription);
@@ -179,7 +176,7 @@ public class VacationController {
 		// new出QueryVo查询对象
 		QueryVo vo = new QueryVo();
 		// 获得Page对象
-		Page<TaskYWC> pages = new Page<TaskYWC>();
+		Page<TaskYWCS> pages = new Page<TaskYWCS>();
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
 		// 每页数
 		if (vo != null) {
@@ -196,9 +193,9 @@ public class VacationController {
 		map.put("msg", "");
 		map.put("count", vacationService.TaskYWCCount());
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 设置日期格式
-		List<TaskYWC> ywcs = pages.getRows();
+		List<TaskYWCS> ywcs = pages.getRows();
 		// 遍历该集合 设置代办集合
-		for (TaskYWC ywc : ywcs) {
+		for (TaskYWCS ywc : ywcs) {
 			String taskDecription = "【" + ywc.getNAME_() + "】" + "  " + "【" + "任务名称:员工请假" + "】";
 			String startTime = df.format(ywc.getSTART_TIME_());
 			String endTime = df.format(ywc.getEND_TIME_());
@@ -228,24 +225,30 @@ public class VacationController {
 	// 点击已完成查看业务数据
 	@RequestMapping(value = "/querywcVacationId.do")
 	@ResponseBody
-	public String querywcVacationId(@RequestParam String task_id, String proIndeId) {
+	public String querywcVacationId(@RequestParam String task_id, String proIndeId,String PROC_DEF_ID_) {
 		// 得到业务数据主键
 		String id = task_id.substring(task_id.indexOf(".") + 1);
 		// new出JSONObject对象
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("id", id);
 		jsonObject.put("proIndeId", proIndeId);
+		//流程部署Id
+		jsonObject.put("PROC_DEF_ID_", PROC_DEF_ID_);
 		return jsonObject.toString();
 	}
 
 	// 已完成代办跳转至查看页面
 	@RequestMapping(value = "/vacationYWCShow.do")
-	public String vacationYWCShow(@RequestParam Integer id, String proIndeId, Model model) {
+	public String vacationYWCShow(@RequestParam Integer id, String proIndeId,String PROC_DEF_ID_, Model model) {
 		// 根据id查询出请假记录数据
 		Vacation vacation = vacationService.queryVacationById(id);
-		List<ReviewOpinion> reviewOpinions = vacationService.queryReviewOpinions(proIndeId);
+		List<ReviewOpinions> reviewOpinions = vacationService.queryReviewOpinions(proIndeId);
+		ProcessDefinition pd = vacationService.queryProcessDefinitionById(PROC_DEF_ID_);
+		model.addAttribute("ywcflag",true);
 		model.addAttribute("reviewOpinions", reviewOpinions);
 		model.addAttribute("vacation", vacation);
+		model.addAttribute("deploymentId", pd.getDeploymentId());
+		model.addAttribute("imageName", pd.getDiagramResourceName());
 		return "procedure/vacation/vacationShow";
 	}
 
@@ -257,25 +260,37 @@ public class VacationController {
 		/** 二：已知任务ID，查询ProcessDefinitionEntiy对象，从而获取当前任务完成之后的连线名称，并放置到List<String>集合中 */
 		// List<String> outcomeList = vacationService.queryOutComeListByTaskId(task_id);
 		// model.addAttribute("outcomeList", outcomeList);
-		List<ReviewOpinion> reviewOpinions = vacationService.queryCommentByTaskId(task_id);
+		List<ReviewOpinions> reviewOpinions = vacationService.queryCommentByTaskId(task_id);
 		// 流程图
 		ProcessDefinition pd = vacationService.queryProcessDefinitionByTaskId(task_id);
+		//流程节点高亮map
+		Map<String, Object> map = vacationService.queryCoordingByTask(task_id);
 		model.addAttribute("reviewOpinions", reviewOpinions);
 		model.addAttribute("vacation", vacation);
 		model.addAttribute("taskId", task_id);
 		model.addAttribute("deploymentId", pd.getDeploymentId());
 		model.addAttribute("imageName", pd.getDiagramResourceName());
+		model.addAttribute("map", map);
 		return "procedure/vacation/vacationShow";
 	}
 
 	// 点击业务列表进入查看页面
 	@RequestMapping(value = "/vacationShowById.do")
 	public String vacationShowById(@RequestParam Integer vacation_id, Model model) {
-		// 根据id查询出请假记录数据
-		List<ReviewOpinion> reviewOpinions = vacationService.vacationShowById(vacation_id, model);
+		// 根据id查询出请假记录数据(评审意见)
+		List<ReviewOpinions> reviewOpinions = vacationService.vacationShowById(vacation_id, model);
 		/** 二：已知任务ID，查询ProcessDefinitionEntiy对象，从而获取当前任务完成之后的连线名称，并放置到List<String>集合中 */
 		// List<String> outcomeList = vacationService.queryOutComeListByTaskId(task_id);
 		// model.addAttribute("outcomeList", outcomeList);
+		//取出reviewOpinions中的流程部署Id
+		String procinstById=null;
+		for (ReviewOpinions reviewOpinion : reviewOpinions) {
+			procinstById=reviewOpinion.getProcinstById();
+		}
+		ProcessDefinition pd = vacationService.queryProcessDefinitionById(procinstById);
+		model.addAttribute("showFlag", true);
+		model.addAttribute("deploymentId", pd.getDeploymentId());
+		model.addAttribute("imageName", pd.getDiagramResourceName());
 		model.addAttribute("reviewOpinions", reviewOpinions);
 		return "procedure/vacation/vacationShow";
 	}
@@ -285,6 +300,9 @@ public class VacationController {
 	public String initResult(String task_id, Model model) {
 		String url = vacationService.querTaskFromKeyByTaskId(task_id);
 		model.addAttribute("taskId", task_id);
+		if(url==null) {
+			return "procedure/vacation/result";
+		}
 		if (url.equals("vacation/initResult.do")) {
 			return "procedure/vacation/result";
 		}
@@ -324,5 +342,5 @@ public class VacationController {
 			e.printStackTrace();
 		}
 	}
-
+	
 }

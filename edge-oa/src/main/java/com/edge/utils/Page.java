@@ -1,6 +1,7 @@
 package com.edge.utils;
 
 import java.util.List;
+import com.edge.utils.MyTask;
 
 /**
  * 分页工具类

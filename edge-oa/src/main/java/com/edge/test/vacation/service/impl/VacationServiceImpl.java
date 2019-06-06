@@ -20,7 +20,6 @@ import org.activiti.engine.impl.pvm.PvmTransition;
 import org.activiti.engine.impl.pvm.process.ActivityImpl;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
-import org.activiti.engine.task.Comment;
 import org.activiti.engine.task.Task;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -29,9 +28,9 @@ import org.springframework.ui.Model;
 import com.edge.system.user.entity.User;
 import com.edge.system.user.service.inter.UserService;
 import com.edge.test.vacation.dao.VacationDao;
-import com.edge.test.vacation.entity.MyTask;
-import com.edge.test.vacation.entity.ReviewOpinion;
-import com.edge.test.vacation.entity.TaskYWC;
+import com.edge.test.vacation.entity.MyTasks;
+import com.edge.test.vacation.entity.ReviewOpinions;
+import com.edge.test.vacation.entity.TaskYWCS;
 import com.edge.test.vacation.entity.Vacation;
 import com.edge.test.vacation.service.inter.VacationService;
 import com.edge.utils.QueryVo;
@@ -53,8 +52,8 @@ public class VacationServiceImpl implements VacationService {
 	}
 
 	// 查询当前用户所有的请假记录
-	public Integer vacationCount(Integer user_id) {
-		return vacationDao.vacationCount(user_id);
+	public Integer vacationCount() {
+		return vacationDao.vacationCount();
 	}
 
 	// 添加请假记录
@@ -90,7 +89,7 @@ public class VacationServiceImpl implements VacationService {
 	}
 
 	// 分页查询我的代办
-	public List<MyTask> queryMyTask(QueryVo vo) {
+	public List<MyTasks> queryMyTask(QueryVo vo) {
 		return vacationDao.queryMyTask(vo);
 	}
 
@@ -215,12 +214,12 @@ public class VacationServiceImpl implements VacationService {
 	}
 
 	// 查询当前我的任务
-	public List<MyTask> queryAllMyTask(String user_name) {
+	public List<MyTasks> queryAllMyTask(String user_name) {
 		return vacationDao.queryAllMyTask(user_name);
 	}
 
 	// 查询已完成
-	public List<TaskYWC> queryTaskYWC(QueryVo vo) {
+	public List<TaskYWCS> queryTaskYWC(QueryVo vo) {
 		return vacationDao.queryTaskYWC(vo);
 	}
 
@@ -230,7 +229,7 @@ public class VacationServiceImpl implements VacationService {
 	}
 
 	/** 获取批注信息，传递的是当前任务ID，获取历史任务ID对应的批注 */
-	public List<ReviewOpinion> queryCommentByTaskId(String taskId) {
+	public List<ReviewOpinions> queryCommentByTaskId(String taskId) {
 		// 使用当前的任务ID，查询当前流程对应的历史任务ID
 		// 使用当前任务ID，获取当前任务对象
 		Task task = processEngine.getTaskService().createTaskQuery().taskId(taskId).singleResult();
@@ -239,11 +238,11 @@ public class VacationServiceImpl implements VacationService {
 		return queryReviewOpinions(proc_Inst_id);
 	}
 
-	public List<ReviewOpinion> queryReviewOpinions(String proc_Inst_id) {
+	public List<ReviewOpinions> queryReviewOpinions(String proc_Inst_id) {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 设置日期格式
-		List<ReviewOpinion> reviewOpinions = vacationDao.queryReviewOpinions(proc_Inst_id);
+		List<ReviewOpinions> reviewOpinions = vacationDao.queryReviewOpinions(proc_Inst_id);
 		// 遍历该集合
-		for (ReviewOpinion reviewOpinion : reviewOpinions) {
+		for (ReviewOpinions reviewOpinion : reviewOpinions) {
 			// 修改属性值
 			// 调用userService去查询审核用户得到用户名
 			User user = userService.queryUserById(Integer.parseInt(reviewOpinion.getUSER_ID_()));
@@ -260,7 +259,7 @@ public class VacationServiceImpl implements VacationService {
 	}
 
 	// 请假记录列表点击请假记录查看请假数据
-	public List<ReviewOpinion> vacationShowById(Integer vacation_id, Model model) {
+	public List<ReviewOpinions> vacationShowById(Integer vacation_id, Model model) {
 		// 使用请假单ID，查询请假单对象
 		Vacation vacation = vacationDao.queryVacationById(vacation_id);
 		// 获取对象的名称
@@ -273,7 +272,13 @@ public class VacationServiceImpl implements VacationService {
 		// 流程实例ID
 		String processInstanceId = hvi.getProcessInstanceId();
 		model.addAttribute("vacation", vacation);
-		List<ReviewOpinion> queryReviewOpinions = queryReviewOpinions(processInstanceId);
+		//通过流程实例Id得到流程部署Id
+		String procinstById = queryProcinstById(processInstanceId);
+		List<ReviewOpinions> queryReviewOpinions = queryReviewOpinions(processInstanceId);
+		//设置 ReviewOpinion中的流程部署Id
+		for (ReviewOpinions reviewOpinion : queryReviewOpinions) {
+			reviewOpinion.setProcinstById(procinstById);
+		}
 		return queryReviewOpinions;
 	}
 
@@ -289,11 +294,58 @@ public class VacationServiceImpl implements VacationService {
 				.singleResult();
 		return pd;
 	}
+	
+	//通过流程部署Id查询流程部署对象
+	public ProcessDefinition queryProcessDefinitionById(String PROC_DEF_ID_) {
+		ProcessDefinition pd = processEngine.getRepositoryService().createProcessDefinitionQuery()//创建流程定义查询对象 对应表act_re_procdef
+				.processDefinitionId(PROC_DEF_ID_)//使用流程定义Id对象
+			.singleResult();
+		return pd;
+	}
 
 	/**使用部署对象ID和资源图片名称，获取图片的输入流*/
 	public InputStream findImageInputStream(String deploymentId,String imageName) {
 		return processEngine.getRepositoryService().getResourceAsStream(deploymentId, imageName);
 		
+	}
+
+	// 点击业务数据列表进入查看页显示对应的流程图返回流程部署Id
+	public String queryProcinstById(String processInstanceId) {
+		return vacationDao.queryProcinstById(processInstanceId);
+	}
+	
+	/**
+	 * 二：查看当前活动，获取当期活动对应的坐标x,y,width,height，将4个值存放到Map<String,Object>中
+		 map集合的key：表示坐标x,y,width,height
+		 map集合的value：表示坐标对应的值
+	 */
+	public Map<String, Object> queryCoordingByTask(String taskId) {
+		//存放坐标
+		Map<String, Object> map = new HashMap<String,Object>();
+		Task task = processEngine.getTaskService().createTaskQuery()
+								 .taskId(taskId).singleResult();//获取任务对象
+		//获取流程定义Id
+		String processDefinitionId = task.getProcessDefinitionId();
+		//获取流程定义的实体对象（对应.bpmn文件中的数据）
+		ProcessDefinitionEntity processDefinitionEntity = (ProcessDefinitionEntity)processEngine.getRepositoryService()
+													.getProcessDefinition(processDefinitionId);
+		//流程实例ID
+		String processInstanceId = task.getProcessInstanceId();
+		//使用流程实例ID，查询正在执行的执行对象表，获取当前活动对应的流程实例对象
+		ProcessInstance pi = processEngine.getRuntimeService().createProcessInstanceQuery()//创建流程查询实例
+									.processInstanceId(processInstanceId).singleResult();//使用流程实例ID查询
+		//获取当前活动的ID
+		String activityId = pi.getActivityId();
+		//获取当前活动对象
+		ActivityImpl activityImpl = processDefinitionEntity.findActivity(activityId);//活动ID
+		//获取历史走过的节点对象
+		
+		//获取坐标
+		map.put("x", activityImpl.getX());
+		map.put("y", activityImpl.getY()*1+70);
+		map.put("width", activityImpl.getWidth());
+		map.put("height", activityImpl.getHeight());
+		return map;
 	}
 
 }

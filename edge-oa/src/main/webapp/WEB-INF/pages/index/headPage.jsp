@@ -12,7 +12,7 @@
 <body>
 <div class="layui-tab">
   <ul class="layui-tab-title">
-    <li class="layui-this">代办</li>
+    <li class="layui-this">待办</li>
     <li>已完成</li>
   </ul>
   <div class="layui-tab-content">
@@ -40,11 +40,11 @@ layui.use(['element','form','table'], function(){
   var form = layui.form;
   table.render({
     elem: '#db'
-    ,url:url+'vacation/myTaskList.do'
-    ,title: '我的代办'
+    ,url:url+'index/myTaskList.do'
+    ,title: '我的待办'
     ,cols: [[
        {field:'index', width:"8%", title: '序号', sort: true,type:'numbers'}
-      ,{field:'taskDecription', width:"55%", title: '代办任务描述'}
+      ,{field:'taskDecription', width:"55%", title: '待办任务描述'}
       ,{field:'ASSIGNEE_', width:"15%", align:'center', title: '办理人'}
       ,{field:'startTime', width:"22%", align:'center', title: '创建日期'}
     /*   ,{fixed: 'right', title:'操作', toolbar: '#dbcz', width:"10%",align:'center'} */
@@ -54,7 +54,7 @@ layui.use(['element','form','table'], function(){
   //…
   table.render({
 	    elem: '#ywc'
-	    ,url:url+'vacation/taskListYWC.do'
+	    ,url:url+'index/taskListYWC.do'
 	    ,title: '已完成'
 	    ,cols: [[
 	       {field:'index', width:"8%", title: '序号', sort: true,type:'numbers'}
@@ -72,10 +72,11 @@ layui.use(['element','form','table'], function(){
     var url=$('#url').val();
     var id=data.ID_;
     //console.log(obj)
-	//查看请假
-	  $.ajax({  
+	//根据流程部署Id去查看对应的业务数据
+	if(data.PROC_DEF_ID_=='Foll_up_Proj:1:4'){
+		$.ajax({  
 		    type: "post",  
-		    url:  "<c:url value='/vacation/querVacationId.do'/>",
+		    url:  "<c:url value='/index/querObjId.do'/>",
 		    dataType: 'json',
 		    async:false,
 		    data:{"task_id":id},
@@ -85,44 +86,48 @@ layui.use(['element','form','table'], function(){
 		    success: function (data) {  
 		    	 layer.open({
 			       	  	type:2,
-			       	  	title:'请假信息',
+			       	  	title:'任务信息',
 			       	  	area: ['100%','100%'],
 			       		shadeClose: false,
 			       		resize:false,
 			       	    anim: 1,
-			       	  	content:[url+"vacation/vacationShow.do?id="+data.id+"&task_id="+data.taskId,'yes']
+			       	  	content:[url+"approveproj/approveprojShow.do?id="+data.id+"&task_id="+data.taskId,'yes']
 		     	  });
 		    }  
 		});
+	}
+	  
   });
   
-  //已代办 监听行工具事件
+  //已完成办 监听行工具事件
   table.on('row(ywc)', function(obj){
     var data = obj.data;
     var url=$('#url').val();
     var id=data.BUSINESS_KEY_;
     //历史流程实例Id
     var proIndeId=data.ID_;
+    //流程部署Id
+    var PROC_DEF_ID_=data.PROC_DEF_ID_;
     //console.log(obj)
-	//查看请假
+	//查看业务数据
 	  $.ajax({  
 		    type: "post",  
-		    url:  "<c:url value='/vacation/querywcVacationId.do'/>",
+		    url:  "<c:url value='/index/querywcObjId.do'/>",
 		    dataType: 'json',
 		    async:false,
-		    data:{"task_id":id,"proIndeId":proIndeId},
+		    data:{"task_id":id,"proIndeId":proIndeId,"PROC_DEF_ID_":PROC_DEF_ID_},
 		    error:function(){
 		    	alert("出错");
 		    },
 		    success: function (data) {  
 		    	 layer.open({
 			       	  	type:2,
-			       	  	title:'请假信息',
+			       	  	title:'业务数据',
 			       	  	area: ['100%','100%'],
 			       		shadeClose: false,
 			       		resize:false,
 			       	    anim: 1,
-			       	  	content:[url+"vacation/vacationYWCShow.do?id="+data.id+"&proIndeId="+data.proIndeId,,'yes']
+			       	  	content:[url+"approveproj/ObjYWCShow.do?id="+data.id+"&proIndeId="+data.proIndeId+"&PROC_DEF_ID_="+data.PROC_DEF_ID_,'yes']
 		     	  });
 		    }  
 		});

@@ -10,7 +10,7 @@ import java.util.Date;
  * @author NingCG
  *
  */
-public class ReviewOpinion {
+public class ReviewOpinions {
 	private String ID_;// 主键
 	private String TYPE_;// 类型
 	private Date TIME_;// 审批时间
@@ -27,6 +27,7 @@ public class ReviewOpinion {
 	private String time;// 审批时间
 	private String result;// 审批结果
 	private String advise;// 审批意见
+	private String procinstById;// 流程部署Id
 
 	public String getID_() {
 		return ID_;
@@ -132,12 +133,20 @@ public class ReviewOpinion {
 		this.userName = userName;
 	}
 
+	public String getProcinstById() {
+		return procinstById;
+	}
+
+	public void setProcinstById(String procinstById) {
+		this.procinstById = procinstById;
+	}
+
 	@Override
 	public String toString() {
 		return "ReviewOpinion [ID_=" + ID_ + ", TYPE_=" + TYPE_ + ", TIME_=" + TIME_ + ", USER_ID_=" + USER_ID_
 				+ ", TASK_ID_=" + TASK_ID_ + ", PROC_INST_ID_=" + PROC_INST_ID_ + ", ACTION_=" + ACTION_ + ", MESSAGE_="
 				+ MESSAGE_ + ", FULL_MSG_=" + FULL_MSG_ + ", userName=" + userName + ", time=" + time + ", result="
-				+ result + ", advise=" + advise + "]";
+				+ result + ", advise=" + advise + ", procinstById=" + procinstById + "]";
 	}
 
 }

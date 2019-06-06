@@ -37,4 +37,75 @@
  			order by pr.privilege_id asc
 		</where>
 	</select>
+	
+	<!--分页查询我的代办 -->
+	<select id="queryMyTask" parameterType="QueryVo" resultType="MyTask">
+		select * from (select row_.*, rownum rownum_ from (select * from
+		act_ru_task order by create_time_ desc ) row_
+		<where>
+			rownum &lt;=#{size} and assignee_=#{user_name}
+		</where>
+		)
+		<where>
+			rownum_ &gt;=#{page}
+		</where>
+	</select>
+	
+	<!--查询我的代办数量 -->
+	<select id="myTaskCount" parameterType="String" resultType="Integer">
+		select count(1) from act_ru_task
+		<where>
+			assignee_=#{user_name}
+		</where>
+	</select>
+	
+	<!--分页查询已完办 -->
+	<select id="queryTaskYWC" parameterType="QueryVo" resultType="TaskYWC">
+		select * from (select row_.*, rownum rownum_ from (select
+			t.name_,t.assignee_,t.form_key_,t.task_def_key_,p.id_,p.business_key_,p.proc_def_id_,p.start_time_,p.end_time_
+		from act_hi_taskinst t
+		left join act_hi_procinst p
+		on t.proc_inst_id_ = p.id_
+		<where>
+			p.end_time_ is not null order by p.end_time_ desc
+		</where>
+		) row_
+		<where>
+			rownum &lt;=#{size} and task_def_key_='usertask1'
+		</where>
+		)
+		<where>
+			rownum_ &gt;=#{page}
+		</where>
+	</select>
+	
+	<!--查询已完成数量 -->
+	<select id="TaskYWCCount" resultType="Integer">
+		select count(1)
+		from act_hi_taskinst t
+		left join act_hi_procinst p
+		on t.proc_inst_id_ = p.id_
+		<where>
+			 t.task_def_key_='usertask1' and p.end_time_ is not null
+		</where>
+	</select>
+	
+	<!--根据流程部署Id得到业务数据Id  -->
+	<select id="queryBusinesskey" parameterType="String" resultType="String">
+		select e.business_key_ from act_ru_execution e 
+		<where>
+			e.proc_def_id_=#{proc_def_id}
+		</where>
+	</select>
+	
+	<!--根据流程实例Id去查询历史任务批注  -->
+	<select id="queryReviewOpinions" parameterType="String" resultType="ReviewOpinion">
+		select * from act_hi_comment t
+		<where>
+			<if test="proc_Inst_id!=null">
+				t.proc_inst_id_=#{proc_Inst_id}
+			</if>
+			order by t.time_ desc
+		</where>
+	</select>
 </mapper>

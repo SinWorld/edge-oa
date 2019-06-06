@@ -1,4 +1,4 @@
-package com.edge.test.vacation.entity;
+package com.edge.utils;
 
 import java.util.Date;
 

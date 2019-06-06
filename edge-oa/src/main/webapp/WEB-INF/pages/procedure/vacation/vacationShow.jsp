@@ -10,7 +10,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@page isELIgnored="false" %>
 <style>
-  #draggable { width: 150px; height: 150px; padding: 0.5em; }
+  .bj{background-color: #C5C1AA}
  </style>
 </head>
 <body>
@@ -28,8 +28,10 @@
 				<input type="hidden" value='<c:url value="/"/>' id="url">
 				<input type="hidden" value="${deploymentId}" id="depId">
 				<input type="hidden" value="${imageName }" id="imgName">
+				<input type="hidden" id="ywcFlag" value="${ywcflag}">
+				<input type="hidden" id="showFlag" value="${showFlag}">
 					<input type="text" name="days" lay-verify="days"
-						autocomplete="off" class="layui-input" style="width: 56.5%"
+						autocomplete="off" class="layui-input bj" style="width: 56.5%"
 						id="days" value="${vacation.days}" readonly="readonly"> 
 					<input type="hidden" id="taskId" value="${taskId}" >	
 				</div>			
@@ -38,7 +40,7 @@
 			<div class="layui-form-item" style="margin-bottom: 2%;">
 				<label class="layui-form-label" style="width: 125px;">请假事由</label>
 				<input type="text" name="reason" lay-verify="reason"
-					autocomplete="off" class="layui-input" style="width: 56.5%"
+					autocomplete="off" class="layui-input bj" style="width: 56.5%"
 					id="reason" value="${vacation.reason}" readonly="readonly"> 
 			</div>
 
@@ -46,7 +48,7 @@
 				<label class="layui-form-label" style="width: 125px;">备注</label>
 				<div class="layui-input-block">
 					<textarea placeholder="请输入内容" lay-verify="remark"
-						class="layui-textarea " style="width: 56.5%" name="remark" readonly="readonly">${vacation.remark}</textarea>
+						class="layui-textarea bj" style="width: 56.5%" name="remark" readonly="readonly">${vacation.remark}</textarea>
 				</div>
 			</div>
 	    </div>
@@ -70,12 +72,14 @@
 	    </div>
 	    
 	     <div class="layui-tab-item">
-	    	<img style="position: absolute;top: 0px;left: 0px;" id="lct" src=''>
+	    	<img style="position: absolute;top:70px;left: 0px;" id="lct" src=''>
+	    	<!--根据当前活动的坐标，动态绘制div  -->
+	    	<div style="position: absolute;border:2px solid red;top:${map.y}px;left:${map.x}px;width:${map.width}px;height:${map.height}px;"></div>
 	    </div>
 	  </div>
 	</div>
 
-	<!-- <div style="margin-top: 70px; margin-left: auto; margin-right: auto; width: auto;"> -->
+	
 			
 			
 			 
@@ -95,7 +99,7 @@
 			</div>
 		</div>
 		<!-- 操作 End -->
-	<!-- </div> -->
+
 <script src="../layui-v2.4.5/layui/layui.js" charset="utf-8"></script>
 <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 --> 
  <script type="text/javascript" src="../jquery/jquery-3.3.1.js"></script>
@@ -108,6 +112,7 @@
 	  ,laydate = layui.laydate;
 	  var element = layui.element;
 	  lct();
+	  yczcmb();
 	  form.render();
 	 
  });
@@ -134,6 +139,18 @@
 	 	var imageName=$('#imgName').val();
 	 	var url=$('#url').val();
 	 	img.attr("src",url+"vacation/viewImage.do?deploymentId="+deploymentId+"&imageName="+imageName)
+	 }
+	 
+	 //隐藏操作面板
+	 function yczcmb(){
+		 var ywcFlag=$('#ywcFlag').val()
+		 var showFlag=$('#showFlag').val();
+		 if(ywcFlag){
+			 $("#myMenu").hide();
+		 }else if(showFlag){
+			 $("#myMenu").hide();
+		 }
+		 
 	 }
  
  </script>

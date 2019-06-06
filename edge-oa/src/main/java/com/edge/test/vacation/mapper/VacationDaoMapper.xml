@@ -11,7 +11,7 @@
 		select * from (select row_.*, rownum rownum_ from (select * from
 		cwgl_vacation order by vacation_id desc ) row_
 		<where>
-			rownum &lt;=#{size} and user_id=#{user_id}
+			rownum &lt;=#{size}
 		</where>
 		)
 		<where>
@@ -22,9 +22,6 @@
 	<!--查询角色总数量 -->
 	<select id="vacationCount" resultType="Integer">
 		select count(1) from cwgl_vacation
-		<where>
-			user_id=#{user_id}
-		</where>
 	</select>
 
 	<!--新增请假记录 -->
@@ -67,7 +64,7 @@
 	<!--分页查询已完办 -->
 	<select id="queryTaskYWC" parameterType="QueryVo" resultType="TaskYWC">
 		select * from (select row_.*, rownum rownum_ from (select
-			t.name_,t.assignee_,t.form_key_,p.id_,p.business_key_,p.start_time_,p.end_time_
+			t.name_,t.assignee_,t.form_key_,p.id_,p.business_key_,p.proc_def_id_,p.start_time_,p.end_time_
 		from act_hi_taskinst t
 		left join act_hi_procinst p
 		on t.proc_inst_id_ = p.id_
@@ -117,5 +114,12 @@
 		</where>
 	</select>
 	
-
+	<!--点击业务数据列表进入查看页显示对应的流程图返回流程部署Id  -->
+	<select id="queryProcinstById" parameterType="String" resultType="String">
+		select p.proc_def_id_ from act_hi_procinst p
+		<where>
+			p.id_=#{processInstanceId}
+		</where>
+	</select>
+	
 </mapper>

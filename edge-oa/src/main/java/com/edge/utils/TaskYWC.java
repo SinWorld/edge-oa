@@ -1,4 +1,4 @@
-package com.edge.test.vacation.entity;
+package com.edge.utils;
 
 import java.util.Date;
 
@@ -13,6 +13,7 @@ public class TaskYWC {
 	private String ASSIGNEE_;// 发起人
 	private String FORM_KEY_;// 请求页面action
 	private String BUSINESS_KEY_;// 业务数据主键
+	private String PROC_DEF_ID_;// 流程部署Id
 	private Date START_TIME_;// 创建时间
 	private Date END_TIME_;// 完成时间
 	private String NAME_;// 节点名称
@@ -103,11 +104,20 @@ public class TaskYWC {
 		this.endTime = endTime;
 	}
 
+	public String getPROC_DEF_ID_() {
+		return PROC_DEF_ID_;
+	}
+
+	public void setPROC_DEF_ID_(String pROC_DEF_ID_) {
+		PROC_DEF_ID_ = pROC_DEF_ID_;
+	}
+
 	@Override
 	public String toString() {
 		return "TaskYWC [ID_=" + ID_ + ", ASSIGNEE_=" + ASSIGNEE_ + ", FORM_KEY_=" + FORM_KEY_ + ", BUSINESS_KEY_="
-				+ BUSINESS_KEY_ + ", START_TIME_=" + START_TIME_ + ", END_TIME_=" + END_TIME_ + ", NAME_=" + NAME_
-				+ ", taskDecription=" + taskDecription + ", beginTime=" + beginTime + ", endTime=" + endTime + "]";
+				+ BUSINESS_KEY_ + ", PROC_DEF_ID_=" + PROC_DEF_ID_ + ", START_TIME_=" + START_TIME_ + ", END_TIME_="
+				+ END_TIME_ + ", NAME_=" + NAME_ + ", taskDecription=" + taskDecription + ", beginTime=" + beginTime
+				+ ", endTime=" + endTime + "]";
 	}
 
 }

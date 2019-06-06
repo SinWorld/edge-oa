@@ -1,20 +1,38 @@
 package com.edge.index.controller;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeSet;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.edge.index.service.inter.IndexService;
+import com.edge.projman.approveproj.entity.Foll_up_Proj;
+import com.edge.projman.approveproj.service.inter.ApproveprojService;
 import com.edge.system.role.entity.Privilege;
 import com.edge.system.user.service.inter.UserService;
+import com.edge.utils.TaskYWC;
+import com.edge.utils.MyTask;
+import com.edge.utils.Page;
+import com.edge.utils.QueryVo;
+import com.google.gson.Gson;
 
 @Controller
 @RequestMapping(value = "index")
@@ -23,6 +41,8 @@ public class IndexController {
 	private IndexService indexService;
 	@Resource
 	private UserService userService;
+	@Resource
+	private ApproveprojService approveprojService;
 
 	// 跳转至登录首页
 	@RequestMapping(value = "/index.do")
@@ -31,8 +51,8 @@ public class IndexController {
 		HttpSession session = request.getSession();
 		// 从session中得到当前登录用户的主键
 		Integer userId = (Integer) session.getAttribute("userId");
-		Boolean flag =(Boolean)session.getAttribute("kg");
-		if(flag) {
+		Boolean flag = (Boolean) session.getAttribute("kg");
+		if (flag) {
 			this.userAllPrivilege(userId, model, session);
 		}
 		return "index/index";
@@ -43,7 +63,7 @@ public class IndexController {
 	public void userAllPrivilege(Integer userId, Model model, HttpSession session) {
 		// 查询当前登录用户的所有顶级权限权限
 		List<Privilege> userPrivilegeList = indexService.userPrivilegeList(userId);
-		TreeSet<Privilege> topList=new TreeSet<Privilege>();
+		TreeSet<Privilege> topList = new TreeSet<Privilege>();
 		// new出JSONArry对象用于存储所有的三级权限
 		JSONArray jsonArray = new JSONArray();
 		// 遍历顶级权限集合
@@ -64,16 +84,204 @@ public class IndexController {
 		}
 		// 将三级权限存入session中
 		session.setAttribute("sjqxs", jsonArray.toString().trim());
-		//用于用户在不退出登录的情况下控制加载权限菜单
+		// 用于用户在不退出登录的情况下控制加载权限菜单
 		session.setAttribute("kg", false);
 		model.addAttribute("privilegeTopList", topList);
 
 	}
-	
-	//跳转至首页显示代办、已办、已完成
-	@RequestMapping(value="/headPage.do")
+
+	// 跳转至首页显示代办、已办、已完成
+	@RequestMapping(value = "/headPage.do")
 	public String headPage() {
 		return "index/headPage";
+	}
+
+	// 分页查询我的代办
+	@RequestMapping(value = "/myTaskList.do")
+	@ResponseBody
+	public String myTaskList(Integer page, HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		String user_name = (String) session.getAttribute("userName");
+		// new出QueryVo查询对象
+		QueryVo vo = new QueryVo();
+		// 获得Page对象
+		Page<MyTask> pages = new Page<MyTask>();
+		Map<String, Object> map = new LinkedHashMap<String, Object>();
+		// 每页数
+		if (vo != null) {
+			pages.setPage((page - 1) * vo.getSize() + 1);
+			vo.setPage((page - 1) * vo.getSize() + 1);
+			vo.setStartRow((pages.getPage()));
+			vo.setSize(page * 10);
+			vo.setUser_name(user_name);
+		}
+		pages.setTotal(indexService.myTaskCount(user_name));
+		pages.setRows(indexService.queryMyTask(vo));
+		// 总页数
+		Gson gson = new Gson();
+		map.put("code", 0);
+		map.put("msg", "");
+		map.put("count", indexService.myTaskCount(user_name));
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 设置日期格式
+		List<MyTask> myTasks = pages.getRows();
+		// 遍历该集合 设置代办集合
+		for (MyTask myTask : myTasks) {
+			String startTime = df.format(myTask.getCREATE_TIME_());
+			myTask.setStartTime(startTime);
+			// 得到myTask中的PROC_DEF_ID_值得到业务表数据主键
+			List<String> businesskeys = indexService.queryBusinesskey(myTask.getPROC_DEF_ID_());
+			// 取得businesskey
+			String businesskey = businesskeys.get(0);
+			String id = businesskey.substring(businesskey.indexOf(".") + 1);
+			// 得到业务数据类型
+			String object = businesskey.substring(0, businesskey.indexOf("."));
+			if ("Foll_up_Proj".equals(object)) {// 表示项目立项
+				// 获得Foll_up_Proj对象
+				Foll_up_Proj foll_up_Proj = approveprojService.queryXiangMuXXById(Integer.parseInt(id));
+				// 获得任务描述 设置待办任务描述
+				String taskDecription = "【" + myTask.getNAME_() + "】" + "  " + "【" + "任务名称:" + foll_up_Proj.getDb_ms()
+						+ "】";
+				myTask.setTaskDecription(taskDecription);
+			}
+		}
+		map.put("data", pages.getRows());
+		String json = gson.toJson(map);
+		return json.toString();
+	}
+
+	// 通过我的代办主键去关联查询运行时流程执行实例表从而得到业务数据表主键
+	@RequestMapping(value = "/querObjId.do")
+	@ResponseBody
+	public String querObjId(@RequestParam String task_id) {
+		// 得到业务数据主键
+		String businessKey = indexService.querObjectId(task_id);
+		String id = businessKey.substring(businessKey.indexOf(".") + 1);
+		// new出JSONObject对象
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("id", id);
+		jsonObject.put("taskId", task_id);
+		return jsonObject.toString();
+	}
+	
+	// 分页查询已完成
+		@RequestMapping(value = "/taskListYWC.do")
+		@ResponseBody
+		public String taskListYWC(Integer page, HttpServletRequest request) {
+			// new出QueryVo查询对象
+			QueryVo vo = new QueryVo();
+			// 获得Page对象
+			Page<TaskYWC> pages = new Page<TaskYWC>();
+			Map<String, Object> map = new LinkedHashMap<String, Object>();
+			// 每页数
+			if (vo != null) {
+				pages.setPage((page - 1) * vo.getSize() + 1);
+				vo.setPage((page - 1) * vo.getSize() + 1);
+				vo.setStartRow((pages.getPage()));
+				vo.setSize(page * 10);
+			}
+
+			pages.setTotal(indexService.TaskYWCCount());
+			pages.setRows(indexService.queryTaskYWC(vo));
+			// 总页数
+			Gson gson = new Gson();
+			map.put("code", 0);
+			map.put("msg", "");
+			map.put("count", indexService.TaskYWCCount());
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 设置日期格式
+			List<TaskYWC> twcs = pages.getRows();
+			// 遍历该集合 设置代办集合
+			for (TaskYWC ywc : twcs) {
+				String startTime = df.format(ywc.getSTART_TIME_());
+				ywc.setBeginTime(startTime);
+				String endTime=df.format(ywc.getEND_TIME_());
+				ywc.setEndTime(endTime);
+				// 得到ywc中的PROC_DEF_ID_值得到业务表数据主键
+				String businesskey = ywc.getBUSINESS_KEY_();
+				// 取得businesskey
+				String id = businesskey.substring(businesskey.indexOf(".") + 1);
+				// 得到业务数据类型
+				String object= businesskey.substring(0, businesskey.indexOf("."));
+				if ("Foll_up_Proj".equals(object)) {// 表示项目立项
+					// 获得Foll_up_Proj对象
+					Foll_up_Proj foll_up_Proj = approveprojService.queryXiangMuXXById(Integer.parseInt(id));
+					// 获得任务描述 设置待办任务描述
+					String taskDecription = "【" + ywc.getNAME_() + "】" + "  " + "【" + "任务名称:" + foll_up_Proj.getDb_ms()
+							+ "】";
+					ywc.setTaskDecription(taskDecription);
+				}
+			}
+			map.put("data", pages.getRows());
+			String json = gson.toJson(map);
+			return json.toString();
+		}
+		
+		// 点击已完成查看业务数据
+		@RequestMapping(value = "/querywcObjId.do")
+		@ResponseBody
+		public String querywcObjId(@RequestParam String task_id, String proIndeId,String PROC_DEF_ID_) {
+			// 得到业务数据主键
+			String id = task_id.substring(task_id.indexOf(".") + 1);
+			// new出JSONObject对象
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("id", id);
+			jsonObject.put("proIndeId", proIndeId);
+			//流程部署Id
+			jsonObject.put("PROC_DEF_ID_", PROC_DEF_ID_);
+			return jsonObject.toString();
+		}
+
+	// 判断任务表单的打开了页面
+	@RequestMapping(value = "/result.do")
+	@ResponseBody
+	public String initResult(String task_id, Model model) {
+		String result = indexService.querTaskFromKeyByTaskId(task_id);
+		model.addAttribute("taskId", task_id);
+		//new出JSONObject对象
+		JSONObject 	jsonObject=new JSONObject();
+		jsonObject.put("address", result);
+		return jsonObject.toString();
+	}
+	
+	//点击处理打开任务表单
+	@RequestMapping(value = "/dealWith.do")
+	public String dealWith(String task_id, Model model) {
+		String result = indexService.querTaskFromKeyByTaskId(task_id);
+		model.addAttribute("taskId", task_id);
+		return result;
+	}
+
+	// 显示流程图
+	@RequestMapping(value = "/viewImage.do")
+	public void viewImage(@RequestParam String deploymentId, String imageName, HttpServletResponse response) {
+		try {
+			imageName = new String(imageName.getBytes("ISO8859-1"), "UTF-8");
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+		}
+		InputStream in = indexService.findImageInputStream(deploymentId, imageName);
+		response.setContentType("image/png");
+		response.setCharacterEncoding("utf-8");
+		try {
+			ServletOutputStream outputStream = response.getOutputStream();
+			int len = 0;
+			byte[] buf = new byte[1024];
+			while ((len = in.read(buf, 0, 1024)) != -1) {
+				outputStream.write(buf, 0, len);
+			}
+			outputStream.close();
+			in.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	// 办理个人任务
+	@RequestMapping(value = "/saveSubmitTask.do")
+	public String saveSubmitTask(String task_id, HttpServletRequest request, Model model, @RequestParam String outcome,
+			String advice) {
+		indexService.saveSubmitTask(task_id, request, advice, outcome);
+		model.addAttribute("flag", true);
+		return "projman/approveproj/result";
 	}
 
 }

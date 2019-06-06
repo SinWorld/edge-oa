@@ -57,6 +57,17 @@
 				});
 			});
 		});
+		
+		document.onkeydown=function(e){
+          var a=e||window.event;//加这个火狐下不会报 event is  undefind
+			var form=document.getElementById('form');
+			var url=$('#url').val();
+            if (a.keyCode == 13){
+			  form.action=url+"login/doLogin.do";
+			  form.submit();
+            }
+		}
+
 	</script>
 </head>
 <body>
@@ -66,19 +77,18 @@
 		</div>
 		<div class="design-w3l" style="margin-top: 5%">
 			<div class="mail-form-agile">
-				<form action="#" method="post">
-					<input type="text" id="loginName" placeholder="登录名" required=""/>
-					<input type="password"  id="password" class="padding" placeholder="密码" required=""/>
+				<form action="#" method="post" id="form">
+					<input type="text" id="loginName" placeholder="登录名" required="" name="loginName"/>
+					<input type="password"  id="password" class="padding" placeholder="密码" required="" name="password"/>
 					<input type="button" value="登录" id="login">
 					<a href="" id="index"></a>
-<!-- 					<input type="button" class="mail-form-agile" value="?忘记密码">
- -->			</form>
+					<input type="hidden" id="url" value="<c:url value="/"/>">
+				</form>
 			</div>
 		  <div class="clear"> </div>
 		</div>
 		
 		<div class="footer">
-		<!-- <p>© 2017  Master  Login form. All Rights Reserved | Design by  <a href="https://w3layouts.com/" >  w3layouts </a></p> -->
 		</div>
 	</div>
 </body>
