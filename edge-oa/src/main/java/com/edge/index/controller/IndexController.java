@@ -26,6 +26,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.edge.index.service.inter.IndexService;
 import com.edge.projman.approveproj.entity.Foll_up_Proj;
 import com.edge.projman.approveproj.service.inter.ApproveprojService;
+import com.edge.projman.xshtdj.entity.XiaoShouHT;
+import com.edge.projman.xshtdj.service.inter.XiaoShouHTDJService;
 import com.edge.system.role.entity.Privilege;
 import com.edge.system.user.service.inter.UserService;
 import com.edge.utils.TaskYWC;
@@ -43,6 +45,8 @@ public class IndexController {
 	private UserService userService;
 	@Resource
 	private ApproveprojService approveprojService;
+	@Resource
+	private XiaoShouHTDJService xiaoShouHTDJService;
 
 	// 跳转至登录首页
 	@RequestMapping(value = "/index.do")
@@ -142,6 +146,13 @@ public class IndexController {
 				String taskDecription = "【" + myTask.getNAME_() + "】" + "  " + "【" + "任务名称:" + foll_up_Proj.getDb_ms()
 						+ "】";
 				myTask.setTaskDecription(taskDecription);
+			}else if("XiaoShouHT".equals(object)) {//表示销售合同登记
+				//获得XiaoShouHT对象
+				XiaoShouHT xsht = xiaoShouHTDJService.queryXSHTById(Integer.parseInt(id));
+				// 获得任务描述 设置待办任务描述
+				String taskDecription = "【" + myTask.getNAME_() + "】" + "  " + "【" + "任务名称:" + xsht.getDb_MS()
+						+ "】";
+				myTask.setTaskDecription(taskDecription);
 			}
 		}
 		map.put("data", pages.getRows());
@@ -160,6 +171,7 @@ public class IndexController {
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("id", id);
 		jsonObject.put("taskId", task_id);
+		jsonObject.put("obj", businessKey.substring(0, businessKey.indexOf(".")));
 		return jsonObject.toString();
 	}
 	
@@ -208,6 +220,13 @@ public class IndexController {
 					String taskDecription = "【" + ywc.getNAME_() + "】" + "  " + "【" + "任务名称:" + foll_up_Proj.getDb_ms()
 							+ "】";
 					ywc.setTaskDecription(taskDecription);
+				}else if("XiaoShouHT".equals(object)) {//表示销售合同登记
+					//获得XiaoShouHT对象
+					XiaoShouHT xsht = xiaoShouHTDJService.queryXSHTById(Integer.parseInt(id));
+					// 获得任务描述 设置待办任务描述
+					String taskDecription = "【" + ywc.getNAME_() + "】" + "  " + "【" + "任务名称:" + xsht.getDb_MS()
+							+ "】";
+					ywc.setTaskDecription(taskDecription);
 				}
 			}
 			map.put("data", pages.getRows());
@@ -221,12 +240,15 @@ public class IndexController {
 		public String querywcObjId(@RequestParam String task_id, String proIndeId,String PROC_DEF_ID_) {
 			// 得到业务数据主键
 			String id = task_id.substring(task_id.indexOf(".") + 1);
+			//得到业务数据类型
+			String obj=task_id.substring(0, task_id.indexOf("."));
 			// new出JSONObject对象
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("id", id);
 			jsonObject.put("proIndeId", proIndeId);
 			//流程部署Id
 			jsonObject.put("PROC_DEF_ID_", PROC_DEF_ID_);
+			jsonObject.put("obj", obj);
 			return jsonObject.toString();
 		}
 

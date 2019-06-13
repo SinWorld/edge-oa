@@ -7,11 +7,18 @@
 		eviction="LRU" readOnly="false"></cache> -->
 	<!--分页查询所有的项目信息 -->
 	<select id="queryAllxiangMuXX" resultType="Foll_up_Proj"
-		parameterType="QueryVo">
+		parameterType="Foll_QueryVo">
 		select * from (select row_.*, rownum rownum_ from (select * from
 		foll_up_proj order by proj_id desc ) row_
 		<where>
-			rownum &lt;=#{size}
+			rownum &lt;=#{size}  
+			<if test="proj_Code!=null"> and proj_Code like '%${proj_Code}%'</if>
+			<if test="proj_Id!=null">  and proj_Id = #{proj_Id}</if>
+			<if test="user_Id!=null">  and user_Id = #{user_Id}</if>
+			<if test="nextCZ!=null">   and nextcz like '%${nextCZ}%'</if>
+			<if test="appr_Status!=null">  and appr_Status = #{appr_Status}</if>
+			<if test="date != null">AND subm_Time <![CDATA[>=]]> #{date}</if>
+ 			<if test="date2 != null">AND subm_Time <![CDATA[<=]]>#{date2}</if>
 		</where>
 		)
 		<where>
@@ -19,10 +26,20 @@
 		</where>
 	</select>
 
-	<!--查询所有项目信息数量 -->
-	<select id="queryAllxiangMuXXCount" resultType="Integer">
+	<!--按条件查询所有项目信息数量 -->
+	<select id="queryAllxiangMuXXCount" resultType="Integer" parameterType="Foll_QueryVo">
 		select count(1)
 		from foll_up_proj
+		<where>
+			1=1
+			<if test="proj_Code!=null and proj_Code!=''"> and proj_Code like '%${proj_Code}%'</if>
+			<if test="proj_Id!=null and proj_Id!=''">  and proj_Id = #{proj_Id}</if>
+			<if test="user_Id!=null and user_Id!=''">  and user_Id = #{user_Id}</if>
+			<if test="nextCZ!=null and nextCZ!=''">   and nextcz like '%${nextCZ}%'</if>
+			<if test="appr_Status!=null and appr_Status!=''">  and appr_Status = #{appr_Status}</if>
+			<if test="date != null and date!=''">AND subm_Time <![CDATA[>=]]> #{date}</if>
+			<if test="date2 != null and date2!=''">AND subm_Time <![CDATA[<=]]>#{date2}</if>
+		</where>
 	</select>
 
 	<!--查询所有的招标方式 -->
@@ -115,5 +132,13 @@
 		</where>
 	</select>
 	
-
+	<!--高级搜索下拉所有的项目信息  -->
+	<select id="queryAllXMXX" resultType="Foll_up_Proj">
+		select * from foll_up_proj order by proj_Id desc
+	</select>
+	
+	<!--高级搜索区下拉所有的审批状态  -->
+	<select id="queryAllSPZT" resultType="APPR_DM_STATUS">
+		select * from appr_dm_status
+	</select>
 </mapper>

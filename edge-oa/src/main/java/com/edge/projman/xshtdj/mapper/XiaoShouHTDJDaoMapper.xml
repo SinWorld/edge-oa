@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edge.projman.xshtdj.dao.XiaoShouHTDJDao">
+	<!-- 定义缓存 一般是一级缓存，如果用同一个sqlsession 那么相同查询直接会从缓存中查找 <cache size="1024" flushInterval="60000" 
+		eviction="LRU" readOnly="false"></cache> -->
+	<!--分页查询所有的项目信息 -->
+	<select id="queryAllXiaoShouHt" resultType="XiaoShouHT"
+		parameterType="Xsht_QueryVo">
+		select * from (select row_.*, rownum rownum_ from (select * from
+		proj_info order by proj_info_id desc ) row_
+		<where>
+			rownum &lt;=#{size}
+			<if test="proj_Code!=null"> and proj_Code like '%${proj_Code}%'</if>
+			<if test="proj_Info_Id!=null"> and proj_Info_Id = #{proj_Info_Id}</if>
+			<if test="user_Id!=null"> and user_Id = #{user_Id}</if>
+			<if test="nextCZ!=null"> and nextcz like '%${nextCZ}%'</if>
+			<if test="appr_Status!=null"> and appr_Status = #{appr_Status}</if>
+			<if test="date != null">AND
+				subm_Time <![CDATA[>=]]>
+				#{date}
+			</if>
+			<if test="date2 != null">AND
+				subm_Time <![CDATA[<=]]>#{date2}
+			</if>
+		</where>
+		)
+		<where>
+			rownum_ &gt;=#{page}
+		</where>
+	</select>
+
+	<!--按条件查询所有项目信息数量 -->
+	<select id="queryAllXiaoShouHTCount" resultType="Integer"
+		parameterType="Xsht_QueryVo">
+		select count(1) from proj_info
+		<where>
+			1=1
+			<if test="proj_Code!=null and proj_Code!=''"> and proj_Code like '%${proj_Code}%'</if>
+			<if test="proj_Info_Id!=null and proj_Info_Id!=''"> and proj_Info_Id = #{proj_Info_Id}</if>
+			<if test="user_Id!=null and user_Id!=''"> and user_Id = #{user_Id}</if>
+			<if test="nextCZ!=null and nextCZ!=''"> and nextcz like '%${nextCZ}%'</if>
+			<if test="appr_Status!=null and appr_Status!=''"> and appr_Status = #{appr_Status}</if>
+			<if test="date != null and date!=''">AND
+				subm_Time <![CDATA[>=]]>
+				#{date}
+			</if>
+			<if test="date2 != null and date2!=''">AND
+				subm_Time <![CDATA[<=]]>#{date2}
+			</if>
+		</where>
+	</select>
+
+	<!--根据Id查询审批状态 -->
+	<select id="queryStatus" resultType="APPR_DM_STATUS"
+		parameterType="Integer">
+		select * from APPR_DM_STATUS a
+		<where>
+			a.appr_status_id=#{appr_Status_Id}
+		</where>
+	</select>
+
+	<!--高级搜索查询所有的销售合同 -->
+	<select id="queryAllXSHT" resultType="XiaoShouHT">
+		select * from proj_info
+		order by proj_info_id desc
+	</select>
+
+	<!--查询所有的已立项的项目 -->
+	<select id="queryAllYLXXMXX" resultType="Foll_up_Proj">
+		select * from foll_up_proj f
+		<where>f.is_ty=1</where>
+	</select>
+
+	<!--查询所有未立项的项目 -->
+	<select id="queryAllWLXXMXX" resultType="Foll_up_Proj">
+		select * from foll_up_proj f
+		<where>
+			f.is_ty=0
+		</where>
+	</select>
+
+	<!--新增销售合同 -->
+	<insert id="saveXSHT" parameterType="XiaoShouHT">
+		insert into
+		proj_info(PROJ_INFO_ID,PROJ_CODE,CONT_NUMBER,PROJ_NAME,
+		PROD_NAME,BP_METHOD,CONT_AMOUNT,CONT_DATE,CUST_UNIT,CUST_CONTACT,CUST_PHONE,OFFI_TEL,OUR_UNIT,
+		USER_ID,USER_NAME,DEPA_ID,DEPA,CONT_COMPDATE,PAYMENT_AMOUNT,QUAL_RATIO,QUAL_BONDS,QUAL_EXPIREDATE,
+		PURC_COST,PROJ_TAXES,WINBID_SERVICEFEE,CAPI_USEFEE,PROJ_MATERIALCOST,PROJ_OTHERCOST,PROJ_PROFIT,
+		PRE_SALE_SUPPRATIO,PRE_SALE_SUPPFEE,PROJ_IMPLRATIO,PROJ_IMPLFEE,DIVI_PROFIT,SALES_RATIO,SALES_FEE,
+		QUAL_PROF_SUPPFEE,QUAL_PROF_IMPLFEE,QUAL_PROF_SALESFEE,WINN_BID,APPR_STATUS,SUBM_USER_ID,SUBM_NAME,
+		SUBM_DEPA_ID,SUBM_DEPA,SUBM_TIME,FINISH_TIME,SUBM_FLAG,CHECK_FLAG,PROJ_ID,IS_LX,NEXTCZ,DB_MS)
+		values(seq_proj_info_id.nextval,#{proj_Code,jdbcType=VARCHAR},#{cont_Number,jdbcType=VARCHAR},#{proj_Name,jdbcType=VARCHAR},
+		#{prod_Name,jdbcType=VARCHAR},#{bp_Method,jdbcType=NUMERIC},#{cont_Amount,jdbcType=NUMERIC},#{cont_Date,jdbcType=DATE},
+		#{cust_Unit,jdbcType=VARCHAR},#{cust_Contact,jdbcType=VARCHAR},#{cust_Phone,jdbcType=VARCHAR},#{offi_Tel,jdbcType=VARCHAR},
+		#{our_Unit,jdbcType=VARCHAR},#{user_Id,jdbcType=NUMERIC},#{user_Name,jdbcType=VARCHAR},#{depa_Id,jdbcType=NUMERIC},#{depa,jdbcType=VARCHAR},
+		#{cont_Compdate,jdbcType=DATE},#{payment_Amount,jdbcType=NUMERIC},#{qual_Ratio,jdbcType=NUMERIC},#{qual_Bonds,jdbcType=NUMERIC},
+		#{qual_Expiredate,jdbcType=DATE},#{purc_Cost,jdbcType=NUMERIC},#{proj_Taxes,jdbcType=NUMERIC},#{winbid_Servicefee,jdbcType=NUMERIC},
+		#{capi_Usefee,jdbcType=NUMERIC},#{proj_Materialcost,jdbcType=NUMERIC},#{proj_Othercost,jdbcType=NUMERIC},#{proj_Profit,jdbcType=NUMERIC},
+		#{pre_Sale_Suppratio,jdbcType=NUMERIC},#{pre_Sale_Suppfee,jdbcType=NUMERIC},#{proj_Implratio,jdbcType=NUMERIC},#{proj_Implfee,jdbcType=NUMERIC},
+		#{divi_Profit,jdbcType=NUMERIC},#{sales_Ratio,jdbcType=NUMERIC},#{sales_Fee,jdbcType=NUMERIC},#{qual_Prof_Suppfee,jdbcType=NUMERIC},#{qual_Prof_Implfee,jdbcType=NUMERIC},
+		#{qual_Prof_Salesfee,jdbcType=NUMERIC},#{winn_Bid,jdbcType=NUMERIC},#{appr_Status,jdbcType=NUMERIC},#{subm_User_Id,jdbcType=NUMERIC},#{subm_Name,jdbcType=VARCHAR},
+		#{subm_Depa_Id,jdbcType=NUMERIC},#{subm_Depa,jdbcType=VARCHAR},#{subm_Time,jdbcType=DATE},#{finish_Time,jdbcType=DATE},#{subm_Flag,jdbcType=NUMERIC},#{check_Flag,jdbcType=NUMERIC},#{proj_Id,jdbcType=NUMERIC},
+		#{is_LX,jdbcType=NUMERIC},#{nextCZ,jdbcType=VARCHAR},#{db_MS,jdbcType=VARCHAR})
+	</insert>
+
+	<!--编辑销售合同 -->
+	<update id="editXSHT" parameterType="XiaoShouHT">
+		update proj_info
+		<set>
+			<if test="cont_Number!=null and cont_Number!=''">cont_Number=#{cont_Number},</if>
+			<if test="proj_Name!=null and proj_Name!=''">proj_Name=#{proj_Name},</if>
+			<if test="prod_Name!=null and prod_Name!=''">prod_Name=#{prod_Name},</if>
+			<if test="bp_Method!=null">bp_Method=#{bp_Method},</if>
+			<if test="cont_Amount!=null">cont_Amount=#{cont_Amount},</if>
+			<if test="cont_Date!=null">cont_Date=#{cont_Date},</if>
+			<if test="cust_Unit!=null and cust_Unit!=''">cust_Unit=#{cust_Unit},</if>
+			<if test="cust_Contact!=null and cust_Contact!=''">cust_Contact=#{cust_Contact},</if>
+			<if test="cust_Phone!=null and cust_Phone!=''">cust_Phone=#{cust_Phone},</if>
+			<if test="offi_Tel!=null and offi_Tel!=''">offi_Tel=#{offi_Tel},</if>
+			<if test="our_Unit!=null and our_Unit!=''">our_Unit=#{our_Unit},</if>
+			<if test="user_Id!=null">user_Id=#{user_Id},</if>
+			<if test="user_Name!=null and user_Name!=''">user_Name=#{user_Name},</if>
+			<if test="depa_Id!=null">depa_Id=#{depa_Id},</if>
+			<if test="depa!=null and depa!=''">depa=#{depa},</if>
+			<if test="cont_Compdate!=null">cont_Compdate=#{cont_Compdate},</if>
+			<if test="payment_Amount!=null">payment_Amount=#{payment_Amount},</if>
+			<if test="qual_Ratio!=null">qual_Ratio=#{qual_Ratio},</if>
+			<if test="qual_Bonds!=null">qual_Bonds=#{qual_Bonds},</if>
+			<if test="qual_Expiredate!=null">qual_Expiredate=#{qual_Expiredate},</if>
+			<if test="purc_Cost!=null">purc_Cost=#{purc_Cost},</if>
+			<if test="proj_Taxes!=null">proj_Taxes=#{proj_Taxes},</if>
+			<if test="winbid_Servicefee!=null">winbid_Servicefee=#{winbid_Servicefee},</if>
+			<if test="capi_Usefee!=null">capi_Usefee=#{capi_Usefee},</if>
+			<if test="proj_Materialcost!=null">proj_Materialcost=#{proj_Materialcost},</if>
+			<if test="proj_Othercost!=null">proj_Othercost=#{proj_Othercost},</if>
+			<if test="proj_Profit!=null">proj_Profit=#{proj_Profit},</if>
+			<if test="pre_Sale_Suppratio!=null">pre_Sale_Suppratio=#{pre_Sale_Suppratio},</if>
+			<if test="pre_Sale_Suppfee!=null">pre_Sale_Suppfee=#{pre_Sale_Suppfee},</if>
+			<if test="proj_Implratio!=null">proj_Implratio=#{proj_Implratio},</if>
+			<if test="proj_Implfee!=null">proj_Implfee=#{proj_Implfee},</if>
+			<if test="divi_Profit!=null">divi_Profit=#{divi_Profit},</if>
+			<if test="sales_Ratio!=null">sales_Ratio=#{sales_Ratio},</if>
+			<if test="sales_Fee!=null">sales_Fee=#{sales_Fee},</if>
+			<if test="qual_Prof_Suppfee!=null">qual_Prof_Suppfee=#{qual_Prof_Suppfee},</if>
+			<if test="qual_Prof_Implfee!=null">qual_Prof_Implfee=#{qual_Prof_Implfee},</if>
+			<if test="qual_Prof_Salesfee!=null">qual_Prof_Salesfee=#{qual_Prof_Salesfee},</if>
+			<if test="winn_Bid!=null">winn_Bid=#{winn_Bid},</if>
+			<if test="appr_Status!=null">appr_Status=#{appr_Status},</if>
+			<if test="subm_User_Id!=null">subm_User_Id=#{subm_User_Id},</if>
+			<if test="subm_Name!=null and subm_Name!=''">subm_Name=#{subm_Name},</if>
+			<if test="subm_Depa_Id!=null">subm_Depa_Id=#{subm_Depa_Id},</if>
+			<if test="subm_Depa!=null and subm_Depa!=''">subm_Depa=#{subm_Depa},</if>
+			<if test="subm_Time!=null">subm_Time=#{subm_Time},</if>
+			<if test="finish_Time!=null">finish_Time=#{finish_Time},</if>
+			<if test="subm_Flag!=null">subm_Flag=#{subm_Flag},</if>
+			<if test="check_Flag!=null">check_Flag=#{check_Flag},</if>
+			<if test="proj_Id!=null">proj_Id=#{proj_Id},</if>
+			<if test="is_LX!=null">is_LX=#{is_LX},</if>
+			<if test="nextCZ!=null and nextCZ!=''">nextCZ=#{nextCZ},</if>
+			<if test="db_MS!=null and db_MS!=''">db_MS=#{db_MS}</if>
+		</set>
+		<where>
+			proj_Info_Id=#{proj_Info_Id}
+		</where>
+	</update>
+
+	<!--根据Id查询销售合同 -->
+	<select id="queryXSHTById" parameterType="Integer" resultType="XiaoShouHT">
+		select * from proj_info p
+		<where>
+			p.proj_Info_Id=#{proj_Info_Id}
+		</where>
+	</select>
+	
+	<!--查询新增后的销售合同主键  -->
+	<select id="queryXSHTMaxId" resultType="Integer">
+		select max(proj_Info_Id) from proj_info
+	</select>
+
+
+</mapper>

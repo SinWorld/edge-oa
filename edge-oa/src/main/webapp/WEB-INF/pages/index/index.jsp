@@ -62,7 +62,7 @@
   
   <div class="layui-footer">
     <!-- 底部固定区域 -->
-    © layui.com - 底部固定区域
+  	 安徽爱吉泰克科技有限公司
   </div>
 </div>
 <script src="../layui-v2.4.5/layui/layui.js"></script>

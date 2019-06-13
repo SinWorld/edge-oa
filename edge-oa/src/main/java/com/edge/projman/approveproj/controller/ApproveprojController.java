@@ -1,6 +1,7 @@
 package com.edge.projman.approveproj.controller;
 
 import java.io.File;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -34,7 +35,7 @@ import com.edge.system.user.entity.User;
 import com.edge.system.user.service.inter.UserService;
 import com.edge.utils.BP_DM_METHOD;
 import com.edge.utils.Page;
-import com.edge.utils.QueryVo;
+import com.edge.projman.approveproj.entity.Foll_QueryVo;
 import com.edge.utils.ReviewOpinion;
 import com.google.gson.Gson;
 
@@ -65,9 +66,10 @@ public class ApproveprojController {
 	// 分页查询项目信息
 	@RequestMapping(value = "/approveprojList.do")
 	@ResponseBody
-	public String approveprojList(Integer page) {
+	public String approveprojList(Integer page,Foll_QueryVo foll_QueryVo,String time1,String time2) {
 		// new出QueryVo查询对象
-		QueryVo vo = new QueryVo();
+		Foll_QueryVo vo = new Foll_QueryVo();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");// 设置日期格式
 		// 获得Page对象
 		Page<Foll_up_Proj> pages = new Page<Foll_up_Proj>();
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
@@ -77,14 +79,44 @@ public class ApproveprojController {
 			vo.setPage((page - 1) * vo.getSize() + 1);
 			vo.setStartRow((pages.getPage()));
 			vo.setSize(page * 10);
+			if(foll_QueryVo.getProj_Code()!=null&&foll_QueryVo.getProj_Code()!="") {
+				vo.setProj_Code(foll_QueryVo.getProj_Code().trim());
+			}
+			if(foll_QueryVo.getProj_Id()!=null) {
+				vo.setProj_Id(foll_QueryVo.getProj_Id());
+			}
+			if(foll_QueryVo.getUser_Id()!=null&&foll_QueryVo.getUser_Id()!="") {
+				vo.setUser_Id(foll_QueryVo.getUser_Id());
+			}
+			if(foll_QueryVo.getNextCZ()!=null&&foll_QueryVo.getNextCZ()!="") {
+				vo.setNextCZ(foll_QueryVo.getNextCZ().trim());
+			}
+			if(foll_QueryVo.getAppr_Status()!=null) {
+				vo.setAppr_Status(foll_QueryVo.getAppr_Status());
+			}
+			if(time1!=null&&time1!="") {
+				//将String类型转换为Date类型
+				try {
+					vo.setDate(sdf.parse(time1));
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+			}
+			if(time2!=null&&time2!="") {
+				try {
+					vo.setDate2(sdf.parse(time2));
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 		// 总页数
-		pages.setTotal(approveprojService.queryAllxiangMuXXCount());
+		pages.setTotal(approveprojService.queryAllxiangMuXXCount(foll_QueryVo));
 		pages.setRows(approveprojService.queryAllxiangMuXX(vo));
 		Gson gson = new Gson();
 		map.put("code", 0);
 		map.put("msg", "");
-		map.put("count", approveprojService.queryAllxiangMuXXCount());
+		map.put("count", approveprojService.queryAllxiangMuXXCount(foll_QueryVo));
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 设置日期格式
 		List<Foll_up_Proj> rows = pages.getRows();
 		// 遍历该集合 设置审批状态和提交时间
@@ -273,10 +305,13 @@ public class ApproveprojController {
 	}
 
 	// 点击业务列表进入查看页面
+	@SuppressWarnings("null")
 	@RequestMapping(value = "/xiangMuXXShowById.do")
-	public String xiangMuXXShowById(@RequestParam Integer proj_Id, Model model) {
+	public String xiangMuXXShowById(@RequestParam Integer proj_Id, Model model,HttpServletRequest request) {
+		// 获取session
+		HttpSession session = request.getSession();
 		// 根据id查询出请假记录数据(评审意见)
-		List<ReviewOpinion> reviewOpinions = approveprojService.xiangMuXXShowById(proj_Id, model);
+		List<ReviewOpinion> reviewOpinions = approveprojService.xiangMuXXShowById(proj_Id, model,session);
 		/** 二：已知任务ID，查询ProcessDefinitionEntiy对象，从而获取当前任务完成之后的连线名称，并放置到List<String>集合中 */
 		// List<String> outcomeList = vacationService.queryOutComeListByTaskId(task_id);
 		// model.addAttribute("outcomeList", outcomeList);
@@ -285,6 +320,11 @@ public class ApproveprojController {
 		for (ReviewOpinion reviewOpinion : reviewOpinions) {
 			procinstById = reviewOpinion.getProcinstById();
 			break;
+		}
+		//如果reviewOpinions为空则将model中的流程部署Id取出
+		if(reviewOpinions==null||reviewOpinions.size()==0) {
+			//从session中取出流程部署Id
+			procinstById = (String) session.getAttribute("prodefById");
 		}
 		ProcessDefinition pd = approveprojService.queryProcessDefinitionById(procinstById);
 		// 流程节点高亮map
@@ -337,7 +377,7 @@ public class ApproveprojController {
 	@RequestMapping(value = "/ObjYWCShow.do")
 	public String vacationYWCShow(@RequestParam Integer id, String proIndeId, String PROC_DEF_ID_, Model model) {
 		// 根据id查询出项目信息数据
-		/*Foll_up_Proj foll_up_Proj = approveprojService.queryXiangMuXXById(id);
+		Foll_up_Proj foll_up_Proj = approveprojService.queryXiangMuXXById(id);
 		// 格式化计划合同签订日期
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		BP_DM_METHOD zbfs = null;
@@ -348,11 +388,9 @@ public class ApproveprojController {
 			zbfs = approveprojService.queryZBFSById(foll_up_Proj.getBp_method());
 			user = userService.queryUserById(foll_up_Proj.getUser_Id());
 		}
-		List<ReviewOpinion> reviewOpinions = indexService.queryCommentByTaskId(String.valueOf(id));
+		List<ReviewOpinion> reviewOpinions = indexService.queryReviewOpinions(proIndeId);
 		// 流程图
-		ProcessDefinition pd = indexService.queryProcessDefinitionByTaskId(String.valueOf(id));
-		// 流程节点高亮map
-		Map<String, Object> map = indexService.queryCoordingByTask(String.valueOf(id));
+		ProcessDefinition pd = indexService.queryProcessDefinitionById(PROC_DEF_ID_);
 		model.addAttribute("reviewOpinions", reviewOpinions);
 		model.addAttribute("foll_up_Proj", foll_up_Proj);
 		model.addAttribute("taskId", id);
@@ -360,8 +398,23 @@ public class ApproveprojController {
 		model.addAttribute("user", user);
 		model.addAttribute("deploymentId", pd.getDeploymentId());
 		model.addAttribute("imageName", pd.getDiagramResourceName());
-		model.addAttribute("map", map);*/
 		return "projman/approveproj/approveprojShow";
 	}
+	
+	//高级搜索区查询所有的项目信息
+	@RequestMapping(value="/queryAllXMXX.do")
+	@ResponseBody
+	public String queryAllXMXX() {
+		JSONArray jsonArray = approveprojService.queryAllXMXX();
+		return jsonArray.toString();
+	}
+	
+	//高级搜索区查询所有的审批状态
+		@RequestMapping(value="/queryAllSPZT.do")
+		@ResponseBody
+		public String queryAllSPZT() {
+			JSONArray jsonArray = approveprojService.queryAllSPZT();
+			return jsonArray.toString();
+		}
 
 }

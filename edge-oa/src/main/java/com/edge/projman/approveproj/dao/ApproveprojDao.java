@@ -3,21 +3,19 @@ package com.edge.projman.approveproj.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
-import org.springframework.ui.Model;
 
 import com.alibaba.fastjson.JSONArray;
 import com.edge.projman.approveproj.entity.Foll_up_Proj;
 import com.edge.utils.APPR_DM_STATUS;
 import com.edge.utils.BP_DM_METHOD;
-import com.edge.utils.QueryVo;
-import com.edge.utils.ReviewOpinion;
+import com.edge.projman.approveproj.entity.Foll_QueryVo;
 
 public interface ApproveprojDao {
 	// 分页查询所有的项目信息
-	public List<Foll_up_Proj> queryAllxiangMuXX(QueryVo vo);
+	public List<Foll_up_Proj> queryAllxiangMuXX(Foll_QueryVo vo);
 
-	// 查询项目信息所有数量
-	public Integer queryAllxiangMuXXCount();
+	// 按条件查询项目信息所有数量
+	public Integer queryAllxiangMuXXCount(Foll_QueryVo vo);
 
 	// ajax查询所有的招标方式
 	public JSONArray allZBFS();
@@ -46,5 +44,11 @@ public interface ApproveprojDao {
 
 	// 点击业务数据列表进入查看页显示对应的流程图返回流程部署Id
 	public String queryProcinstById(@Param("processInstanceId") String processInstanceId);
+	
+	//高级搜索区查询所有的项目信息
+	public JSONArray queryAllXMXX();
+	
+	//高级搜索区查询所有的审批状态
+	public JSONArray queryAllSPZT();
 
 }

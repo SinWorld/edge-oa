@@ -150,7 +150,7 @@ public class IndexServiceImpl implements IndexService {
 
 	// 获取任务Id，获取任务对象，使用任务对象获取流程定义Id，查询流程定义对象
 	public ProcessDefinition queryProcessDefinitionByTaskId(String taskId) {
-		List<HistoricTaskInstance> his=new ArrayList<HistoricTaskInstance>();
+		List<HistoricTaskInstance> his = new ArrayList<HistoricTaskInstance>();
 		// 使用任务Id去查询历史任务
 		List<HistoricTaskInstance> list = processEngine.getHistoryService().createHistoricTaskInstanceQuery().list();
 		for (HistoricTaskInstance l : list) {
@@ -160,17 +160,26 @@ public class IndexServiceImpl implements IndexService {
 				break;
 			}
 		}
-		//取得历史任务中的流程定义Id
-		if(his.size()>0&&his!=null) {
+		// 取得历史任务中的流程定义Id
+		if (his.size() > 0 && his != null) {
 			String processDefinitionId = his.get(0).getProcessDefinitionId();
 			ProcessDefinition pd = processEngine.getRepositoryService().createProcessDefinitionQuery()// 创建流程定义查询对象
 					// 对应表act_re_procdef
 					.processDefinitionId(processDefinitionId)// 使用流程定义Id对象
 					.singleResult();
 			return pd;
-		}else {
+		} else {
 			return null;
 		}
+	}
+
+	// 代办已完成 使用流程部署Id查询流程定义对象
+	public ProcessDefinition queryProcessDefinitionById(String PROC_DEF_ID_) {
+		ProcessDefinition pd = processEngine.getRepositoryService().createProcessDefinitionQuery()// 创建流程定义查询对象
+				// 对应表act_re_procdef
+				.processDefinitionId(PROC_DEF_ID_)// 使用流程定义Id对象
+				.singleResult();
+		return pd;
 	}
 
 	/**
@@ -182,12 +191,12 @@ public class IndexServiceImpl implements IndexService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		// 获取流程定义Id
 		String processDefinitionId = null;
-		String processInstanceId=null;
+		String processInstanceId = null;
 		List<HistoricTaskInstance> list = processEngine.getHistoryService().createHistoricTaskInstanceQuery().list();
 		for (HistoricTaskInstance l : list) {
 			if (taskId.equals(l.getId())) {
-				processDefinitionId=l.getProcessDefinitionId();
-				processInstanceId=l.getProcessInstanceId();
+				processDefinitionId = l.getProcessDefinitionId();
+				processInstanceId = l.getProcessInstanceId();
 				break;
 			}
 		}
@@ -199,7 +208,7 @@ public class IndexServiceImpl implements IndexService {
 		ProcessInstance pi = processEngine.getRuntimeService().createProcessInstanceQuery()// 创建流程查询实例
 				.processInstanceId(processInstanceId).singleResult();// 使用流程实例ID查询
 		// 获取当前活动的ID
-		if(pi!=null) {
+		if (pi != null) {
 			String activityId = pi.getActivityId();
 			// 获取当前活动对象
 			ActivityImpl activityImpl = processDefinitionEntity.findActivity(activityId);// 活动ID
@@ -210,7 +219,7 @@ public class IndexServiceImpl implements IndexService {
 			map.put("width", activityImpl.getWidth());
 			map.put("height", activityImpl.getHeight());
 			return map;
-		}else {
+		} else {
 			return null;
 		}
 	}
@@ -251,11 +260,13 @@ public class IndexServiceImpl implements IndexService {
 		processEngine.getTaskService().complete(taskId, variables);
 		// 4：当任务完成之后，需要指定下一个任务的办理人（使用类）-----已经开发完成
 	}
-	//分页查询已完成的代办
+
+	// 分页查询已完成的代办
 	public List<TaskYWC> queryTaskYWC(QueryVo vo) {
 		return indexDao.queryTaskYWC(vo);
 	}
-	//查询已完成代办
+
+	// 查询已完成代办
 	public Integer TaskYWCCount() {
 		return indexDao.TaskYWCCount();
 	}

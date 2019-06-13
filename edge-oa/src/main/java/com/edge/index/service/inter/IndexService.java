@@ -52,6 +52,9 @@ public interface IndexService {
 	// 获取任务Id，获取任务对象，使用任务对象获取流程定义Id，查询流程定义对象
 	public ProcessDefinition queryProcessDefinitionByTaskId(String taskId);
 
+	// 代办已完成 使用流程部署Id查询流程定义对象
+	public ProcessDefinition queryProcessDefinitionById(String PROC_DEF_ID_);
+
 	/**
 	 * 二：查看当前活动，获取当期活动对应的坐标x,y,width,height，将4个值存放到Map<String,Object>中
 	 * map集合的key：表示坐标x,y,width,height map集合的value：表示坐标对应的值

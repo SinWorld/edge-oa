@@ -14,134 +14,131 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
 <%@page isELIgnored="false" %>
 </head>
-<body onload="refreshAndClose()" >
-	<div style="margin-top: 3%; margin-left: 15%; margin-right: auto; width: auto;">
+<body onload="refreshAndClose()" style="width:100%;padding:0px; margin:0px;text-align: center;">
+	<div style="width:1280px;height:auto;padding:0px; margin:0 auto;" id="main">
 		<form class="layui-form" action="<c:url value='/approveproj/editXMXX.do'/>" method="post" enctype="multipart/form-data">
 		<input type="hidden" id="url" value='<c:url value="/"/>'>
 		<input type="hidden" id="flag" value="${flag}"> 
 		<input type="hidden" name="proj_Id" value="${foll_up_Proj.proj_Id}">
 		<input type="hidden" id="taskId" name="taskId" value="${taskId}"> 
-			<div class="layui-form-item" style="margin-bottom: 2%;">
-				<label class="layui-form-label">项目名称</label>
-				<div class="layui-input-block">
-					<input type="text" name="budget_Name" lay-verify="budget_Name"
-						autocomplete="off" class="layui-input" style="width: 56.5%" id="budget_Name" value="${foll_up_Proj.budget_Name }">
-				</div>
+			
+			<div class="layui-form-item" style="margin-top: 2%;">
+			    <label class="layui-form-label" style="width: 280px;">项目名称</label>
+			    <div class="layui-input-block">
+			      <input type="text" name="budget_Name" lay-verify="budget_Name" autocomplete="off" value="${foll_up_Proj.budget_Name }" class="layui-input" style="width: 51.4%" id="budget_Name">
+			    </div>
 			</div>
-
-			<div class="layui-form-item" style="margin-bottom: 2%;">
-				<label class="layui-form-label">预算金额</label>
-				<div class="layui-input-block">
-					<input type="text" name="budget_Amount" lay-verify="budget_Amount"
-						autocomplete="off" class="layui-input" style="width: 17%" id="budget_Amount" value="${foll_up_Proj.budget_Amount}">
-				</div>
-			</div>
-
-			<div class="layui-inline" style="float: right;margin-top:-5.5%; position: relative;right:33.5%; margin-bottom: 2%;">
-		      <label class="layui-form-label" style="width: 120px;">计划合同签订日期</label>
-			  <div class="layui-input-inline">
-		        	<input type="text" name="plan_Cont_Date" id="date" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input" value="${foll_up_Proj.plan_cont_date}">
-		      </div>
-				
+			
+			 <div class="layui-form-item">
+				  <div class="layui-inline" style="left: -98px;">
+				      <label class="layui-form-label" style="width: 100px;">预算金额</label>
+				      <div class="layui-input-inline">
+				        <input type="text" name="budget_Amount" lay-verify="budget_Amount" autocomplete="off" class="layui-input" id="budget_Amount" value="${foll_up_Proj.budget_Amount}">
+				        <span style="position: relative;top: -25px;right: -105px;">元</span>
+				      </div>
+			     </div>
+			    <div class="layui-inline" style="top: -10px;left: -14px;">
+				      <label class="layui-form-label" style="width: 139px;">计划合同部签订日期</label>
+				      <div class="layui-input-inline">
+				        <input type="text" name="plan_Cont_Date" id="date" lay-verify="date" placeholder="yyyy-mm-dd" autocomplete="off" class="layui-input" value="${foll_up_Proj.plan_cont_date}">
+				      </div>
+			    </div>
+			  </div>
+			  
+			  <div class="layui-form-item">
+				<div class="layui-inline" style="width: 608px;left: -158px;">
+				  	<label class="layui-form-label" style="width: 342px;">招标招标方式</label>
+					<div class="layui-input-inline" style="text-align: left;">
+						<select name="bp_method" id="bp_method" lay-filter="bp_method" lay-verify="bp_method">
+							<option value="${zbfs.bp_Method_Id}" selected="selected">${zbfs.bp_Method_Name}</option>
+						</select>
+					</div>
+				 </div>
+				  <div class="layui-inline" style="top: -2px;left: -196px;">
+				      <label class="layui-form-label" style="width: 227px;">客户负责人</label>
+				      <div class="layui-input-inline">
+				        <input type="text" name="cust_Contact" lay-verify="cust_Contact" autocomplete="off" class="layui-input" id="cust_Contact" value="${foll_up_Proj.cust_Contact}">
+				      </div>
+			    </div>
+		   </div>
+		  <div class="layui-form-item">
+			    <label class="layui-form-label" style="width: 286px;">客户单位名称</label>
+			    <div class="layui-input-block" style="left: -8px;">
+			      <input type="text" name="cust_Unit" lay-verify="cust_Unit" autocomplete="off"  value="${foll_up_Proj.cust_Unit}" class="layui-input" style="width: 51.5%" id="cust_Unit">
+			    </div>
+		  </div>
+			
+		  <div class="layui-form-item">
+			  <div class="layui-inline" style="top: -2px;left: -122px;">
+			      <label class="layui-form-label" style="width: 95px;">客户手机号</label>
+			      <div class="layui-input-inline">
+			        <input type="text" name="cust_Phone" lay-verify="cust_Phone" autocomplete="off" class="layui-input" id="cust_Phone"  value="${foll_up_Proj.cust_Phone }">
+			      </div>
 		    </div>
+			  <div class="layui-inline" style="top: -2px;left: 9px;">
+			      <label class="layui-form-label" style="width: 95px;">客户固定电话</label>
+			      <div class="layui-input-inline">
+			        <input type="text" name="offi_Tel" lay-verify="offi_Tel" autocomplete="off" class="layui-input" id="offi_Tel" value="${ foll_up_Proj.offi_Tel}">
+			      </div>
+		    </div>
+		  </div>
 			
-			<div class="layui-form-item" style="margin-top: 15px;">
-				<label class="layui-form-label">招标采购<br/>方式</label>
-				<div class="layui-input-inline">
-					<select name="bp_method" id="bp_method" lay-filter="required" lay-verify="required">
-						<option value="${zbfs.bp_Method_Id}" selected="selected" >${zbfs.bp_Method_Name}</option>
-					</select>
-				</div>
-			</div>
+			<div class="layui-form-item">
+				  <div class="layui-inline" style="top: -2px;left: -166px;">
+				      <label class="layui-form-label" style="width: 280px;">项目成功率</label>
+				      <div class="layui-input-inline">
+				        <input type="text" name="proj_Succ_Rate" lay-verify="proj_Succ_Rate" autocomplete="off" class="layui-input" id="proj_Succ_Rate" value="${foll_up_Proj.proj_Succ_Rate }">
+				        <span style="position: relative;top: -25px;right: -105px;">%</span>
+				      </div>
+			    </div>
+				  <div class="layui-inline" style="width: 417px;left: -116px;">
+				  	<label class="layui-form-label" style="width: 177px;">我方负责人</label>
+					<div class="layui-input-inline" style="text-align: left;">
+						<select name="user_Id" id="user_Id" lay-filter="user_Id" lay-verify="user_Id">
+							<option value="${user.user_id}" selected="selected">${user.user_name}</option>
+						</select>
+					</div>
+				 </div>
+			 </div>
 			
-			<div class="layui-form-item"  style="float: right;margin-top:-6.5%;position: relative;right:29%;width:31%;">
-				<label class="layui-form-label">客户负责人</label>
-				<div class="layui-input-block">
-					<input type="text" name="cust_Contact" lay-verify="cust_Contact"
-						autocomplete="off" class="layui-input" style="width: 53.5%" id="cust_Contact" value="${foll_up_Proj.cust_Contact}">
-				</div>
-			</div>
-			
-			<div class="layui-form-item" style="margin-bottom: 2%;">
-				<label class="layui-form-label">客户单位<br/>名称</label>
-				<div class="layui-input-block">
-					<input type="text" name="cust_Unit" lay-verify="cust_Unit"
-						autocomplete="off" class="layui-input" style="width: 56.5%" id="cust_Unit"  value="${foll_up_Proj.cust_Unit}">
-				</div>
-			</div>
-			
-			<div class="layui-form-item" style="margin-bottom: 2%;">
-				<label class="layui-form-label">客户手机号</label>
-				<div class="layui-input-block">
-					<input type="text" name="cust_Phone" lay-verify="cust_Phone"
-						autocomplete="off" class="layui-input" style="width: 17%" id="cust_Phone" value="${foll_up_Proj.cust_Phone }" >
-				</div>
-			</div>
-			
-			<div class="layui-form-item"  style="float: right;margin-top:-5.5%;position: relative;right:29%;width:37%;">
-				<label class="layui-form-label" style="width: 100px;">客户固定电话号</label>
-				<div class="layui-input-block">
-					<input type="text" name="offi_Tel" lay-verify="offi_Tel"
-						autocomplete="off" class="layui-input" style="width: 56.5%" id="offi_Tel" value="${ foll_up_Proj.offi_Tel}">
-				</div>
-			</div>
-			
-			<div class="layui-form-item" style="margin-bottom: 2%;">
-				<label class="layui-form-label">项目成功率</label>
-				<div class="layui-input-block">
-					<input type="text" name="proj_Succ_Rate" lay-verify="proj_Succ_Rate"
-						autocomplete="off" class="layui-input" style="width: 17%" id="proj_Succ_Rate" value="${foll_up_Proj.proj_Succ_Rate }">
-				</div>
-			</div>
-			
-			<div class="layui-form-item" style="float: right;margin-top:-5.5%;position: relative;right:29%;width:35.1%;">
-				<label class="layui-form-label">我方负责人</label>
-				<div class="layui-input-inline" style="width: 59%">
-					<select name="user_Id" id="user_Id" lay-filter="user_Id" lay-verify="user_Id">
-						<option value="${user.user_id}" selected="selected">${user.user_name}</option>
-					</select>
-				</div>
-			</div>
-			
-			<div class="layui-form-item" style="margin-bottom: 0%;">
-				<label class="layui-form-label">我方单位<br/>名称</label>
-				<div class="layui-input-block">
-					<input type="text" name="our_Unit" lay-verify="our_Unit"
-						autocomplete="off" class="layui-input" style="width: 56.5%" id="our_Unit" value="${foll_up_Proj.our_Unit }">
-				</div>
-			</div>
-			
-			<div class="layui-form-item layui-form-text">
-				<label class="layui-form-label" style="width: 80px;">备注</label>
-				<div class="layui-input-block">
-					<textarea placeholder="请输入内容" lay-verify="memo_1"
-						class="layui-textarea" style="width: 56.5%" name="memo_1">${foll_up_Proj.memo_1}</textarea>
-				</div>
-			</div>
+			 <div class="layui-form-item">
+				    <label class="layui-form-label" style="width: 288px;">我方单位名称</label>
+				    <div class="layui-input-block" style="left: -10px;">
+				      <input type="text" name="our_Unit" lay-verify="our_Unit" autocomplete="off" value="${foll_up_Proj.our_Unit }" class="layui-input" style="width: 51.8%" id="our_Unit">
+				    </div>
+			  </div>
+  
+			 <div class="layui-form-item layui-form-text">
+			    <label class="layui-form-label" style="width: 280px;">备注</label>
+			    <div class="layui-input-block">
+			      <textarea placeholder="请输入内容" name="memo_1"  lay-verify="memo_1" id="memo_1" class="layui-textarea" style="width:51.6%">${foll_up_Proj.memo_1}</textarea>
+			    </div>
+			 </div>
+			 
 			
 			<!--附件 -->
-			
-			<div class="layui-upload">
-			  <button type="button" class="layui-btn layui-btn-normal" id="testList">选择多文件</button> 
-			  <div class="layui-upload-list">
-			    <table class="layui-table" style="width: 67%">
-			      <thead>
-			        <tr><th>文件名</th>
-			        <th>大小</th>
-			        <th>状态</th>
-			        <th>操作</th>
-			      </tr></thead>
-			      <tbody id="demoList"></tbody>
-			    </table>
-			  </div>
-			  <button type="button" class="layui-btn" id="testListAction">开始上传</button>
+	
+			 <div class="layui-upload">
+				  <button type="button" class="layui-btn layui-btn-normal" id="testList" style="margin-left: -91.5%">选择多文件</button> 
+				  <div class="layui-upload-list">
+				    <table class="layui-table" style="width: 100%;">
+				      <thead>
+				        <tr><th>文件名</th>
+				        <th>大小</th>
+				        <th>状态</th>
+				        <th>操作</th>
+				      </tr></thead>
+				      <tbody id="demoList"></tbody>
+				    </table>
+				  </div>
+				  <button type="button" class="layui-btn" id="testListAction" style="margin-left: -91.5%">开始上传</button>
 			</div> 
-
-			<div class="layui-form-item" style="text-align: center;margin-left: -30%;">
-			    <div class="layui-input-block">
+		
+			<div class="layui-form-item">
+			    <div class="layui-input-block" style="left: -30px;">
 			      <button class="layui-btn" lay-submit="" lay-filter="demo1" style="width:35%;margin-top:10px;">立即提交</button>
 			    </div>
-  			</div>
+			</div>
 	</form>
  </div>
 <script src="../layui-v2.4.5/layui/layui.js" charset="utf-8"></script>

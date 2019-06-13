@@ -72,30 +72,41 @@ layui.use(['element','form','table'], function(){
     var url=$('#url').val();
     var id=data.ID_;
     //console.log(obj)
-	//根据流程部署Id去查看对应的业务数据
-	if(data.PROC_DEF_ID_=='Foll_up_Proj:1:4'){
-		$.ajax({  
-		    type: "post",  
-		    url:  "<c:url value='/index/querObjId.do'/>",
-		    dataType: 'json',
-		    async:false,
-		    data:{"task_id":id},
-		    error:function(){
-		    	alert("出错");
-		    },
-		    success: function (data) {  
-		    	 layer.open({
-			       	  	type:2,
-			       	  	title:'任务信息',
-			       	  	area: ['100%','100%'],
-			       		shadeClose: false,
-			       		resize:false,
-			       	    anim: 1,
-			       	  	content:[url+"approveproj/approveprojShow.do?id="+data.id+"&task_id="+data.taskId,'yes']
-		     	  });
-		    }  
-		});
-	}
+	$.ajax({  
+	    type: "post",  
+	    url:  "<c:url value='/index/querObjId.do'/>",
+	    dataType: 'json',
+	    async:false,
+	    data:{"task_id":id},
+	    error:function(){
+	    	alert("出错");
+	    },
+	    success: function (data) {
+	    	var obj=data.obj;//获得数据对像类型
+	    	if(obj=='Foll_up_Proj'){
+	    		layer.open({
+		       	  	type:2,
+		       	  	title:'任务信息',
+		       	  	area: ['100%','100%'],
+		       		shadeClose: false,
+		       		resize:false,
+		       	    anim: 1,
+		       	  	content:[url+"approveproj/approveprojShow.do?id="+data.id+"&task_id="+data.taskId,'yes']
+	     	  });
+	    	}else if(obj=='XiaoShouHT'){
+	    		layer.open({
+		       	  	type:2,
+		       	  	title:'任务信息',
+		       	  	area: ['100%','100%'],
+		       		shadeClose: false,
+		       		resize:false,
+		       	    anim: 1,
+		       	  	content:[url+"xshtdj/xshtdjShow.do?id="+data.id+"&task_id="+data.taskId,'yes']
+	     	  });
+	    	}
+	    }  
+	});
+	
 	  
   });
   
@@ -120,16 +131,28 @@ layui.use(['element','form','table'], function(){
 		    	alert("出错");
 		    },
 		    success: function (data) {  
-		    	 layer.open({
+		    	if(data.obj=='Foll_up_Proj'){
+			    	 layer.open({
+				       	  	type:2,
+				       	  	title:'业务数据',
+				       	  	area: ['100%','100%'],
+				       		shadeClose: false,
+				       		resize:false,
+				       	    anim: 1,
+				       	  	content:[url+"approveproj/ObjYWCShow.do?id="+data.id+"&proIndeId="+data.proIndeId+"&PROC_DEF_ID_="+data.PROC_DEF_ID_,'yes']
+			     	  });
+		    	}else if(data.obj=='XiaoShouHT'){
+		    		layer.open({
 			       	  	type:2,
-			       	  	title:'业务数据',
+			       	  	title:'任务信息',
 			       	  	area: ['100%','100%'],
 			       		shadeClose: false,
 			       		resize:false,
 			       	    anim: 1,
-			       	  	content:[url+"approveproj/ObjYWCShow.do?id="+data.id+"&proIndeId="+data.proIndeId+"&PROC_DEF_ID_="+data.PROC_DEF_ID_,'yes']
+			       	 	content:[url+"xshtdj/ObjYWCShow.do?id="+data.id+"&proIndeId="+data.proIndeId+"&PROC_DEF_ID_="+data.PROC_DEF_ID_,'yes']
 		     	  });
-		    }  
+		    	} 
+		    }
 		});
   });
 });
