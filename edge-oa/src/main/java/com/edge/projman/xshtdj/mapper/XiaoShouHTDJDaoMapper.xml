@@ -179,5 +179,4 @@
 		select max(proj_Info_Id) from proj_info
 	</select>
 
-
 </mapper>

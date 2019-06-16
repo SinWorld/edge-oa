@@ -18,7 +18,8 @@
 	<div style="width:1280px;height:auto;padding:0px; margin:0 auto;" id="main">
 		<form class="layui-form" action="<c:url value='/approveproj/saveXiangMuLX.do'/>" method="post" enctype="multipart/form-data">
 		<input type="hidden" id="url" value='<c:url value="/"/>'>
-		<input type="hidden" id="flag" value="${flag}"> 
+		<input type="hidden" id="flag" value="${flag}">
+		<input type="hidden" id="fjsx" name="fjsx"> 
 			
 			<div class="layui-form-item" style="margin-top: 5%">
 			    <label class="layui-form-label" style="width: 280px;">项目名称</label>
@@ -121,11 +122,13 @@
 				  <div class="layui-upload-list">
 				    <table class="layui-table" style="width: 100%;">
 				      <thead>
-				        <tr><th>文件名</th>
-				        <th>大小</th>
-				        <th>状态</th>
-				        <th>操作</th>
-				      </tr></thead>
+				        <tr>
+					        <th style="text-align: center;">文件名</th>
+					        <th style="text-align: center;">大小</th>
+					        <th style="text-align: center;">状态</th>
+					        <th style="text-align: center;">操作</th>
+				      	</tr>
+				      </thead>
 				      <tbody id="demoList"></tbody>
 				    </table>
 				  </div>
@@ -219,8 +222,8 @@ layui.use(['form', 'layedit', 'laydate','upload'], function(){
     })
     return true;
   });
-  
 //多文件列表示例
+  var fjsx=$('#fjsx').val();
   var demoListView = $('#demoList')
   ,uploadListIns = upload.render({
     elem: '#testList'
@@ -264,6 +267,17 @@ layui.use(['form', 'layedit', 'laydate','upload'], function(){
         ,tds = tr.children();
         tds.eq(2).html('<span style="color: #5FB878;">上传成功</span>');
         tds.eq(3).html(''); //清空操作
+        //将附件属性拼接字符串提交至后端
+         var fj=res.data;
+		 //将json串转换为字符串
+		 var str = JSON.stringify(fj);
+        if(undefined!=fjsx){
+			 fjsx=fjsx+","+str;
+			 $('#fjsx').val(fjsx);
+		 }else{
+			 fjsx=str;
+			 $('#fjsx').val(fjsx);
+		 }
         return delete this.files[index]; //删除文件队列已经上传成功的文件
       }
       this.error(index, upload);

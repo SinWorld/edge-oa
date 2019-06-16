@@ -8,6 +8,7 @@ import com.edge.system.role.entity.Privilege;
 import com.edge.utils.MyTask;
 import com.edge.utils.QueryVo;
 import com.edge.utils.ReviewOpinion;
+import com.edge.utils.SYS_FUJIAN;
 import com.edge.utils.TaskYWC;
 
 public interface IndexDao {
@@ -34,5 +35,11 @@ public interface IndexDao {
 
 	// 根据流程实例Id去查询历史任务批注
 	public List<ReviewOpinion> queryReviewOpinions(@Param("proc_Inst_id") String proc_Inst_id);
+	
+	//向附件中插入数据
+	public void addFuJ(SYS_FUJIAN fj);
+	
+	//按业务数据查询相关附件
+	public List<SYS_FUJIAN> queryFuJ(@Param("objId") String objId);
 
 }

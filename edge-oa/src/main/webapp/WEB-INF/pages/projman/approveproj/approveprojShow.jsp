@@ -15,7 +15,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
 <%@page isELIgnored="false" %>
 <style>
-  .bj{background-color: #C5C1AA}
+  .bj{background-color: #F0F0F0}
  </style>
 </head>
 <body style="width:100%;padding:0px; margin:0px;text-align: center;">
@@ -160,7 +160,8 @@
 			</div>
 			<!--附件  -->
 			<div class="layui-tab-item">
-				<p>附件</p>
+				<p>任务附件</p>
+				<table class="layui-hide" id="test" lay-filter="test"></table>
 			</div>
 			<!--流程检视  -->
 			<div class="layui-tab-item">
@@ -188,11 +189,14 @@
 			</div>
 		</div>
 	<!-- 操作 End -->
-		
+<script type="text/html" id="barDemo">
+  <!--<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="yl" name="defaultAD">预览</a>-->
+  <a class="layui-btn layui-btn-xs" lay-event="xz">下载</a>
+</script>		
 <script src="../layui-v2.4.5/layui/layui.js" charset="utf-8"></script>
 <script type="text/javascript" src="../jquery-easyui-1.7.0/jquery.easyui.min.js"></script>
 <script>
-layui.use(['form', 'layedit', 'laydate','element'], function(){
+layui.use(['form', 'layedit', 'laydate','element','table'], function(){
   var form = layui.form
   ,layer = layui.layer
   ,layedit = layui.layedit
@@ -200,6 +204,9 @@ layui.use(['form', 'layedit', 'laydate','element'], function(){
   ,upload = layui.upload;
   var url=$('#url').val();
   var element = layui.element;
+  var table = layui.table;
+  var url=$('#url').val();
+  var objId=$('#objId').val();
   form.render();
   //日期
   laydate.render({
@@ -208,7 +215,80 @@ layui.use(['form', 'layedit', 'laydate','element'], function(){
   
   //创建一个编辑器
   var editIndex = layedit.build('LAY_demo_editor');
- 
+  
+  table.render({
+	    elem: '#test'
+	    ,url:url+'approveproj/queryFJByObjId.do?id='+objId
+	    ,title: '任务附件'
+	    ,cols: [[
+	       {field:'index', width:"10%", title: '序号', sort: true,type:'numbers'}
+	      ,{field:'rEALWJM', width:"80%",align:'left', title: '文件名称'}
+	      ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:"10%",align:'center'}
+	    ]]
+	  });
+  
+//监听行工具事件
+  table.on('tool(test)', function(obj){
+    var data = obj.data;
+    //存储在ftp服务器端的地址
+    var ftpPath=data.sHANGCHUANDZ;
+    //存储在ftp的文件名
+    var fileName=data.cUNCHUWJM;
+    //存储在ftp的真实文件名
+    var rEALWJM=data.rEALWJM;
+    var url=$('#url').val();
+    //console.log(obj)
+    if(obj.event === 'yl'){
+    	return;
+    	//在线预览
+		  $.ajax({  
+			    type: "post",  
+			    url:  "<c:url value='/department/deleteDepartment.do'/>",
+			    dataType: 'json',
+			    async:false,
+			    data:{"id":id},
+			    error:function(){
+			    	alert("出错");
+			    },
+			    success: function (data) {  
+			    	if(data.flag){
+			    		layer.close(index);
+			    		window.location.reload();
+			    	}else{
+			    		layer.close(index);
+			    		layer.msg("当前部门下存在子部门无法删除，请先删除子部门")
+			    	}
+			    }  
+			});
+	}else if(obj.event === 'xz'){
+    	//下载文件
+    	 $.ajax({  
+			    type: "post",  
+			    url:  "<c:url value='/approveproj/downloadFtpFile.do'/>",
+			    dataType: 'json',
+			    async:false,
+			    data:{
+			    	"ftpPath":ftpPath,
+			    	"fileName":fileName,
+			    	"rEALWJM":rEALWJM
+			    	},
+			    error:function(){
+			    	alert("出错");
+			    },
+			    success: function (data) {  
+			    	var flag=data.flag;
+			    	if(flag){
+			    		layer.msg("文件已下载至"+" "+data.path);
+			    	}else{
+			    		layer.msg(data.fail);
+			    	}
+			    }  
+			});
+    	}
+  });
+  
+  
+  
   lct();
 
 });

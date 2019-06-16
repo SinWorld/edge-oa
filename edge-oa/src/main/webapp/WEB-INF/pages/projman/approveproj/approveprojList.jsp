@@ -13,8 +13,9 @@
 <body>
 	<form class="layui-form" action="" style="margin-top: 10px;">
 	 <div class="demoTable" style="background-color: #CAE1FF" id="gjssq">
-		<div class="layui-form-item" style="width:100%;height:auto;padding:0px; margin:0 auto;" id="main"">
-			  <div class="layui-inline">
+		<div class="layui-form-item" style="width:1280px;height:auto;padding:0px; margin:0 auto;" id="main"">
+		 <div class="layui-form-item">
+			 <div class="layui-inline">
 			      <label class="layui-form-label" style="width: 100px;">项目编号</label>
 			      <div class="layui-input-inline">
 			        <input type="text" name="proj_Code" lay-verify="proj_Code"
@@ -30,17 +31,15 @@
 					</div>
 			</div>
 			<div class="layui-inline" style="width: 24.5%;left: -6px;">
-		  	<label class="layui-form-label">我方负责人</label>
-			<div class="layui-input-inline" style="text-align: left;">
-				<select name="user_Id" id="user_Id" lay-filter="required" lay-verify="required">
-					<option value="" selected="selected">请选择我方负责人</option>
-				</select>
-			</div>
+			  	<label class="layui-form-label">我方负责人</label>
+				<div class="layui-input-inline" style="text-align: left;">
+					<select name="user_Id" id="user_Id" lay-filter="required" lay-verify="required">
+						<option value="" selected="selected">请选择我方负责人</option>
+					</select>
+				</div>
 		 	</div>
-	 	
-			
-		<button class="layui-btn" data-type="reload" type="button" id="do_search" >搜索</button>
-		
+		 	<button class="layui-btn" data-type="reload" type="button" id="do_search" >搜索</button>
+	 	</div>
 		
 		<div class="layui-form-item">
 			<div class="layui-inline">
@@ -50,26 +49,27 @@
 					autocomplete="off" class="layui-input" style="width: 200px;" id="nextCZ">
 			      </div>
 		     </div>
-			 <div class="layui-inline" style="width: 24.5%;">
+			 <div class="layui-inline" style="width: 25.7%;">
 			  	<label class="layui-form-label">审批状态</label>
 				<div class="layui-input-inline" style="text-align: left;">
 					<select name="appr_Status" id="appr_Status" lay-filter="appr_Status" lay-verify="appr_Status">
-						<option value="" selected="selected">请选择我方负责人</option>
+						<option value="" selected="selected">请选择审批状态</option>
 					</select>
 				</div>
 		 	</div>
-		    <div class="layui-inline" style="left: -33px;">
+		    <div class="layui-inline" style="left: -35px;width: 501px;">
 		      <label class="layui-form-label" style="width: 71px;">提交时间</label>
 		      <div class="layui-input-inline">
 		        <input type="text" name="time1" id="date" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
 		      </div>
-		     <!--   <i style="float: right;">—</i> -->
+		       <i class="u-date_line" style="margin-left: -212px;line-height: 35px;">—</i>
 		      <div class="layui-input-inline">
 		        <input type="text" name="time2" id="date2" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
 		      </div>
 			</div>
+			<button type="reset" class="layui-btn layui-btn-primary" style="margin-left: -26px;">重置</button>
 	 	</div>
-	<button type="reset" class="layui-btn layui-btn-primary" style="float: right;margin-top: -54px;margin-right: 81px;">重置</button>
+	
 	</div> 
 	</div>
 </form>
@@ -129,9 +129,9 @@ layui.use(['table','form','layedit', 'laydate'], function(){
     	var that = this.elem.next();
 	    res.data.forEach(function (item, index) {
 	    	if(res.data[index].spzt=='作废'){
-	    		 var tr = that.find(".layui-table-box tbody tr[data-index='" + index + "']").css("background-color", "#EE3B3B");
+	    		 var tr = that.find(".layui-table-box tbody tr[data-index='" + index + "']").css({"color":"#EE3B3B","font-weight":"bold"});
 	    	}else if(res.data[index].spzt=='退回'){
-	    		 var tr = that.find(".layui-table-box tbody tr[data-index='" + index + "']").css("background-color", "#FFA500");
+	    		 var tr = that.find(".layui-table-box tbody tr[data-index='" + index + "']").css({"color": "#FFA500","font-weight":"bold"});
 	    	}
         });
 

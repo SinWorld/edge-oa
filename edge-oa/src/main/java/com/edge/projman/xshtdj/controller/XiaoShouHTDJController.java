@@ -1,9 +1,17 @@
 package com.edge.projman.xshtdj.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +27,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -33,8 +42,10 @@ import com.edge.system.department.service.inter.DepartmentService;
 import com.edge.system.user.entity.User;
 import com.edge.system.user.service.inter.UserService;
 import com.edge.utils.BP_DM_METHOD;
+import com.edge.utils.FtpUtil;
 import com.edge.utils.Page;
 import com.edge.utils.ReviewOpinion;
+import com.edge.utils.SYS_FUJIAN;
 import com.google.gson.Gson;
 
 /**
@@ -46,6 +57,15 @@ import com.google.gson.Gson;
 @Controller
 @RequestMapping(value = "xshtdj")
 public class XiaoShouHTDJController {
+
+	public static final String ftpHost = "192.168.0.106";// ftp文档服务器Ip
+
+	public static final String ftpUserName = "admin";// ftp文档服务器登录用户名
+
+	public static final String ftpPassword = "123";// ftp文档服务器登录密码
+
+	public static final int ftpPort = 21;// ftp文档服务器登录端口
+
 	@Resource
 	private XiaoShouHTDJService xiaoShouHTDJService;
 	@Resource
@@ -173,7 +193,7 @@ public class XiaoShouHTDJController {
 
 	// 新增销售合同
 	@RequestMapping(value = "/saveXSHT.do")
-	public String saveXSHT(XiaoShouHT xiaoShouHT, HttpServletRequest request, Model model) {
+	public String saveXSHT(XiaoShouHT xiaoShouHT, HttpServletRequest request, Model model, @RequestParam String fjsx) {
 		// 从session中获取用户名和用户主键
 		HttpSession session = request.getSession();
 		// 当前登录系统用户主键和用户名
@@ -210,7 +230,8 @@ public class XiaoShouHTDJController {
 		xiaoShouHT.setDb_MS("销售合同登记");
 		xiaoShouHTDJService.saveXSHT(xiaoShouHT);
 		model.addAttribute("flag", true);
-
+		Integer xshtdm = xiaoShouHTDJService.queryXSHTMaxId();
+		addXSHTFj(fjsx, userId, xshtdm);
 		// 启动流程实例
 		xiaoShouHTDJService.saveStartProcess(dqUser.getUser_name(), request);
 		return "projman/xshtdj/saveXshtdj";
@@ -397,8 +418,144 @@ public class XiaoShouHTDJController {
 		return "projman/xshtdj/xshtdjShow";
 	}
 
-	@RequestMapping(value = "/test.do")
-	public String test() {
-		return "projman/xshtdj/test";
+	// 上传附件操作
+	@RequestMapping(value = "/upload.do")
+	@ResponseBody
+	public String upload(@RequestParam("file") MultipartFile file) throws Exception {
+		// new出JSONObject对象
+		JSONObject jsonObject = new JSONObject();
+		// new出Map集合用于存放上传文件名、上传文件在ftp中的名称、上传文间地址
+		Map<String, Object> map = new HashMap<String, Object>();
+		// 文件名
+		String fileName = file.getOriginalFilename();
+		String fileSuffix = fileName.substring(fileName.lastIndexOf("."), fileName.length());
+		// ftp不支持中文名称故生成非中文名存储在ftp中
+		// String localFileName = System.currentTimeMillis() + fileSuffix;
+		Random r = new Random();
+		String localFileName = String.valueOf(r.nextInt(999999)) + fileSuffix;
+		File input = this.MultipartFileToFile(file);
+		// 将File转化为InputStream
+		InputStream inp = new FileInputStream(input);
+		// 连接ftp文档服务器
+		Date date = new Date();
+		String path = "/" + new SimpleDateFormat("yyyy/MM/dd").format(date);
+		// 上传文件
+		boolean flag = FtpUtil.uploadFile(ftpHost, ftpUserName, ftpPassword, ftpPort, path, localFileName, inp);
+		map.put("fileName", fileName);
+		map.put("localFileName", localFileName);
+		map.put("path", path);
+		if (flag) {
+			jsonObject.put("code", 0);
+			jsonObject.put("msg", "");
+			jsonObject.put("data", map);
+		} else {
+			jsonObject.put("code", 1);
+			jsonObject.put("msg", "文件上传失败");
+			jsonObject.put("data", map);
+		}
+		return jsonObject.toString();
+
 	}
+
+	// 将 MultipartFile文件类型转换为File类型
+	private File MultipartFileToFile(MultipartFile file) {
+		File f = null;
+		try {
+			InputStream is = file.getInputStream();
+			f = new File(file.getOriginalFilename());
+			OutputStream os = new FileOutputStream(f);
+			int bytesRead = 0;
+			byte[] buffer = new byte[8192];
+			while ((bytesRead = is.read(buffer, 0, 8192)) != -1) {
+				os.write(buffer, 0, bytesRead);
+			}
+			os.close();
+			is.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return f;
+	}
+
+	// 将上传的附件写入数据库
+	private void addXSHTFj(String fjsx, Integer userId, Integer xshtdm) {
+		List<String> list = new ArrayList<String>();
+		// 将fjsx进行字符截取
+		String fjvalue = fjsx.substring(1, fjsx.length());
+		list.add(fjvalue);
+		String value = list.toString();
+		Date date = new Date();
+		// 根据项目信息主键查询项目信息对象
+		XiaoShouHT xshy = xiaoShouHTDJService.queryXSHTById(xshtdm);
+		String key = xshy.getClass().getSimpleName();
+		// 拼接业务数据主键
+		String objId = key + "." + String.valueOf(xshtdm);
+		// 将字符串转换为json数组
+		JSONArray jsonArray = JSONArray.parseArray(value);
+		for (int i = 0; i < jsonArray.size(); i++) {
+			JSONObject obj = jsonArray.getJSONObject(i);
+			String localFileName = (String) obj.get("localFileName");// 上传文件名
+			String path = (String) obj.get("path");// 上传文件地址
+			String fileName = (String) obj.get("fileName");// 上传文件真实名
+			// new 出附件对象
+			SYS_FUJIAN fj = new SYS_FUJIAN();
+			fj.setCUNCHUWJM(localFileName);// 上传文件名
+			fj.setSHANGCHUANDZ(path);// 上传文件地址
+			fj.setREALWJM(fileName);// 上传文件真实名称
+			fj.setSHANGCHUANRQ(date);// 上传文件日期
+			fj.setSHANGCHUANYHDM(userId);// 上传用户主键
+			fj.setYEWUDM(objId);// 上传业务数据主键
+			indexService.addFuJ(fj);// 添加附件
+		}
+	}
+
+	// 按业务数据主键查询附件
+	@RequestMapping(value = "/queryFJByObjId.do")
+	@ResponseBody
+	public String queryFJByObjId(@RequestParam Integer id) {
+		JSONObject jsonObject = new JSONObject();
+		// 根据销售合同登记主键查询销售合同对象
+		XiaoShouHT xsht = xiaoShouHTDJService.queryXSHTById(id);
+		String key = xsht.getClass().getSimpleName();
+		// 拼接业务数据主键
+		String objId = key + "." + String.valueOf(id);
+		List<SYS_FUJIAN> queryFuJ = indexService.queryFuJ(objId);
+		jsonObject.put("code", 0);
+		jsonObject.put("msg", "");
+		jsonObject.put("data", queryFuJ);
+		return jsonObject.toString();
+	}
+
+	// 下载附件操作
+	@RequestMapping(value = "/downloadFtpFile.do")
+	@ResponseBody
+	public String downloadFtpFile(@RequestParam String ftpPath, String fileName, String rEALWJM) {
+		JSONObject jsonObject = new JSONObject();
+		// 在本地按日期创建下载问价的保存地址
+		String localPath = addNewFile();
+		boolean flag = FtpUtil.downloadFtpFile(ftpHost, ftpUserName, ftpPassword, ftpPort, ftpPath, localPath, fileName,
+				rEALWJM);
+		if (flag) {
+			jsonObject.put("flag", true);
+			jsonObject.put("path", localPath);
+		} else {
+			jsonObject.put("flag", false);
+			jsonObject.put("fail", "文件下载失败");
+		}
+		return jsonObject.toString();
+	}
+
+	// 在本地按日期创建文件夹 如果存在则不创建
+	public String addNewFile() {
+		Date date = new Date();
+		String path = "D:/" + "附件" + "/" + new SimpleDateFormat("yyyy/MM/dd/").format(date);
+		// 如果不存在,创建文件夹
+		File f = new File(path);
+		if (!f.exists()) {
+			f.mkdirs();
+		}
+		return path;
+	}
+
 }

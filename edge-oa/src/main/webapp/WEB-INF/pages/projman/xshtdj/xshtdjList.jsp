@@ -6,6 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>销售合同列表</title>
 <link rel="stylesheet" href="../layui-v2.4.5/layui/css/layui.css">
+<link rel="stylesheet" href="../login/css/static.css">
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
 <%@page isELIgnored="false"%>
 
@@ -13,62 +14,65 @@
 <body>
 <form class="layui-form" action="" style="margin-top: 10px;">
 	 <div class="demoTable" style="background-color: #CAE1FF" id="gjssq">
-		<div class="layui-form-item" style="margin-bottom: 2%;width: 340px;">
-			<label class="layui-form-label">合同编号</label>
-			<div class="layui-input-block" style="width: 312px;">
-				<input type="text" name="proj_Code" lay-verify="proj_Code"
+		<div class="layui-form-item" style="width:1280px;height:auto;padding:0px; margin:0 auto;" id="main"">
+		 <div class="layui-form-item">
+			 <div class="layui-inline">
+			      <label class="layui-form-label" style="width: 100px;">合同编号</label>
+			      <div class="layui-input-inline">
+			        <input type="text" name="proj_Code" lay-verify="proj_Code"
 					autocomplete="off" class="layui-input" style="width: 200px;" id="proj_Code">
+			      </div>
+		     </div>
+		    <div class="layui-inline" style="width:490px;">
+				  	<label class="layui-form-label">合同名称</label>
+					<div class="layui-input-inline" style="text-align: left;width: 75%">
+						<select name="proj_Info_Id" id="proj_Info_Id" lay-filter="proj_Info_Id" lay-verify="proj_Info_Id" lay-search="">
+							<option value="" selected="selected">请选择合同名称</option>
+						</select>
+					</div>
 			</div>
-		</div>
-		
-		<div class="layui-form-item" style="margin-top:-64px;width: 530px;float: right;margin-right: 465px;">
-				<label class="layui-form-label">合同名称</label>
-				<div class="layui-input-inline" style="width: 400px;">
-					<select name="proj_Info_Id" id="proj_Info_Id" lay-filter="required" lay-verify="required">
-						<option value="" selected="selected">请选择合同</option>
-					</select>
-				</div>
-			</div>
-		
-			<div class="layui-form-item" style="margin-top: -64px;float: right;margin-right: 140px;">
-				<label class="layui-form-label">我方负责人</label>
-				<div class="layui-input-inline">
-					<select name="user_Id" id="user_Id" lay-filter="required" lay-verify="required">
+			<div class="layui-inline" style="width: 24.5%;left: -6px;">
+			  	<label class="layui-form-label">我方负责人</label>
+				<div class="layui-input-inline" style="text-align: left;">
+					<select name="user_Id" id="user_Id" lay-filter="user_Id" lay-verify="user_Id">
 						<option value="" selected="selected">请选择我方负责人</option>
 					</select>
 				</div>
-			</div>
-			 <button class="layui-btn" data-type="reload" type="button" id="do_search"style="float: right;margin-top: -64px;margin-right: 35px;">搜索</button>
+		 	</div>
+		 	<button class="layui-btn" data-type="reload" type="button" id="do_search" >搜索</button>
+	 	</div>
 		
-		<div class="layui-form-item" style="width: 320px;float: right;margin-right: 673px;">
-				<label class="layui-form-label">审批状态</label>
-				<div class="layui-input-inline" style="width: 200px;">
+		<div class="layui-form-item">
+			<div class="layui-inline">
+			      <label class="layui-form-label" style="width: 100px;">当前操作</label>
+			      <div class="layui-input-inline">
+			        <input type="text" name="nextCZ" lay-verify="nextCZ"
+					autocomplete="off" class="layui-input" style="width: 200px;" id="nextCZ">
+			      </div>
+		     </div>
+			 <div class="layui-inline" style="width: 25.7%;">
+			  	<label class="layui-form-label">审批状态</label>
+				<div class="layui-input-inline" style="text-align: left;">
 					<select name="appr_Status" id="appr_Status" lay-filter="appr_Status" lay-verify="appr_Status">
 						<option value="" selected="selected">请选择审批状态</option>
 					</select>
 				</div>
-		</div>
-		
-		
-		<div class="layui-form-item" style="margin-bottom: 2%;width: 340px;display:inline">
-			<label class="layui-form-label">当前操作</label>
-			<div class="layui-input-block" style="width: 312px;">
-				<input type="text" name="nextCZ" lay-verify="nextCZ"
-					autocomplete="off" class="layui-input" style="width: 200px;" id="nextCZ">
-			</div>
-		</div>
-		
-		<div class="layui-inline" style="display:inline;float: right;margin-top: -54px;margin-right: 148px;">
-		      <label class="layui-form-label" style="width: 120px;">提交时间</label>
+		 	</div>
+		    <div class="layui-inline" style="left: -35px;width: 501px;">
+		      <label class="layui-form-label" style="width: 71px;">提交时间</label>
 		      <div class="layui-input-inline">
 		        <input type="text" name="time1" id="date" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
-		      </div>-
+		      </div>
+		       <i class="u-date_line" style="margin-left: -212px;line-height: 35px;">—</i>
 		      <div class="layui-input-inline">
 		        <input type="text" name="time2" id="date2" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
 		      </div>
-		</div>
-		<button type="reset" class="layui-btn layui-btn-primary" style="float: right;margin-top: -54px;margin-right: 35px;">重置</button>
+			</div>
+			<button type="reset" class="layui-btn layui-btn-primary" style="margin-left: -26px;">重置</button>
+	 	</div>
+	
 	</div> 
+	</div>
 </form>
 <input type="hidden" value='<c:url value="/"/>' id="url">
 <input type="hidden" id="flag" value="false">
@@ -125,9 +129,9 @@ layui.use(['table','form','layedit', 'laydate'], function(){
     	var that = this.elem.next();
 	    res.data.forEach(function (item, index) {
 	    	if(res.data[index].spzt=='作废'){
-	    		 var tr = that.find(".layui-table-box tbody tr[data-index='" + index + "']").css("background-color", "#EE3B3B");
+	    		 var tr = that.find(".layui-table-box tbody tr[data-index='" + index + "']").css({"color":"#EE3B3B","font-weight":"bold"});
 	    	}else if(res.data[index].spzt=='退回'){
-	    		 var tr = that.find(".layui-table-box tbody tr[data-index='" + index + "']").css("background-color", "#FFA500");
+	    		 var tr = that.find(".layui-table-box tbody tr[data-index='" + index + "']").css({"color": "#FFA500","font-weight":"bold"});
 	    	}
         });
 
@@ -175,6 +179,34 @@ layui.use(['table','form','layedit', 'laydate'], function(){
      	  	content:[url+"xshtdj/xiaoShouHTShowById.do?proj_Id="+proj_Id,'yes']
    	  });
   });
+  
+  // 执行搜索，表格重载
+  $('#do_search').on('click', function () {
+      // 搜索条件
+      var proj_Code = $('#proj_Code').val();//销售合同编号
+      var proj_Info_Id=$('#proj_Info_Id').val();//销售合同
+      var user_Id=$('#user_Id').val();//我方负责人
+      var nextCZ=$('#nextCZ').val();//当前操作
+      var appr_Status=$('#appr_Status').val();//审批状态
+      var date=$('#date').val();
+      var date2=$('#date2').val();
+      table.reload('testReload', {
+          method: 'post'
+          , where: {
+              'proj_Code': proj_Code,
+              'proj_Info_Id':proj_Info_Id,
+              'user_Id':user_Id,
+              'nextCZ':nextCZ,
+              'appr_Status':appr_Status,
+              'time1':date,
+              'time2':date2,
+          }
+          , page: {
+              curr: 1
+          }
+      });
+  });
+  
 });
  
 
@@ -210,7 +242,7 @@ function  allXSHT(form){
 		},
 		success : function(msg) {
 			for (var i = 0; i < msg.length; i++) {
-				$("#proj_Id").append(
+				$("#proj_Info_Id").append(
 						"<option value='"+msg[i].proj_Info_Id+"'>"+ msg[i].proj_Name +"</option>");
 			}
 			form.render('select');

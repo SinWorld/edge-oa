@@ -19,6 +19,7 @@
 		<form class="layui-form" action="<c:url value='/xshtdj/saveXSHT.do'/>" method="post" enctype="multipart/form-data">
 		<input type="hidden" id="url" value='<c:url value="/"/>'>
 		<input type="hidden" id="flag" value="${flag}"> 
+		<input type="hidden" id="fjsx" name="fjsx"> 
 			
 			  <div class="layui-form-item" style="margin-top: 5%">
 			    <label class="layui-form-label">销售合同<br/>名称</label>
@@ -310,10 +311,11 @@ layui.use(['form', 'layedit', 'laydate','upload'], function(){
 
   
 //多文件列表示例
+ var fjsx=$('#fjsx').val();
   var demoListView = $('#demoList')
   ,uploadListIns = upload.render({
     elem: '#testList'
-    ,url: '<c:url value="/approveproj/upload.do"/>'
+    ,url: '<c:url value="/xshtdj/upload.do"/>'
     ,accept: 'file'
     ,multiple: true
     ,auto: false
@@ -353,6 +355,17 @@ layui.use(['form', 'layedit', 'laydate','upload'], function(){
         ,tds = tr.children();
         tds.eq(2).html('<span style="color: #5FB878;">上传成功</span>');
         tds.eq(3).html(''); //清空操作
+        //将附件属性拼接字符串提交至后端
+        var fj=res.data;
+		 //将json串转换为字符串
+		 var str = JSON.stringify(fj);
+	       if(undefined!=fjsx){
+				 fjsx=fjsx+","+str;
+				 $('#fjsx').val(fjsx);
+			 }else{
+				 fjsx=str;
+				 $('#fjsx').val(fjsx);
+			 }
         return delete this.files[index]; //删除文件队列已经上传成功的文件
       }
       this.error(index, upload);

@@ -13,6 +13,7 @@ import com.edge.system.role.entity.Privilege;
 import com.edge.utils.MyTask;
 import com.edge.utils.QueryVo;
 import com.edge.utils.ReviewOpinion;
+import com.edge.utils.SYS_FUJIAN;
 import com.edge.utils.TaskYWC;
 
 public interface IndexService {
@@ -69,4 +70,10 @@ public interface IndexService {
 
 	// 办理个人任务
 	public void saveSubmitTask(String taskId, HttpServletRequest request, String advice, String outcome);
+
+	// 向附件中插入数据
+	public void addFuJ(SYS_FUJIAN fj);
+
+	// 按业务数据查询相关附件
+	public List<SYS_FUJIAN> queryFuJ(@Param("objId") String objId);
 }

@@ -20,6 +20,7 @@ import org.activiti.engine.impl.pvm.process.ActivityImpl;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
 import com.edge.index.dao.IndexDao;
@@ -30,6 +31,7 @@ import com.edge.system.user.service.inter.UserService;
 import com.edge.utils.MyTask;
 import com.edge.utils.QueryVo;
 import com.edge.utils.ReviewOpinion;
+import com.edge.utils.SYS_FUJIAN;
 import com.edge.utils.TaskYWC;
 
 @Service
@@ -269,6 +271,16 @@ public class IndexServiceImpl implements IndexService {
 	// 查询已完成代办
 	public Integer TaskYWCCount() {
 		return indexDao.TaskYWCCount();
+	}
+
+	//向附件中插入数据
+	public void addFuJ(SYS_FUJIAN fj) {
+		indexDao.addFuJ(fj);
+	}
+
+	//按业务数据查询相关附件
+	public List<SYS_FUJIAN> queryFuJ(String objId) {
+		return indexDao.queryFuJ(objId);
 	}
 
 }

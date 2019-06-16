@@ -108,4 +108,18 @@
 			order by t.time_ desc
 		</where>
 	</select>
+	
+	<!--新增附件  -->
+	<insert id="addFuJ" parameterType="SYS_FUJIAN">
+		insert into sys_fujian (FUJIANDM,CUNCHUWJM,SHANGCHUANYHDM,SHANGCHUANRQ,YEWUDM,SHANGCHUANDZ,REALWJM)
+		values(seq_fujian_dm.nextval,#{CUNCHUWJM,jdbcType=VARCHAR},#{SHANGCHUANYHDM,jdbcType=NUMERIC},#{SHANGCHUANRQ,jdbcType=DATE},#{YEWUDM,jdbcType=VARCHAR},#{SHANGCHUANDZ,jdbcType=VARCHAR},#{REALWJM,jdbcType=VARCHAR})
+	</insert>
+	
+	<!--按业务数据查询相关附件  -->
+	<select id="queryFuJ" parameterType="String" resultType="SYS_FUJIAN">
+		select * from sys_fujian f
+		<where>
+			f.yewudm=#{objId} order by f.fujiandm asc
+		</where>
+	</select>
 </mapper>

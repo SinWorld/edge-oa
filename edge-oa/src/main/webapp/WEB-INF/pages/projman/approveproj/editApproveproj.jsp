@@ -118,7 +118,7 @@
 			
 			<!--附件 -->
 	
-			 <div class="layui-upload">
+			<!--  <div class="layui-upload">
 				  <button type="button" class="layui-btn layui-btn-normal" id="testList" style="margin-left: -91.5%">选择多文件</button> 
 				  <div class="layui-upload-list">
 				    <table class="layui-table" style="width: 100%;">
@@ -132,7 +132,7 @@
 				    </table>
 				  </div>
 				  <button type="button" class="layui-btn" id="testListAction" style="margin-left: -91.5%">开始上传</button>
-			</div> 
+			</div>  -->
 		
 			<div class="layui-form-item">
 			    <div class="layui-input-block" style="left: -30px;">
@@ -223,7 +223,7 @@ layui.use(['form', 'layedit', 'laydate','upload'], function(){
   });
   
 //多文件列表示例
-  var demoListView = $('#demoList')
+/*   var demoListView = $('#demoList')
   ,uploadListIns = upload.render({
     elem: '#testList'
     ,url: '<c:url value="/approveproj/upload.do"/>'
@@ -276,7 +276,7 @@ layui.use(['form', 'layedit', 'laydate','upload'], function(){
       tds.eq(2).html('<span style="color: #FF5722;">上传失败</span>');
       tds.eq(3).find('.demo-reload').removeClass('layui-hide'); //显示重传
     }
-  });
+  }); */
   
   allZBFS(form);
   allUser(form);

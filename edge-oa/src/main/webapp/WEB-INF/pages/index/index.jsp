@@ -10,7 +10,7 @@
   <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
   <%@page isELIgnored="false" %>
 </head>
-<body class="layui-layout-body">
+<body class="layui-layout-body" onload="loadTopWindow()">
 <div class="layui-layout layui-layout-admin">
   <div class="layui-header">
     <div class="layui-logo"  style="font-size: 30px;">内网OA</div>
@@ -53,9 +53,7 @@
   
   <div class="layui-body">
     <!-- 内容主体区域 -->
-   <%--  <div style="padding: 15px;">
-    	<iframe src='<c:url value="/user/banner"/>' style="width: 100%" id="banner" frameborder="0" scrolling="no" onload="this.height=100"></iframe>
-    </div> --%>
+   
     <iframe  src='<c:url value="/index/headPage.do"/>' name="iframe_a" id="iframe-page-content"  width="100%" height="100%" frameborder="no" border="0" marginwidth="0" marginheight=" 0" scrolling="no" allowtransparency="yes"></iframe>
     
   </div>
@@ -85,30 +83,12 @@ function reinitIframe(){
 	console.log(height);
 	}catch (ex){}
 }
-	
-		//角色管理
-		/* $('#role').click(function(){
-			var height=document.documentElement.clientHeight;
-			document.getElementById('iframe-page-content').style.height=height+'px';
-			var url='<c:url value="/role/initRoleList.do"/>';
-			$("#iframe-page-content").attr('src',url);
-		});	 */
-		
-		//部门管理
-		/* $('#department').click(function(){
-			var height=document.documentElement.clientHeight;
-			document.getElementById('iframe-page-content').style.height=height+'px';
-			var url='<c:url value="/department/initDepartmentList.do"/>';
-			$("#iframe-page-content").attr('src',url);
-		}); */
-		
-		//用户管理
-		/* $('#userManage').click(function(){
-				var height=document.documentElement.clientHeight;
-				document.getElementById('iframe-page-content').style.height=height+'px';
-				var url='<c:url value="/user/initUserList.do"/>';
-				$("#iframe-page-content").attr('src',url);
-			}); */
+
+function loadTopWindow(){ 
+	if (window.top!=null && window.top.document.URL!=document.URL){ 
+		window.top.location= document.URL; //这样就可以让登陆窗口显示在整个窗口了 
+	} 
+} 
 </script>
 </body>
 </html>
