@@ -185,12 +185,12 @@
 						    </div>
 				  		</div>	
 						
-						<div class="layui-form-item layui-form-text">
-						    <label class="layui-form-label">货物(产品)<br/>内容</label>
-						    <div class="layui-input-block">
-						      <textarea placeholder="请输入内容" name="prod_Name"  lay-verify="prod_Name" id="prod_Name" class="layui-textarea bj" style="width:63.5%" disabled="">${xsht.prod_Name}</textarea>
-						    </div>
-					   </div>
+						<div>
+							 	<span>货物(产品)内容</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							 	<span style="color:red">(注：绿色字体为已入库)</span>
+							   	<table class="layui-hide" id="hwnr"></table>
+					    </div>
+					 
 						
 					</form>
 				</div>
@@ -278,6 +278,31 @@ layui.use(['form', 'layedit', 'laydate','element','table'], function(){
 	      ,{field:'rEALWJM', width:"80%",align:'left', title: '文件名称'}
 	      ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:"10%",align:'center'}
 	    ]]
+	  });
+  
+  table.render({
+	    elem: '#hwnr'
+	    ,url:url+'xshtdj/queryHWCPByObjId.do?id='+objId
+	    ,title: '货物(产品内容)'
+	    ,cols: [[
+	       {field:'index', width:"5%", title: '序号', sort: true,type:'numbers'}
+	      ,{field:'chanPinMC', width:"22%",align:'left', title: '产品名称'}
+	      ,{field:'pinPai', width:"17%",align:'left', title: '品牌'}
+	      ,{field:'guiGeXH', width:"12%",align:'left', title: '规格型号'}
+	      ,{field:'zhuYaoPZCS', width:"12%",align:'left', title: '主要配置参数'}
+	      ,{field:'danWei', width:"8%",align:'center', title: '单位'}
+	      ,{field:'shuLiang', width:"8%",align:'center', title: '数量'}
+	      ,{field:'price', width:"8%",align:'center', title: '单价'}
+	      ,{field:'jinE', width:"8%",align:'center', title: '金额'}
+	    ]]
+  		,done: function(res, curr, count){
+		  	var that = this.elem.next();
+			    res.data.forEach(function (item, index) {
+			    	if(res.data[index].is_rk==1){
+			    		 var tr = that.find(".layui-table-box tbody tr[data-index='" + index + "']").css({"color":"#43CD80","font-weight":"bold"});
+			    	}
+		      });
+		}
 	  });
   
 //监听行工具事件

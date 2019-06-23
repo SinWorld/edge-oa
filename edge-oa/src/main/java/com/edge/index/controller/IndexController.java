@@ -56,15 +56,13 @@ public class IndexController {
 		// 从session中得到当前登录用户的主键
 		Integer userId = (Integer) session.getAttribute("userId");
 		Boolean flag = (Boolean) session.getAttribute("kg");
-		if (flag) {
-			this.userAllPrivilege(userId, model, session);
-		}
+		this.userAllPrivilege(userId, model, session,flag);
 		return "index/index";
 
 	}
 
 	// 用户登录系统查询当前用户所拥有的权限
-	public void userAllPrivilege(Integer userId, Model model, HttpSession session) {
+	public void userAllPrivilege(Integer userId, Model model, HttpSession session,Boolean flag) {
 		// 查询当前登录用户的所有顶级权限权限
 		List<Privilege> userPrivilegeList = indexService.userPrivilegeList(userId);
 		TreeSet<Privilege> topList = new TreeSet<Privilege>();
@@ -87,9 +85,11 @@ public class IndexController {
 			}
 		}
 		// 将三级权限存入session中
-		session.setAttribute("sjqxs", jsonArray.toString().trim());
+		if(flag) {
+			session.setAttribute("sjqxs", jsonArray.toString().trim());
+			session.setAttribute("kg", false);
+		}
 		// 用于用户在不退出登录的情况下控制加载权限菜单
-		session.setAttribute("kg", false);
 		model.addAttribute("privilegeTopList", topList);
 
 	}

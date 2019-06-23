@@ -5,11 +5,10 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.ui.Model;
 
 import com.alibaba.fastjson.JSONArray;
-import com.edge.projman.approveproj.entity.Foll_up_Proj;
+import com.edge.projman.xshtdj.entity.HuoWuInFor;
 import com.edge.projman.xshtdj.entity.XiaoShouHT;
 import com.edge.projman.xshtdj.entity.Xsht_QueryVo;
 import com.edge.utils.APPR_DM_STATUS;
@@ -53,5 +52,11 @@ public interface XiaoShouHTDJService {
 	public void saveTask(String taskId, HttpServletRequest request);
 
 	// 销售合同列表查看业务数据
-	public List<ReviewOpinion> xiaoShouHTShowById(Integer proj_Id, Model model,HttpSession session);
+	public List<ReviewOpinion> xiaoShouHTShowById(Integer proj_Id, Model model, HttpSession session);
+
+	// 新增货物产品内容
+	public void addHWCPNR(HuoWuInFor huoWuInFor);
+
+	// 查询该销售合同对应的产品内容
+	public List<HuoWuInFor> hwnrs( Integer proj_Info_Id);
 }

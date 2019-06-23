@@ -34,6 +34,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.edge.index.service.inter.IndexService;
 import com.edge.projman.approveproj.entity.Foll_up_Proj;
 import com.edge.projman.approveproj.service.inter.ApproveprojService;
+import com.edge.projman.xmcgrk.service.inter.XiangMuCGRKService;
+import com.edge.projman.xshtdj.entity.HuoWuInFor;
 import com.edge.projman.xshtdj.entity.XiaoShouHT;
 import com.edge.projman.xshtdj.entity.Xsht_QueryVo;
 import com.edge.projman.xshtdj.service.inter.XiaoShouHTDJService;
@@ -76,6 +78,8 @@ public class XiaoShouHTDJController {
 	private DepartmentService departmentService;
 	@Resource
 	private IndexService indexService;
+	@Resource
+	private XiangMuCGRKService xiangMuCGRKService;
 
 	// 跳转至销售合同登记列表页面
 	@RequestMapping(value = "/initXshtdjList.do")
@@ -193,7 +197,8 @@ public class XiaoShouHTDJController {
 
 	// 新增销售合同
 	@RequestMapping(value = "/saveXSHT.do")
-	public String saveXSHT(XiaoShouHT xiaoShouHT, HttpServletRequest request, Model model, @RequestParam String fjsx) {
+	public String saveXSHT(XiaoShouHT xiaoShouHT, HttpServletRequest request, Model model, @RequestParam String fjsx,
+			String hwnrs) {
 		// 从session中获取用户名和用户主键
 		HttpSession session = request.getSession();
 		// 当前登录系统用户主键和用户名
@@ -231,7 +236,12 @@ public class XiaoShouHTDJController {
 		xiaoShouHTDJService.saveXSHT(xiaoShouHT);
 		model.addAttribute("flag", true);
 		Integer xshtdm = xiaoShouHTDJService.queryXSHTMaxId();
-		addXSHTFj(fjsx, userId, xshtdm);
+		if(hwnrs!=null||hwnrs!="") {
+			addhwcpnr(hwnrs,xshtdm);
+		}
+		if(fjsx.length()!=0) {
+			addXSHTFj(fjsx, userId, xshtdm);
+		}
 		// 启动流程实例
 		xiaoShouHTDJService.saveStartProcess(dqUser.getUser_name(), request);
 		return "projman/xshtdj/saveXshtdj";
@@ -269,6 +279,39 @@ public class XiaoShouHTDJController {
 		String time = year + month + day + Hourse + minute + second;
 		String bh = "S" + time + x;
 		return bh;
+	}
+
+	//新增货物产品内容集合
+	private void addhwcpnr(String str,Integer objId) {
+		String hwnr = str.substring(1, str.length()).trim();
+		String[] hwnrs = hwnr.split(",");
+		// 遍历
+		for (String hw : hwnrs) {
+			String[] data = hw.split(";");
+			String cpmc = data[0];//产品名称
+			String pp = data[1];//品牌
+			String ggxh = data[2];//规格型号
+			String zypzcs = data[3];//主要配置参数
+			String dw = data[4];//单位
+			String sl = data[5];//数量
+			String dj = data[6];//单价
+			String je = data[7];//金额
+			//new 出货物产品内容对象
+			HuoWuInFor hwif=new HuoWuInFor();
+			//赋值
+			hwif.setChanPinMC(cpmc);
+			hwif.setPinPai(pp);
+			hwif.setGuiGeXH(ggxh);
+			hwif.setZhuYaoPZCS(zypzcs);
+			hwif.setDanWei(dw);
+			hwif.setShuLiang(Integer.parseInt(sl));
+			hwif.setPrice(Double.parseDouble(dj));
+			hwif.setJinE(Double.parseDouble(je));
+			hwif.setProj_Info_Id(objId);
+			hwif.setIs_rk(false);
+			hwif.setIs_ck(false);
+			xiaoShouHTDJService.addHWCPNR(hwif);
+		}
 	}
 
 	// 跳转至查看页面并回显数据
@@ -334,12 +377,20 @@ public class XiaoShouHTDJController {
 			// 查询我方负责人
 			user = userService.queryUserById(xsht.getUser_Id());
 		}
+		List<HuoWuInFor> list = this.queryHWNR(objId);
 		model.addAttribute("xsht", xsht);
 		model.addAttribute("zbfs", zbfs);
 		model.addAttribute("user", user);
 		model.addAttribute("xmxx", xmxx);
 		model.addAttribute("taskId", taskId);
+		model.addAttribute("list", list);
 		return "projman/xshtdj/editXshtdj";
+	}
+	
+	//查询货物内容用于在编辑页面回显
+	private List<HuoWuInFor> queryHWNR(Integer xshtdm){
+		List<HuoWuInFor> hwcgnrs = xiangMuCGRKService.queryHWCGNRS(xshtdm);
+		return hwcgnrs;
 	}
 
 	// 编辑操作并启动流程
@@ -375,11 +426,14 @@ public class XiaoShouHTDJController {
 			// 从session中取出流程部署Id
 			procinstById = (String) session.getAttribute("prodefById");
 		}
+		//查询货物产品内容
+		List<HuoWuInFor> hwnrs = xiaoShouHTDJService.hwnrs(proj_Id);
 		ProcessDefinition pd = approveprojService.queryProcessDefinitionById(procinstById);
 		// 流程节点高亮map
 		model.addAttribute("deploymentId", pd.getDeploymentId());
 		model.addAttribute("imageName", pd.getDiagramResourceName());
 		model.addAttribute("reviewOpinions", reviewOpinions);
+		model.addAttribute("hwnrs", hwnrs);
 		return "projman/xshtdj/xshtdjShow";
 	}
 
@@ -524,6 +578,21 @@ public class XiaoShouHTDJController {
 		jsonObject.put("code", 0);
 		jsonObject.put("msg", "");
 		jsonObject.put("data", queryFuJ);
+		return jsonObject.toString();
+	}
+	
+	
+	// 按业务数据主键查询货物产品内容
+	@RequestMapping(value = "/queryHWCPByObjId.do")
+	@ResponseBody
+	public String queryHWCPByObjId(@RequestParam Integer id) {
+		JSONObject jsonObject = new JSONObject();
+		// 根据销售合同登记主键查询销售合同对象
+		XiaoShouHT xsht = xiaoShouHTDJService.queryXSHTById(id);
+		List<HuoWuInFor> hwnrs = xiaoShouHTDJService.hwnrs(xsht.getProj_Info_Id());
+		jsonObject.put("code", 0);
+		jsonObject.put("msg", "");
+		jsonObject.put("data", hwnrs);
 		return jsonObject.toString();
 	}
 

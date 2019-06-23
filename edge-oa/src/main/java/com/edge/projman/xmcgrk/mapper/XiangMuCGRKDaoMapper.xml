@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edge.projman.xmcgrk.dao.XiangMuCGRKDao">
+	<!-- 定义缓存 一般是一级缓存，如果用同一个sqlsession 那么相同查询直接会从缓存中查找 <cache size="1024" flushInterval="60000" 
+		eviction="LRU" readOnly="false"></cache> -->
+	<!--分页查询所有的项目采购入库数据 -->
+	<select id="queryAllHWCPNR" resultType="HuoWuInFor"
+		parameterType="Xmcgrk_QueryVo">
+		select * from (select row_.*, rownum rownum_ from (select * from
+		huowucpnr order by hwid desc ) row_
+		<where>
+			rownum &lt;=#{size} and is_rk=1
+			<if test="chanPinMC!=null"> and chanpinmc like '%${chanPinMC}%'</if>
+			<if test="pinPai!=null"> and pinpai like '%${pinPai}%'</if>
+			<if test="guiGeXH!=null"> and guigexh like '%${guiGeXH}%'</if>
+			<if test="zhuYaoPZCS!=null"> and zhuyaopzcs like '%${zhuYaoPZCS}%'</if>
+			<if test="danWei!=null"> and danwei like '%${danWei}%'</if>
+			<if test="shuLiang!=null"> and shuliang = #{shuLiang}</if>
+			<if test="price!=null"> and price = #{price}</if>
+			<if test="jinE!=null"> and jine = #{jinE}</if>
+			<if test="proj_Info_Id!=null"> and proj_info_id = #{proj_Info_Id}</if>
+		</where>
+		)
+		<where>
+			rownum_ &gt;=#{page}
+		</where>
+	</select>
+
+	<!--按条件查询所有项目信息数量 -->
+	<select id="queryAllXiangMuCGRKCount" resultType="Integer"
+		parameterType="Xmcgrk_QueryVo">
+		select count(1) from huowucpnr
+		<where>
+			is_rk=1
+			<if test="chanPinMC!=null"> and chanpinmc like '%${chanPinMC}%'</if>
+			<if test="pinPai!=null"> and pinpai like '%${pinPai}%'</if>
+			<if test="guiGeXH!=null"> and guigexh like '%${guiGeXH}%'</if>
+			<if test="zhuYaoPZCS!=null"> and zhuyaopzcs like '%${zhuYaoPZCS}%'</if>
+			<if test="danWei!=null"> and danwei like '%${danWei}%'</if>
+			<if test="shuLiang!=null"> and shuliang = #{shuLiang}</if>
+			<if test="price!=null"> and price = #{price}</if>
+			<if test="jinE!=null"> and jine = #{jinE}</if>
+			<if test="proj_Info_Id!=null"> and proj_info_id = #{proj_Info_Id}</if>
+		</where>
+	</select>
+
+	<!--查询流程已完成的销售合同 -->
+	<select id="queryAllXSHT" resultType="XiaoShouHT">
+		select * from proj_info
+		<where>
+			appr_status=1
+		</where>
+		order by proj_info_id desc
+	</select>
+
+	<!--通过销售合同代码查询对应的货物产品内容 -->
+	<select id="queryHWCGNRS" parameterType="Integer" resultType="HuoWuInFor">
+		select * from huowucpnr h
+		<where>
+			h.proj_info_id=#{proj_Info_Id} and is_rk=0
+		</where>
+	</select>
+	
+	<!--根据货物产品内容主键查询货物数据  -->
+	<select id="queryHWCPNRById" resultType="HuoWuInFor" parameterType="Integer">
+		select * from huowucpnr h
+		<where>
+			h.hwid=#{hwId}
+		</where>
+	</select>
+	
+	<!--货物入库  -->
+	<update id="hwrk" parameterType="HuoWuInFor">
+		update huowucpnr h
+		<set>
+			h.is_rk=1
+		</set>
+		<where>
+			h.hwid=#{hwId}
+		</where>
+	</update>
+</mapper>

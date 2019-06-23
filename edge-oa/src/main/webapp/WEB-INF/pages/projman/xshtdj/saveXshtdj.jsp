@@ -10,6 +10,8 @@
 	content="width=device-width, initial-scale=1, maximum-scale=1">
 <title>销售合同登记</title>
 <link rel="stylesheet" href="../layui-v2.4.5/layui/css/layui.css">
+<link rel="stylesheet" href="../bootstrap-3.3.7-dist/css/bootstrap.min.css"> 
+<link rel="stylesheet" href="../bootstrap-3.3.7-dist/css/bootstrap-theme.min.css"> 
 <script src="../jquery/jquery-3.3.1.js"></script>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
 <%@page isELIgnored="false" %>
@@ -20,16 +22,17 @@
 		<input type="hidden" id="url" value='<c:url value="/"/>'>
 		<input type="hidden" id="flag" value="${flag}"> 
 		<input type="hidden" id="fjsx" name="fjsx"> 
+		<input type="hidden" id="hwnrs" name="hwnrs">
 			
 			  <div class="layui-form-item" style="margin-top: 5%">
-			    <label class="layui-form-label">销售合同<br/>名称</label>
+			    <label class="layui-form-label" style="width: 120px;">销售合同名称</label>
 			    <div class="layui-input-block">
 			      <input type="text" name="proj_Name" lay-verify="proj_Name" autocomplete="off" placeholder="请输入销售合同名称" class="layui-input" style="width: 90%" id="proj_Name">
 			    </div>
 			  </div>
 			
 			 <div class="layui-form-item">
-			    <label class="layui-form-label">项目是否<br/>立项</label>
+			    <label class="layui-form-label" style="width: 120px;">项目是否立项</label>
 			    <div class="layui-input-block" style="width: 315px;">
 			      <input type="radio" name="is_LX" value="1" title="已立项"  lay-filter="is_LX">
 			      <input type="radio" name="is_LX" value="0" title="未立项"  lay-filter="is_LX">
@@ -37,8 +40,8 @@
 			 </div>
 			
 			<div class="layui-form-item">
-				<label class="layui-form-label">项目名称</label>
-				<div class="layui-input-inline" style="width: 90%;text-align: left;">
+				<label class="layui-form-label" style="width: 120px;">项目名称</label>
+				<div class="layui-input-inline" style="width: 88%;text-align: left;">
 					<select name="proj_Id" id="proj_Id" lay-filter="proj_Id" lay-verify="proj_Id" lay-search="">
 						<option value="" selected="selected">请选择所属项目</option>
 					</select>
@@ -47,52 +50,52 @@
 			
 			
 			<div class="layui-form-item">
-				<div class="layui-inline" style="width: 352px;">
-				  	<label class="layui-form-label">招标采购<br/>方式</label>
+				<div class="layui-inline" style="width: 352px;left: -5px;top: 4px;">
+				  	<label class="layui-form-label" style="width: 120px;">招标采购方式</label>
 					<div class="layui-input-inline" style="text-align: left;">
 						<select name="bp_Method" id="bp_Method" lay-filter="bp_Method" lay-verify="bp_Method">
 							<option value="" selected="selected">请选择招标方式</option>
 						</select>
 					</div>
 				 </div>
-				  <div class="layui-inline" style="top: -2px;">
-				      <label class="layui-form-label">合同金额</label>
+				  <div class="layui-inline" style="top:9px;">
+				      <label class="layui-form-label" style="width: 90px;">合同金额</label>
 				      <div class="layui-input-inline">
 				        <input type="text" name="cont_Amount" lay-verify="cont_Amount" autocomplete="off" class="layui-input" id="cont_Amount" onchange="htje()">
 				        <span style="position: relative;top: -25px;right: -105px;">元</span>
 				      </div>
 			    </div>
-			    <div class="layui-inline" style="top: -10px;">
-				      <label class="layui-form-label">签订日期</label>
+			    <div class="layui-inline">
+				      <label class="layui-form-label" style="width: 90px;">签订日期</label>
 				      <div class="layui-input-inline">
 				        <input type="text" name="cont_Date" id="cont_Date" lay-verify="cont_Date" placeholder="yyyy-mm-dd" autocomplete="off" class="layui-input">
 				      </div>
 			    </div>
-			    <div class="layui-inline" style="width: 20%;top: -2px;">
-				      <label class="layui-form-label" style="width: 84px;">合同计划完成日期</label>
-				      <div class="layui-input-inline" style="width: 51%">
+			    <div class="layui-inline" style="width: 22%;">
+				      <label class="layui-form-label" style="width: 148px;">合同计划完成日期</label>
+				      <div class="layui-input-inline" style="width: 42%">
 				        <input type="text" name="finish_Time" id="finish_Time" lay-verify="finish_Time" placeholder="yyyy-mm-dd" autocomplete="off" class="layui-input" >
 				      </div>
 			    </div>
 			 </div>
 			
-			<div class="layui-form-item" style="margin-top: -30px;">
-			    <div class="layui-inline" style="left: -156px;">
-			      <label class="layui-form-label">质保金比例</label>
+			<div class="layui-form-item">
+			    <div class="layui-inline" style="left: -131px;">
+			      <label class="layui-form-label" style="width: 100px;">质保金比例</label>
 			      <div class="layui-input-inline">
 			        <input type="text" name="qual_Ratio" lay-verify="qual_Ratio" id="qual_Ratio" autocomplete="off" class="layui-input" onchange="zbjbl()">
 			        <span style="position: relative;top: -25px;right: -105px;">%</span>
 			      </div>
 			    </div>
-			    <div class="layui-inline"style="left: -114px;">
-			      <label class="layui-form-label">质保金金额</label>
+			    <div class="layui-inline"style="left: -102px;">
+			      <label class="layui-form-label" style="width: 100px;">质保金金额</label>
 			      <div class="layui-input-inline">
-			        <input type="text" name="qual_Bonds" lay-verify="qual_Bonds" id="qual_Bonds" autocomplete="off" class="layui-input" readonly="readonly">
-			        <span style="position: relative;top: -25px;right: -105px;">元</span>
+			        <input type="text" name="qual_Bonds" lay-verify="qual_Bonds" id="qual_Bonds" autocomplete="off" class="layui-input" readonly="readonly" style="width: 135px;">
+			        <span style="position: relative;top: -25px;right: -55px;">元</span>
 			      </div>
 			    </div>
-			    <div class="layui-inline" style="top: 10px;left: -114px;">
-			      <label class="layui-form-label">质保金到期日期</label>
+			    <div class="layui-inline" style="left: -150px;top: -7px;">
+			      <label class="layui-form-label" style="width: 137px;">质保金到期日期</label>
 			      <div class="layui-input-inline">
 			        <input type="text" name="qual_Expiredate" id="qual_Expiredate" lay-verify="qual_Expiredate" placeholder="yyyy-mm-dd" autocomplete="off" class="layui-input">
 			      </div>
@@ -104,13 +107,13 @@
 		</div>
 		 <div class="layui-form-item">
 			    <div class="layui-inline" style="width: 60%;left: -52px;">
-				    <label class="layui-form-label">单位名称</label>
+				    <label class="layui-form-label" style="width: 120px;">单位名称</label>
 				    <div class="layui-input-block">
-				      <input type="text" name="cust_Unit" id="cust_Unit" lay-verify="cust_Unit" autocomplete="off"  class="layui-input" style="width: 72.5%">
+				      <input type="text" name="cust_Unit" id="cust_Unit" lay-verify="cust_Unit" autocomplete="off"  class="layui-input" style="width: 70%">
 				    </div>
 			    </div>
 			    
-		      <div class="layui-inline" style="width: 30%;left: -144px;">
+		      <div class="layui-inline" style="width: 30%;left: -146px;">
 			    <label class="layui-form-label">负责人</label>
 			    <div class="layui-input-block">
 			      <input type="text" name="cust_Contact" lay-verify="cust_Contact" id="cust_Contact" autocomplete="off"  class="layui-input" style="width: 50%">
@@ -120,13 +123,13 @@
 			
 	     <div class="layui-form-item">
 		    <div class="layui-inline" style="width: 38.5%;left: -150px;">
-			    <label class="layui-form-label">手机号码</label>
+			    <label class="layui-form-label" style="width: 120px;">手机号码</label>
 			    <div class="layui-input-block">
 			      <input type="text" name="cust_Phone" lay-verify="cust_Phone" id="cust_Phone" autocomplete="off"  class="layui-input" style="width: 50%">
 			    </div>
 		    </div>
-		    <div class="layui-inline" style="width: 36%;left: 32px;">
-			    <label class="layui-form-label">办公电话</label>
+		    <div class="layui-inline" style="width: 36%;left: -10px;">
+			    <label class="layui-form-label" style="width: 120px;">办公电话</label>
 			    <div class="layui-input-block">
 			      <input type="text" name="offi_Tel" id="offi_Tel" lay-verify="offi_Tel" autocomplete="off"  class="layui-input" style="width: 42%">
 			    </div>
@@ -139,9 +142,9 @@
 			
 		 <div class="layui-form-item">
 		    <div class="layui-inline" style="width: 53%;left: -2px;">
-			    <label class="layui-form-label">单位名称</label>
+			    <label class="layui-form-label" style="width: 120px;">单位名称</label>
 			    <div class="layui-input-block">
-			      <input type="text" name="our_Unit" lay-verify="our_Unit" id="our_Unit" autocomplete="off" placeholder="请输入单位名称" class="layui-input" style="width: 82%">
+			      <input type="text" name="our_Unit" lay-verify="our_Unit" id="our_Unit" autocomplete="off" placeholder="请输入单位名称" class="layui-input" style="width: 79%">
 			    </div>
 		    </div>
 		   <div class="layui-inline" style="width: 24.5%;left: -6px;">
@@ -161,12 +164,37 @@
   		</div>	
 			
 			
-		<div class="layui-form-item layui-form-text">
-		    <label class="layui-form-label">货物(产品)<br/>内容</label>
-		    <div class="layui-input-block">
-		      <textarea placeholder="请输入内容" name="prod_Name"  lay-verify="prod_Name" id="prod_Name" class="layui-textarea" style="width:89.8%"></textarea>
-		    </div>
-	   </div>
+		
+	
+	 <div class="layui-form-item layui-form-text">
+		 <div class="layui-input-block" style="text-align: left;">
+			<button type="button" class="layui-btn layui-btn-normal" onclick="addRow()"><i class="layui-icon">&#xe608;</i>新增一行</button>	
+		 </div>
+	  	<label class="layui-form-label" style="width: 135px;">货物(产品)内容</label>
+		  <div class="layui-input-block">
+			<table class="table table-bordered" id="hwcpnrs" style="width: 100%">
+			  <thead>
+			    <tr>
+			      <th scope="col" style="text-align: center;width: 5%">序号</th>
+			      <th scope="col" style="text-align: center;width: 22%">产品名称</th>
+			      <th scope="col" style="text-align: center;width: 17%">品牌</th>
+			      <th scope="col" style="text-align: center;width: 12%">规格型号</th>
+			      <th scope="col" style="text-align: center;width: 12%">主要配置参数</th>
+			      <th scope="col" style="text-align: center;width: 6%">单位</th>
+			      <th scope="col" style="text-align: center;width: 6%">数量</th>
+			      <th scope="col" style="text-align: center;width: 6%">单价</th>
+			      <th scope="col" style="text-align: center;width: 6%">金额</th>
+			      <th scope="col" style="text-align: center;width: 8%">操作</th>
+			    </tr>
+			  </thead>
+			  <tbody>
+			  </tbody>
+			</table>
+			<span style="margin-right: -1130px;font-size: 12px; color: #FF6347;line-height: 0px;">注:不要填写标点符号!!!</span>
+		</div>
+	</div>
+	
+		
 			
 	<!--附件 -->
 	
@@ -175,11 +203,13 @@
 		  <div class="layui-upload-list">
 		    <table class="layui-table" style="width: 100%;">
 		      <thead>
-		        <tr><th>文件名</th>
-		        <th>大小</th>
-		        <th>状态</th>
-		        <th>操作</th>
-		      </tr></thead>
+			      <tr>
+			        <th style="text-align: center;">文件名</th>
+			        <th style="text-align: center;">大小</th>
+			        <th style="text-align: center;">状态</th>
+			        <th style="text-align: center;">操作</th>
+			      </tr>
+		      </thead>
 		      <tbody id="demoList"></tbody>
 		    </table>
 		  </div>
@@ -194,6 +224,7 @@
 	
 	</form>
  </div>
+<script src="../bootstrap-3.3.7-dist/js/bootstrap.js"></script>
 <script src="../layui-v2.4.5/layui/layui.js" charset="utf-8"></script>
 <script>
 layui.use(['form', 'layedit', 'laydate','upload'], function(){
@@ -219,12 +250,10 @@ layui.use(['form', 'layedit', 'laydate','upload'], function(){
   
   //创建一个编辑器
   var editIndex = layedit.build('LAY_demo_editor');
- 
-
-  
   
   //监听提交
   form.on('submit(demo1)', function(data){
+	  savehwcpnr();
     layer.alert(JSON.stringify(data.field), {
       title: '最终的提交信息'
     })
@@ -279,6 +308,7 @@ layui.use(['form', 'layedit', 'laydate','upload'], function(){
 	form.on('radio(is_LX)', function (data) {
 		if(data.value==1){//已立项
 			$("#proj_Id").empty();
+			$('#proj_Id').attr("disabled",false); 
 			$("#proj_Id").append("<option value=''>请选择所属项目</option>");
 			$('#bp_Method').val('');
 			$('#cont_Date').val('');
@@ -294,6 +324,7 @@ layui.use(['form', 'layedit', 'laydate','upload'], function(){
 		}else{
 			//未立项
 			$("#proj_Id").empty();
+			$('#proj_Id').attr("disabled",true); 
 			$("#proj_Id").append("<option value=''>请选择所属项目</option>");
 			$('#bp_Method').val('');
 			$('#cont_Date').val('');
@@ -305,7 +336,8 @@ layui.use(['form', 'layedit', 'laydate','upload'], function(){
 			$('#offi_Tel').val('');
 			$('#our_Unit').val('');
 			$('#user_Id').val('');
-			wlxXmXX(form);
+			form.render('select');
+			//wlxXmXX(form);
 		}
     });
 
@@ -379,7 +411,6 @@ layui.use(['form', 'layedit', 'laydate','upload'], function(){
   });
   allZBFS(form);
   allUser(form);
- 
 });
 
 
@@ -517,6 +548,82 @@ function formatDate(date){
 	return str;
 }
 
+//表格新增一行
+var index=0;
+function addRow(){
+	index++;
+	var tables=$('#hwcpnrs');
+	var addtr = $("<tr>"+
+			"<th scope='row' style='text-align: center;line-height:38px;'>"+index+"</th>"+
+			"<td><input type='text' class='form-control' aria-label='' aria-describedby='' id='cpmc"+index+"'></td>"+
+			"<td><input type='text' class='form-control' aria-label='' aria-describedby='' id='pp"+index+"'></td>"+
+			"<td><input type='text' class='form-control' aria-label='' aria-describedby='' id='ggxh"+index+"'></td>"+
+			"<td><input type='text' class='form-control' aria-label='' aria-describedby='' id='zypzcs"+index+"'></td>"+
+			"<td><input type='text' class='form-control' aria-label='' aria-describedby='' id='dw"+index+"'></td>"+
+			"<td><input type='text' class='form-control' aria-label='' aria-describedby='' id='sl"+index+"' onchange='jsje("+index+")'></td>"+
+			"<td><input type='text' class='form-control' aria-label='' aria-describedby='' id='dj"+index+"' onchange='jsje("+index+")'></td>"+
+			"<td><input type='text' class='form-control' aria-label='' aria-describedby='' id='je"+index+"' readonly='readonly'></td>"+
+			"<td><button type='button' class='layui-btn layui-btn-danger' title='删除一行' onclick='deleteTrRow(this)'><i class='layui-icon'>&#xe640;</i></button></td>"+
+			"</tr>");
+	 addtr.appendTo(tables);     
+} 
+
+
+//表格删除一行
+function deleteTrRow(tr){
+    $(tr).parent().parent().remove();
+    index--;
+}
+
+//拼接表格提交的数据
+ function savehwcpnr(){
+	//货物内容
+	$('#hwnrs').val('');
+	var hwnrs=$('#hwnrs').val();
+	//获取表格每一行的数据
+	for(var i=1;i<=index;i++){
+		//产品名称
+		var cpmc=$('#cpmc'+i+'').val();
+		//品牌
+		var pp=$('#pp'+i+'').val();
+		//规格型号
+		var ggxh=$('#ggxh'+i+'').val();
+		//主要配置参数
+		var zypzcs=$('#zypzcs'+i+'').val();
+		//单位
+		var dw=$('#dw'+i+'').val();
+		//数量
+		var sl=$('#sl'+i+'').val();
+		//单价
+		var dj=$('#dj'+i+'').val();
+		//金额
+		var je=$('#je'+i+'').val();
+		//拼接字符串
+		var str=cpmc+";"+pp+";"+ggxh+";"+zypzcs+";"+dw+";"+sl+";"+dj+";"+je;
+		if(undefined!=hwnrs){
+			hwnrs=hwnrs+","+str;
+			 $('#hwnrs').val(hwnrs);
+		 }else{
+			 hwnrs=str;
+			 $('#hwnrs').val(hwnrs);
+		 }
+	}
+} 
+
+function jsje(index){
+	//获得输入数量的值
+	var sl=$('#sl'+index+'').val()*1;
+	//获得输入单价的值
+	var dj=$('#dj'+index+'').val()*1;
+	if(dj!=""){
+		var je=dj.toFixed(2); 
+		$('#dj'+index+'').val(je);
+	}
+	//设置金额
+	var je=(sl*1)*(dj*1);
+	var money=je.toFixed(2);
+	$('#je'+index+'').val(money);
+}
 
 
 

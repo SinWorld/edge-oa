@@ -13,13 +13,13 @@
 <form id="form" method="post">
 	<input type="hidden" value='<c:url value="/"/>' id="url">
 	<div  style="width:100%;overflow:hidden">
-		<div style="width:20%;float:left;">
-			<div style="padding-top:10%;padding-bottom:10%;border:3px solid #000;background:#FFFACD" class="layui-form-item">
+		<div style="width:15%;float:left;">
+			<div style="height:-webkit-fill-available;padding-top:10%;padding-bottom:10%;background:#eee" class="layui-form-item">
 				<h2 style="text-align: center;">部门机构</h2>
 			 	<ul id="tree" style="font-size: 20px;"></ul>  
 			</div>
 		</div>
-		<div style="width:80%;float:right;text-align:center">
+		<div style="width:85%;float:right;position:relative;top: -10px;">
 			<table class="layui-hide" id="test" lay-filter="test" ></table>
 		</div>
 	</div>

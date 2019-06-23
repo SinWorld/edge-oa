@@ -22,9 +22,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.activiti.engine.repository.ProcessDefinition;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.net.ftp.FTPClient;
-import org.junit.Test;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -311,7 +308,9 @@ public class ApproveprojController {
 		approveprojService.saveXiangMuXX(foll_up_Proj);
 		model.addAttribute("flag", true);
 		Integer xmxxdm = approveprojService.xiangMuXXId();// 新增数据主键
-		this.addXMXXFj(fjsx, userId, xmxxdm);
+		if(fjsx.length()!=0) {
+			this.addXMXXFj(fjsx, userId, xmxxdm);
+		}
 		// 启动流程实例
 		approveprojService.saveStartProcess(userName, request);
 		return "projman/approveproj/saveApproveproj";

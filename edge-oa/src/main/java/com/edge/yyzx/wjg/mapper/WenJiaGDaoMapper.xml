@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edge.yyzx.wjg.dao.WenJianGDao">
+	<!-- 定义缓存 一般是一级缓存，如果用同一个sqlsession 那么相同查询直接会从缓存中查找 <cache size="1024" flushInterval="60000" 
+		eviction="LRU" readOnly="false"></cache> -->
+		
+	<!--查询顶级节点  -->
+	<select id="queryTopWJJTree" resultType="SYS_WenJianJ">
+		select * from sys_wenjianj w
+		<where>
+			w.parent_id is null
+		</where>
+	</select>	
+	
+	<!--查询子节点  -->
+	<select id="queryChildrenWJJTree" resultType="SYS_WenJianJ" parameterType="Integer">
+		select * from sys_wenjianj w
+		<where>
+			w.parent_id=#{parent_id}
+		</where>
+	</select>
+		
+	<!--通过id查询文件夹 -->
+	<select id="queryWjjById" parameterType="Integer" resultType="SYS_WenJianJ">
+		select * from sys_wenjianj w
+		<where>
+			w.id=#{id}
+		</where>
+	</select>
+
+	<!--新增文件夹 -->
+	<insert id="saveWjj" parameterType="SYS_WenJianJ">
+		insert into
+		sys_wenjianj(ID,TITLE,PARENT_ID)
+		values(seq_wenjianj_id.nextval,#{title},#{parent_Id})
+	</insert>
+
+	<!--查询所有文件夹 -->
+	<select id="allWenJianJ" resultType="SYS_WenJianJ">
+		select * from sys_wenjianj
+	</select>
+	
+	<!--编辑文件夹  -->
+	<update id="editWJJ" parameterType="SYS_WenJianJ">
+		update sys_wenjianj 
+		<set>
+			<if test="title!=null">title=#{title},</if>
+			<if test="parent_Id!=null">parent_Id=#{parent_Id}</if>
+		</set>
+		<where>
+			id=#{id}
+		</where>
+	</update>
+	
+	<!--删除文件夹  -->
+	<delete id="deleteWJJ" parameterType="Integer">
+		delete sys_wenjianj w
+		<where>
+			w.id=#{id}
+		</where>
+	</delete>
+	
+	<!--文件柜新增文件  -->
+	<insert id="saveWJG" parameterType="SYS_WenJianG">
+		insert into sys_wenjiang(WENJIANGDM,WENJIANM,WENJIANJDM,USERDM,STARTTIME,SCWJM,SCDZ,REALWJM)
+		values(seq_wenJianGDM.Nextval,#{wenJianM,jdbcType=VARCHAR},#{wenJianJDM,jdbcType=NUMERIC},#{userDM,jdbcType=NUMERIC},
+		#{startTime,jdbcType=DATE},#{scwjm,jdbcType=VARCHAR},#{scdz,jdbcType=VARCHAR},#{realWJM,jdbcType=VARCHAR})
+	</insert>
+	
+	<!--分页查询所有的文件柜文件  -->
+	<select id="queryAllWenJ" resultType="SYS_WenJianG"
+		parameterType="Wjg_QueryVo">
+		select * from (select row_.*, rownum rownum_ from (select * from
+		sys_wenjiang order by wenjiangdm desc ) row_
+		<where>
+			rownum &lt;=#{size}
+			<if test="wenJianM!=null"> and wenjianm like '%${wenJianM}%'</if>
+			<if test="wenJianJDM!=null"> and wenjianjdm = #{wenJianJDM}</if>
+			<if test="userDM!=null"> and userdm = #{userDM}</if>
+			<if test="date != null">AND
+				starttime <![CDATA[>=]]>
+				#{date}
+			</if>
+			<if test="date2 != null">AND
+				starttime <![CDATA[<=]]>#{date2}
+			</if>
+		</where>
+		)
+		<where>
+			rownum_ &gt;=#{page}
+		</where>
+	</select>
+	
+	<!--按条件查询所有文件柜文件数量 -->
+	<select id="queryAllWenJCount" resultType="Integer"
+		parameterType="Wjg_QueryVo">
+		select count(1) from sys_wenjiang
+		<where>
+			1=1
+			<if test="wenJianM!=null"> and wenjianm like '%${wenJianM}%'</if>
+			<if test="wenJianJDM!=null"> and wenjianjdm = #{wenJianJDM}</if>
+			<if test="userDM!=null"> and userdm = #{userDM}</if>
+			<if test="date != null and date!=''">AND
+				starttime <![CDATA[>=]]>
+				#{date}
+			</if>
+			<if test="date2 != null and date2!=''">AND
+				starttime <![CDATA[<=]]>#{date2}
+			</if>
+		</where>
+	</select>
+	
+	<!--根据id查询对应的文件柜文件  -->
+	<select id="queryWJGById" resultType="SYS_WenJianG" parameterType="Integer">
+		select * from sys_wenjiang g
+		<where>
+			g.wenjiangdm=#{id}
+		</where>
+	</select>
+	
+	<!--删除文件  -->
+	<delete id="deleteWJById" parameterType="Integer">
+		delete sys_wenjiang 
+		<where>
+			wenjiangdm=#{id}
+		</where>
+	</delete>
+	
+	<!--根据文件夹代码查询文件柜文件  -->
+	<select id="queryWJGByWJJDM" parameterType="Integer" resultType="SYS_WenJianG">
+		select * from sys_wenjiang g
+		<where>
+			g.wenjianjdm=#{wjjDM}
+		</where>
+	
+	</select>
+	
+	
+	
+</mapper>

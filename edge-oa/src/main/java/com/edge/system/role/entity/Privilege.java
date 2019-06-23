@@ -14,6 +14,7 @@ public class Privilege implements Comparable<Privilege> {
 	private String privilege_name;// 权限名称
 	private String privilege_url;// 功能url
 	private Integer parent_id;// 父级权限
+	private String icon;// 字体图标
 
 	private TreeSet<Privilege> children = new TreeSet<Privilege>();// 辅助属性 下级权限
 
@@ -57,10 +58,18 @@ public class Privilege implements Comparable<Privilege> {
 		this.parent_id = parent_id;
 	}
 
+	public String getIcon() {
+		return icon;
+	}
+
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
+
 	@Override
 	public String toString() {
 		return "Privilege [privilege_id=" + privilege_id + ", privilege_name=" + privilege_name + ", privilege_url="
-				+ privilege_url + ", parent_id=" + parent_id + ", children=" + children + "]";
+				+ privilege_url + ", parent_id=" + parent_id + ", icon=" + icon + ", children=" + children + "]";
 	}
 
 	public int compareTo(Privilege p) {

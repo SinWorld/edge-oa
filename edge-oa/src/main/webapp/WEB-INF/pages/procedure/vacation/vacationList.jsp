@@ -12,7 +12,9 @@
 <body>
 <form id="form" method="post">
 	<input type="hidden" value='<c:url value="/"/>' id="url">
- 	<table class="layui-hide" id="test" lay-filter="test"></table>
+	<div style="position:relative;top: -10px;">
+ 		<table class="layui-hide" id="test" lay-filter="test"></table>
+ 	</div>
  </form>
 <script type="text/html" id="toolbarDemo">
   <div class="layui-btn-container">

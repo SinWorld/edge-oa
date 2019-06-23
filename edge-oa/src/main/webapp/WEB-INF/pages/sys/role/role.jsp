@@ -13,7 +13,9 @@
 <form id="form" method="post">
 	<input type="hidden" value='<c:url value="/"/>' id="url">
  	<span id="qx"><textarea  rows="" cols="100%" id="sjqx">${sjqxs}</textarea></span>
- 	<table class="layui-hide" id="test" lay-filter="test"></table>
+ 	<div style="position:relative;top: -10px;">
+ 		<table class="layui-hide" id="test" lay-filter="test"></table>
+ 	</div>
  </form>
 <script type="text/html" id="toolbarDemo">
   <div class="layui-btn-container">

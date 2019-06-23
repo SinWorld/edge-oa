@@ -14,6 +14,7 @@ import org.activiti.engine.history.HistoricVariableInstance;
 import org.activiti.engine.impl.identity.Authentication;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -23,6 +24,7 @@ import com.edge.projman.approveproj.dao.ApproveprojDao;
 import com.edge.projman.approveproj.entity.Foll_up_Proj;
 import com.edge.projman.approveproj.service.inter.ApproveprojService;
 import com.edge.projman.xshtdj.dao.XiaoShouHTDJDao;
+import com.edge.projman.xshtdj.entity.HuoWuInFor;
 import com.edge.projman.xshtdj.entity.XiaoShouHT;
 import com.edge.projman.xshtdj.entity.Xsht_QueryVo;
 import com.edge.projman.xshtdj.service.inter.XiaoShouHTDJService;
@@ -200,6 +202,16 @@ public class XiaoShouHtDJServiceImpl implements XiaoShouHTDJService {
 	// 点击业务数据列表进入查看页显示对应的流程图返回流程部署Id
 	public String queryProcinstById(String processInstanceId) {
 		return approveprojDao.queryProcinstById(processInstanceId);
+	}
+
+	// 新增货物产品内容
+	public void addHWCPNR(HuoWuInFor huoWuInFor) {
+		xiaoShouHTDJDao.addHWCPNR(huoWuInFor);
+	}
+
+	// 查询该销售合同对应的产品内容
+	public List<HuoWuInFor> hwnrs(Integer proj_Info_Id) {
+		return xiaoShouHTDJDao.hwnrs(proj_Info_Id);
 	}
 
 }

@@ -178,5 +178,21 @@
 	<select id="queryXSHTMaxId" resultType="Integer">
 		select max(proj_Info_Id) from proj_info
 	</select>
+	
+	<!--新增货物产品内容  -->
+	<insert id="addHWCPNR" parameterType="HuoWuInFor">
+		insert into huowucpnr(HWID,CHANPINMC,PINPAI,GUIGEXH,ZHUYAOPZCS,DANWEI,SHULIANG,PRICE,JINE,PROJ_INFO_ID,IS_RK,IS_CK)
+		values(seq_hwId.Nextval,#{chanPinMC,jdbcType=VARCHAR},#{pinPai,jdbcType=VARCHAR},#{guiGeXH,jdbcType=VARCHAR},
+		#{zhuYaoPZCS,jdbcType=VARCHAR},#{danWei,jdbcType=VARCHAR},#{shuLiang,jdbcType=NUMERIC},#{price,jdbcType=NUMERIC},
+		#{jinE,jdbcType=NUMERIC},#{proj_Info_Id,jdbcType=NUMERIC},#{is_rk,jdbcType=NUMERIC},#{is_ck,jdbcType=NUMERIC})
+	</insert>
+	
+	<!--查询销售合同对应的产品内容  -->
+	<select id="hwnrs"  resultType="HuoWuInFor" parameterType="Integer">
+		select * from huowucpnr h
+		<where>
+			h.proj_info_id=#{proj_Info_Id} order by h.hwid desc
+		</where>
+	</select>
 
 </mapper>

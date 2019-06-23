@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.alibaba.fastjson.JSONArray;
 import com.edge.projman.approveproj.entity.Foll_up_Proj;
+import com.edge.projman.xshtdj.entity.HuoWuInFor;
 import com.edge.projman.xshtdj.entity.XiaoShouHT;
 import com.edge.projman.xshtdj.entity.Xsht_QueryVo;
 import com.edge.utils.APPR_DM_STATUS;
@@ -40,5 +41,11 @@ public interface XiaoShouHTDJDao {
 
 	// 编辑销售合同
 	public void editXSHT(XiaoShouHT xiaoShouHT);
+	
+	//新增货物产品内容
+	public void addHWCPNR(HuoWuInFor huoWuInFor);
+	
+	//查询该销售合同对应的产品内容
+	public List<HuoWuInFor> hwnrs(@Param("proj_Info_Id")Integer proj_Info_Id);
 
 }

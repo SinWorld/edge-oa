@@ -76,7 +76,9 @@
 </form>
 <input type="hidden" value='<c:url value="/"/>' id="url">
 <input type="hidden" id="flag" value="false">
-<table class="layui-hide" id="test" lay-filter="test"></table>
+<div style="position:relative;top: -10px;">
+	<table class="layui-hide" id="test" lay-filter="test"></table>
+</div>
 <script type="text/html" id="toolbarDemo">
   <div class="layui-btn-container" style="width:25%;">
     <button class="layui-btn layui-btn-sm" lay-event="getCheckData" type="button">销售合同登记</button>

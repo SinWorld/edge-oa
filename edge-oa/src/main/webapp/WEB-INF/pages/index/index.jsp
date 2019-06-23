@@ -18,7 +18,7 @@
     <ul class="layui-nav layui-layout-right">
       <li class="layui-nav-item">
         <a href="javascript:;">
-           <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
+           <img src="../login/images/photo-pic.png"  class="layui-nav-img">
       			${userName}
         </a>
         <input type="hidden" value="${userId}" id="userId">
@@ -36,10 +36,15 @@
     <div class="layui-side-scroll">
       <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
       <ul class="layui-nav layui-nav-tree"  lay-filter="test">
-      <li class="layui-nav-item"><a href="">首页</a></li>
+      <li class="layui-nav-item"><a href=""><i class="layui-icon">&#xe68e;</i>&nbsp;&nbsp;首页</a></li>
       <c:forEach items="${privilegeTopList}" var="p">
         <li class="layui-nav-item">
-          <a class="" href="javascript:;">${p.privilege_name}</a>
+        <c:if test="${empty p.privilege_url}">
+        	<a class="" href="javascript:;"><i class="layui-icon">${p.icon}</i>&nbsp;&nbsp;${p.privilege_name}</a>
+        </c:if>
+        <c:if test="${not empty p.privilege_url}">
+        	<a class="" href='<c:url value="${p.privilege_url}"/>' target="iframe_a"><i class="layui-icon">${p.icon}</i>&nbsp;&nbsp;${p.privilege_name}</a>
+        </c:if>
           <c:forEach items="${p.children}" var="c">
 	           <dl class="layui-nav-child">
 	            <dd><a  href='<c:url value="${c.privilege_url}"/>' mytitle="${c.privilege_name}"  target="iframe_a">${c.privilege_name}</a></dd>
@@ -60,7 +65,7 @@
   
   <div class="layui-footer">
     <!-- 底部固定区域 -->
-  	 安徽爱吉泰克科技有限公司
+    <a href="http://www.ahajtk.com">安徽爱吉泰克科技有限公司</a>
   </div>
 </div>
 <script src="../layui-v2.4.5/layui/layui.js"></script>
