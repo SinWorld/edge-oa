@@ -28,10 +28,10 @@
 					      <label class="layui-form-label" style="width: 100px;">文件名</label>
 					      <div class="layui-input-inline">
 					        <input type="text" name="wenJianM" lay-verify="wenJianM"
-							autocomplete="off" class="layui-input" style="width: 300px;" id="wenJianM">
+							autocomplete="off" class="layui-input" style="width: 260px;" id="wenJianM">
 					      </div>
 				     </div>
-				    <div class="layui-inline" style="width:490px;right: -78px;">
+				    <div class="layui-inline" style="width:380px;right: -33px;">
 						  	<label class="layui-form-label">文件夹名称</label>
 							<div class="layui-input-inline" style="text-align: left;width: 68%">
 								<select name="wenJianJDM" id="wenJianJDM" lay-filter="wenJianJDM" lay-verify="wenJianJDM" lay-search="">
@@ -39,7 +39,7 @@
 								</select>
 							</div>
 					</div>
-					<div class="layui-inline" style="width: 24.5%;left: -6px;">
+					<div class="layui-inline" style="width: 24.5%;left: -33px;">
 					  	<label class="layui-form-label">上传人</label>
 						<div class="layui-input-inline" style="text-align: left;">
 							<select name="userDM" id="userDM" lay-filter="userDM" lay-verify="userDM">
@@ -47,7 +47,6 @@
 							</select>
 						</div>
 				 	</div>
-				 	<button class="layui-btn" data-type="reload" type="button" id="do_search" >搜索</button>
 			 	</div>
 				
 				<div class="layui-form-item">
@@ -61,17 +60,18 @@
 				        <input type="text" name="time2" id="date2" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
 				      </div>
 					</div>
-					<button type="reset" class="layui-btn layui-btn-primary" style="margin-left:17px;">重置</button>
+					<button class="layui-btn" data-type="reload" type="button" id="do_search" style="margin-left:20px;margin-top: -5px;">搜索</button>
+					<button type="reset" class="layui-btn layui-btn-primary" style="margin-left:17px;margin-top: -5px;">重置</button>
 			 	</div>
 			
 			</div> 
 			</div>
 		</form>
-		<table class="layui-hide" id="test" lay-filter="test" style="width: 100%"></table>
+			<table class="layui-hide" id="test" lay-filter="test" style="width: 100%"></table>
 	</div>
 </div>
 <script type="text/html" id="toolbarDemo">
-  <div class="layui-btn-container" style="width:20%;">
+  <div class="layui-btn-container" style="width:22%;">
     <button class="layui-btn layui-btn-sm" lay-event="getCheckData" type="button">上传</button>
  	<button class="layui-btn layui-btn-sm" lay-event="xz" type="button">下载</button>
 	<button class="layui-btn layui-btn-sm" lay-event="gjss" type="button">高级搜索</button>

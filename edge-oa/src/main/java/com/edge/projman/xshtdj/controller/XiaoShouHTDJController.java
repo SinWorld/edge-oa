@@ -236,10 +236,10 @@ public class XiaoShouHTDJController {
 		xiaoShouHTDJService.saveXSHT(xiaoShouHT);
 		model.addAttribute("flag", true);
 		Integer xshtdm = xiaoShouHTDJService.queryXSHTMaxId();
-		if(hwnrs!=null||hwnrs!="") {
-			addhwcpnr(hwnrs,xshtdm);
+		if (hwnrs != null || hwnrs != "") {
+			addhwcpnr(hwnrs, xshtdm);
 		}
-		if(fjsx.length()!=0) {
+		if (fjsx.length() != 0) {
 			addXSHTFj(fjsx, userId, xshtdm);
 		}
 		// 启动流程实例
@@ -281,37 +281,40 @@ public class XiaoShouHTDJController {
 		return bh;
 	}
 
-	//新增货物产品内容集合
-	private void addhwcpnr(String str,Integer objId) {
-		String hwnr = str.substring(1, str.length()).trim();
-		String[] hwnrs = hwnr.split(",");
-		// 遍历
-		for (String hw : hwnrs) {
-			String[] data = hw.split(";");
-			String cpmc = data[0];//产品名称
-			String pp = data[1];//品牌
-			String ggxh = data[2];//规格型号
-			String zypzcs = data[3];//主要配置参数
-			String dw = data[4];//单位
-			String sl = data[5];//数量
-			String dj = data[6];//单价
-			String je = data[7];//金额
-			//new 出货物产品内容对象
-			HuoWuInFor hwif=new HuoWuInFor();
-			//赋值
-			hwif.setChanPinMC(cpmc);
-			hwif.setPinPai(pp);
-			hwif.setGuiGeXH(ggxh);
-			hwif.setZhuYaoPZCS(zypzcs);
-			hwif.setDanWei(dw);
-			hwif.setShuLiang(Integer.parseInt(sl));
-			hwif.setPrice(Double.parseDouble(dj));
-			hwif.setJinE(Double.parseDouble(je));
-			hwif.setProj_Info_Id(objId);
-			hwif.setIs_rk(false);
-			hwif.setIs_ck(false);
-			xiaoShouHTDJService.addHWCPNR(hwif);
+	// 新增货物产品内容集合
+	private void addhwcpnr(String str, Integer objId) {
+		Gson gson = new Gson();
+		String hwnrs = str.substring(1, str.length()).trim();
+		String[] split = hwnrs.split("&");
+		for (String s : split) {
+			// 将其转换为JSONObject对象
+			JSONObject jsonObject = gson.fromJson(s.trim(), JSONObject.class);
+			String cpmc = (String) jsonObject.get("cpmc");// 产品名称
+			String pp = (String) jsonObject.get("pp");// 品牌
+			String ggxh = (String) jsonObject.get("ggxh");// 规格型号
+			String zypzcs = (String) jsonObject.get("zypzcs");// 主要配置参数
+			String dw = (String) jsonObject.get("dw");// 单位
+			Double sl = (Double) jsonObject.get("sl");
+			Integer number = Integer.valueOf(sl.intValue());// 数量
+			Double dj = (Double) jsonObject.get("dj");// 单价
+			Double je = (Double) jsonObject.get("je");// 金额
+			// new 出货物产品内容对象
+			HuoWuInFor hwnr = new HuoWuInFor();
+			// 赋值
+			hwnr.setChanPinMC(cpmc);
+			hwnr.setPinPai(pp);
+			hwnr.setGuiGeXH(ggxh);
+			hwnr.setZhuYaoPZCS(zypzcs);
+			hwnr.setDanWei(dw);
+			hwnr.setShuLiang(number);
+			hwnr.setPrice(dj);
+			hwnr.setJinE(je);
+			hwnr.setProj_Info_Id(objId);
+			hwnr.setIs_rk(false);
+			hwnr.setIs_ck(false);
+			xiaoShouHTDJService.addHWCPNR(hwnr);
 		}
+		
 	}
 
 	// 跳转至查看页面并回显数据
@@ -386,23 +389,94 @@ public class XiaoShouHTDJController {
 		model.addAttribute("list", list);
 		return "projman/xshtdj/editXshtdj";
 	}
-	
-	//查询货物内容用于在编辑页面回显
-	private List<HuoWuInFor> queryHWNR(Integer xshtdm){
+
+	// 查询货物内容用于在编辑页面回显
+	private List<HuoWuInFor> queryHWNR(Integer xshtdm) {
 		List<HuoWuInFor> hwcgnrs = xiangMuCGRKService.queryHWCGNRS(xshtdm);
 		return hwcgnrs;
 	}
 
 	// 编辑操作并启动流程
 	@RequestMapping(value = "/editXSHT.do")
-	public String editXMXX(XiaoShouHT xsht, Model model, HttpServletRequest request, Integer taskId) {
+	public String editXMXX(XiaoShouHT xsht, Model model, HttpServletRequest request, Integer taskId,
+			@RequestParam String hwnrData) {
 		// 设置审核状态为运行中
 		xsht.setAppr_Status(2);
 		xiaoShouHTDJService.editXSHT(xsht);
+		if(hwnrData!=null||hwnrData!="") {
+			this.editHWNRS(hwnrData, xsht.getProj_Info_Id());
+		}
 		model.addAttribute("flag", true);
 		// 推动流程进入下一节点
 		approveprojService.saveTask(String.valueOf(taskId), request);
 		return "projman/xshtdj/editXshtdj";
+	}
+
+	// 编辑页面对货物产品内容的操作
+	private void editHWNRS(String hwnrData, Integer objId) {
+		Gson gson = new Gson();
+		String hwnrs = hwnrData.substring(1, hwnrData.length()).trim();
+		String[] split = hwnrs.split("&");
+		for (String s : split) {
+			// 将其转换为JSONObject对象
+			JSONObject jsonObject = gson.fromJson(s.trim(), JSONObject.class);
+			Double id = (Double) jsonObject.get("hwId");
+			Integer hwId = Integer.valueOf(id.intValue());// 主键
+			String cpmc = (String) jsonObject.get("cpmc");// 产品名称
+			String pp = (String) jsonObject.get("pp");// 品牌
+			String ggxh = (String) jsonObject.get("ggxh");// 规格型号
+			String zypzcs = (String) jsonObject.get("zypzcs");// 主要配置参数
+			String dw = (String) jsonObject.get("dw");// 单位
+			Double sl = (Double) jsonObject.get("sl");
+			Integer number = Integer.valueOf(sl.intValue());// 数量
+			Double dj = (Double) jsonObject.get("dj");// 单价
+			Double je = (Double) jsonObject.get("je");// 金额
+			// 如果id不为-1为编辑，否则为新增
+			if (hwId != -1) {
+				// 根据id查询对应的货物产品内容
+				HuoWuInFor hwnr = xiaoShouHTDJService.queryHuoWuInForById(hwId);
+				// 设置属性
+				hwnr.setChanPinMC(cpmc);
+				hwnr.setPinPai(pp);
+				hwnr.setGuiGeXH(ggxh);
+				hwnr.setZhuYaoPZCS(zypzcs);
+				hwnr.setDanWei(dw);
+				hwnr.setShuLiang(number);
+				hwnr.setPrice(dj);
+				hwnr.setJinE(je);
+				// 执行编辑操作
+				xiaoShouHTDJService.editHWCPNR(hwnr);
+			} else {
+				// 新增操作
+				// new 出货物产品内容对象
+				HuoWuInFor hwnr = new HuoWuInFor();
+				// 赋值
+				hwnr.setChanPinMC(cpmc);
+				hwnr.setPinPai(pp);
+				hwnr.setGuiGeXH(ggxh);
+				hwnr.setZhuYaoPZCS(zypzcs);
+				hwnr.setDanWei(dw);
+				hwnr.setShuLiang(number);
+				hwnr.setPrice(dj);
+				hwnr.setJinE(je);
+				hwnr.setProj_Info_Id(objId);
+				hwnr.setIs_rk(false);
+				hwnr.setIs_ck(false);
+				xiaoShouHTDJService.addHWCPNR(hwnr);
+			}
+
+		}
+
+	}
+
+	// 删除货物内容数据
+	@RequestMapping(value = "/deleteHWNRById.do")
+	@ResponseBody
+	public String  deleteHWNRById(@RequestParam Integer id) {
+		xiaoShouHTDJService.deleteHWNRById(id);
+		JSONObject jsonObject=new JSONObject();
+		jsonObject.put("flag", "删除成功");
+		return jsonObject.toString();
 	}
 
 	// 点击业务列表进入查看页面
@@ -426,7 +500,7 @@ public class XiaoShouHTDJController {
 			// 从session中取出流程部署Id
 			procinstById = (String) session.getAttribute("prodefById");
 		}
-		//查询货物产品内容
+		// 查询货物产品内容
 		List<HuoWuInFor> hwnrs = xiaoShouHTDJService.hwnrs(proj_Id);
 		ProcessDefinition pd = approveprojService.queryProcessDefinitionById(procinstById);
 		// 流程节点高亮map
@@ -580,8 +654,7 @@ public class XiaoShouHTDJController {
 		jsonObject.put("data", queryFuJ);
 		return jsonObject.toString();
 	}
-	
-	
+
 	// 按业务数据主键查询货物产品内容
 	@RequestMapping(value = "/queryHWCPByObjId.do")
 	@ResponseBody

@@ -194,5 +194,41 @@
 			h.proj_info_id=#{proj_Info_Id} order by h.hwid desc
 		</where>
 	</select>
-
+	
+	<!--通过Id查询对应的货物产品内容  -->
+	<select id="queryHuoWuInForById" parameterType="Integer" resultType="HuoWuInFor">
+		select * from huowucpnr h
+		<where>
+			h.hwid=#{hwId}
+		</where>
+	</select>
+	
+	<!--编辑货物产品内容  -->
+	<update id="editHWCPNR" parameterType="HuoWuInFor">
+		update huowucpnr 
+		<set>
+			<if test="chanPinMC!=null">chanpinmc=#{chanPinMC},</if>
+			<if test="pinPai!=null">pinpai=#{pinPai},</if>
+			<if test="guiGeXH!=null">guigexh=#{guiGeXH},</if>
+			<if test="zhuYaoPZCS!=null">zhuyaopzcs=#{zhuYaoPZCS},</if>
+			<if test="danWei!=null">danwei=#{danWei},</if>
+			<if test="shuLiang!=null">shuliang=#{shuLiang},</if>
+			<if test="price!=null">price=#{price},</if>
+			<if test="jinE!=null">jine=#{jinE},</if>
+			<if test="proj_Info_Id!=null">proj_info_id=#{proj_Info_Id},</if>
+			<if test="is_rk!=null">is_rk=#{is_rk},</if>
+			<if test="is_ck!=null">is_ck=#{is_ck}</if>
+		</set>
+		<where>
+			hwid=#{hwId}
+		</where>
+	</update>
+	
+	<!--删除货物产品内容  -->
+	<delete id="deleteHWNRById" parameterType="Integer">
+		delete from huowucpnr h
+		<where>
+			h.hwid=#{hwId}
+		</where>
+	</delete>
 </mapper>

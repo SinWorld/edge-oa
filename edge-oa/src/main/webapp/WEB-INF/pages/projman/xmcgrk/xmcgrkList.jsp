@@ -313,7 +313,7 @@
 						mark += 1;
 						tdPreArr.each(function() {//相同列的第一列增加rowspan属性
 							$(this).attr("rowspan", mark); 
-							$(this).css({"background-color":"#DCDCDC","color":"#3192d3","cursor":"pointer"}); 
+							$(this).css({"background-color":"#DCDCDC","color":"#3192d3","cursor":"pointer","text-align":"center"}); 
 							
 						});
 						tdCurArr.each(function() {//当前行隐藏
@@ -321,7 +321,7 @@
 						});
 					} else {
 						tdPreArr.each(function() {//相同列的第一列增加rowspan属性
-							$(this).css({"background-color":"#DCDCDC","color":"#3192d3","cursor":"pointer"}); 
+							$(this).css({"background-color":"#DCDCDC","color":"#3192d3","cursor":"pointer","text-align":"center"}); 
 						});
 						mergeIndex = i;
 						mark = 1;//一旦前后两行的值不一样了，那么需要合并的格子数mark就需要重新计算

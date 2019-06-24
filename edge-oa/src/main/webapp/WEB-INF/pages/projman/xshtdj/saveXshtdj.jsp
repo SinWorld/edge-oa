@@ -555,14 +555,14 @@ function addRow(){
 	var tables=$('#hwcpnrs');
 	var addtr = $("<tr>"+
 			"<th scope='row' style='text-align: center;line-height:38px;'>"+index+"</th>"+
-			"<td><input type='text' class='form-control' aria-label='' aria-describedby='' id='cpmc"+index+"'></td>"+
-			"<td><input type='text' class='form-control' aria-label='' aria-describedby='' id='pp"+index+"'></td>"+
-			"<td><input type='text' class='form-control' aria-label='' aria-describedby='' id='ggxh"+index+"'></td>"+
-			"<td><input type='text' class='form-control' aria-label='' aria-describedby='' id='zypzcs"+index+"'></td>"+
-			"<td><input type='text' class='form-control' aria-label='' aria-describedby='' id='dw"+index+"'></td>"+
-			"<td><input type='text' class='form-control' aria-label='' aria-describedby='' id='sl"+index+"' onchange='jsje("+index+")'></td>"+
-			"<td><input type='text' class='form-control' aria-label='' aria-describedby='' id='dj"+index+"' onchange='jsje("+index+")'></td>"+
-			"<td><input type='text' class='form-control' aria-label='' aria-describedby='' id='je"+index+"' readonly='readonly'></td>"+
+			"<td><input type='text' class='form-control' aria-label='' aria-describedby=''  name='cpmc'></td>"+
+			"<td><input type='text' class='form-control' aria-label='' aria-describedby=''  name='pp'></td>"+
+			"<td><input type='text' class='form-control' aria-label='' aria-describedby=''  name='ggxh'></td>"+
+			"<td><input type='text' class='form-control' aria-label='' aria-describedby=''  name='zypzcs'></td>"+
+			"<td><input type='text' class='form-control' aria-label='' aria-describedby=''  name='dw'></td>"+
+			"<td><input type='text' class='form-control' aria-label='' aria-describedby=''  name='sl' id='sl"+index+"' onchange='jsje("+index+")'></td>"+
+			"<td><input type='text' class='form-control' aria-label='' aria-describedby=''  name='dj' id='dj"+index+"' onchange='jsje("+index+")'></td>"+
+			"<td><input type='text' class='form-control' aria-label='' aria-describedby=''  name='je' id='je"+index+"' readonly='readonly'></td>"+
 			"<td><button type='button' class='layui-btn layui-btn-danger' title='删除一行' onclick='deleteTrRow(this)'><i class='layui-icon'>&#xe640;</i></button></td>"+
 			"</tr>");
 	 addtr.appendTo(tables);     
@@ -578,43 +578,47 @@ function deleteTrRow(tr){
 //拼接表格提交的数据
  function savehwcpnr(){
 	//货物内容
-	$('#hwnrs').val('');
 	var hwnrs=$('#hwnrs').val();
-	//获取表格每一行的数据
-	for(var i=1;i<=index;i++){
+	//货物当前表格
+	var tables=$('#hwcpnrs');
+	//获得表格所有行
+	var rows=tables[0].rows;
+	//遍历表格
+	for(var i=1;i<rows.length;i++){
 		//产品名称
-		var cpmc=$('#cpmc'+i+'').val();
+		var cpmc=$('input[name="cpmc"]')[i-1].value;
 		//品牌
-		var pp=$('#pp'+i+'').val();
+		var pp=$('input[name="pp"]')[i-1].value;
 		//规格型号
-		var ggxh=$('#ggxh'+i+'').val();
+		var ggxh=$('input[name="ggxh"]')[i-1].value;
 		//主要配置参数
-		var zypzcs=$('#zypzcs'+i+'').val();
+		var zypzcs=$('input[name="zypzcs"]')[i-1].value;
 		//单位
-		var dw=$('#dw'+i+'').val();
+		var dw=$('input[name="dw"]')[i-1].value;
 		//数量
-		var sl=$('#sl'+i+'').val();
+		var sl=$('input[name="sl"]')[i-1].value;
 		//单价
-		var dj=$('#dj'+i+'').val();
+		var dj=$('input[name="dj"]')[i-1].value;
 		//金额
-		var je=$('#je'+i+'').val();
+		var je=$('input[name="je"]')[i-1].value;
 		//拼接字符串
-		var str=cpmc+";"+pp+";"+ggxh+";"+zypzcs+";"+dw+";"+sl+";"+dj+";"+je;
+		var str="{"+"cpmc"+":"+cpmc+","+"pp"+":"+pp+","+"ggxh"+":"+ggxh+","+"zypzcs"+":"+zypzcs+","+"dw"+":"+dw+","+"sl"+":"+sl+","+"dj"+":"+dj+","+"je"+":"+je+"}";
 		if(undefined!=hwnrs){
-			hwnrs=hwnrs+","+str;
+			hwnrs=hwnrs+"&"+str;
 			 $('#hwnrs').val(hwnrs);
 		 }else{
 			 hwnrs=str;
 			 $('#hwnrs').val(hwnrs);
 		 }
 	}
-} 
+}
 
 function jsje(index){
 	//获得输入数量的值
 	var sl=$('#sl'+index+'').val()*1;
 	//获得输入单价的值
 	var dj=$('#dj'+index+'').val()*1;
+	$('#dj'+index+'').attr("title",dj);
 	if(dj!=""){
 		var je=dj.toFixed(2); 
 		$('#dj'+index+'').val(je);
@@ -623,6 +627,9 @@ function jsje(index){
 	var je=(sl*1)*(dj*1);
 	var money=je.toFixed(2);
 	$('#je'+index+'').val(money);
+	$('#je'+index+'').attr("title",money);
+	
+	
 }
 
 

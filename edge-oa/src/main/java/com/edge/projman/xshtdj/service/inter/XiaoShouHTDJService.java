@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.ui.Model;
 
 import com.alibaba.fastjson.JSONArray;
@@ -58,5 +59,14 @@ public interface XiaoShouHTDJService {
 	public void addHWCPNR(HuoWuInFor huoWuInFor);
 
 	// 查询该销售合同对应的产品内容
-	public List<HuoWuInFor> hwnrs( Integer proj_Info_Id);
+	public List<HuoWuInFor> hwnrs(Integer proj_Info_Id);
+
+	// 通过Id查询对应的货物产品内容
+	public HuoWuInFor queryHuoWuInForById(Integer hwId);
+
+	// 编辑货物产品内容
+	public void editHWCPNR(HuoWuInFor huoWuInFor);
+
+	// 删除货物产品内容
+	public void deleteHWNRById( Integer hwId);
 }

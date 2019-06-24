@@ -23,7 +23,9 @@
 		<input type="hidden" id="flag" value="${flag}"> 
 		<input type="hidden" value="${xsht.is_LX}" id="sflx">
 		<input type="hidden" value="${xsht.proj_Info_Id}" name="proj_Info_Id">
-		<input type="hidden" id="taskId" name="taskId" value="${taskId}">  
+		<input type="hidden" id="taskId" name="taskId" value="${taskId}"> 
+		<input type="hidden" id="hwnrSize" value="${list.size()}">
+		<input type="hidden" id="hwnrData" name="hwnrData"> 
 			
 			 <div class="layui-form-item" style="margin-top: 5%">
 			    <label class="layui-form-label"style="width: 120px;">销售合同名称</label>
@@ -188,15 +190,15 @@
 				    <c:forEach items="${list}" var="l">
 				    	<tr>
 				    		<th scope='row' style='text-align: center;line-height:38px;'></th>
-				    		<td><input type='text' class='form-control' aria-label='' aria-describedby='' value="${l.chanPinMC }"></td>
-				    		<td><input type='text' class='form-control' aria-label='' aria-describedby='' value="${l.pinPai }"></td>
-				    		<td><input type='text' class='form-control' aria-label='' aria-describedby='' value="${l.guiGeXH }"></td>
-				    		<td><input type='text' class='form-control' aria-label='' aria-describedby='' value="${l.zhuYaoPZCS }"></td>
-				    		<td><input type='text' class='form-control' aria-label='' aria-describedby='' value="${l.danWei }"></td>
-				    		<td><input type='text' class='form-control' aria-label='' aria-describedby='' value="${l.shuLiang }"></td>
-				    		<td><input type='text' class='form-control' aria-label='' aria-describedby='' value="${l.price }"></td>
-				    		<td><input type='text' class='form-control' aria-label='' aria-describedby='' value="${l.jinE }"></td>
-				    		<td><button type='button' class='layui-btn layui-btn-danger' title='删除一行' onclick='deleteTrRow(this)'><i class='layui-icon'>&#xe640;</i></button></td>
+				    		<td><input type="hidden" name="hwnrId" value="${l.hwId}"> <input type='text' class='form-control' aria-label='' aria-describedby='' name='cpmc' value="${l.chanPinMC }"></td>
+				    		<td><input type='text' class='form-control' aria-label='' aria-describedby='' value="${l.pinPai }" name='pp'></td>
+				    		<td><input type='text' class='form-control' aria-label='' aria-describedby='' value="${l.guiGeXH }" name='ggxh'></td>
+				    		<td><input type='text' class='form-control' aria-label='' aria-describedby='' value="${l.zhuYaoPZCS }" name='zypzcs'></td>
+				    		<td><input type='text' class='form-control' aria-label='' aria-describedby='' value="${l.danWei }" name='dw'></td>
+				    		<td><input type='text' class='form-control' aria-label='' aria-describedby='' value="${l.shuLiang }" name='sl'></td>
+				    		<td><input type='text' class='form-control' aria-label='' aria-describedby='' value="${l.price }" title="${l.price }" name='dj'></td>
+				    		<td><input type='text' class='form-control' aria-label='' aria-describedby='' value="${l.jinE }" title="${l.jinE }" name='je'></td>
+				    		<td><button type='button' class='layui-btn layui-btn-danger' title='删除一行' onclick='deleteData(${l.hwId})'><i class='layui-icon'>&#xe640;</i></button></td>
 				    	</tr>
 				    </c:forEach>
 				  </thead>
@@ -263,6 +265,7 @@ layui.use(['form', 'layedit', 'laydate','upload'], function(){
   
   //监听提交
   form.on('submit(demo1)', function(data){
+	editHWCPNRS();
     layer.alert(JSON.stringify(data.field), {
       title: '最终的提交信息'
     })
@@ -562,6 +565,61 @@ function xmsflx(form){
 	}
 }
 
+//表格新增一行
+var index=0;
+function addRow(){
+	//获得表格长度
+	var hwnrSize=$('#hwnrSize').val();
+	if(hwnrSize!=""){
+		hwnrSize++;
+		$('#hwnrSize').val(hwnrSize);
+		var tables=$('#hwcpnrs');
+		var addtr = $("<tr>"+
+				"<th scope='row' style='text-align: center;line-height:38px;'>"+hwnrSize+"</th>"+
+				"<td><input type='text' class='form-control' aria-label='' aria-describedby='' name='cpmc'></td>"+
+				"<td><input type='text' class='form-control' aria-label='' aria-describedby='' name='pp'></td>"+
+				"<td><input type='text' class='form-control' aria-label='' aria-describedby='' name='ggxh'></td>"+
+				"<td><input type='text' class='form-control' aria-label='' aria-describedby='' name='zypzcs'></td>"+
+				"<td><input type='text' class='form-control' aria-label='' aria-describedby='' name='dw'></td>"+
+				"<td><input type='text' class='form-control' aria-label='' aria-describedby='' name='sl' id='sl"+hwnrSize+"' onchange='jsje("+hwnrSize+")'></td>"+
+				"<td><input type='text' class='form-control' aria-label='' aria-describedby='' name='dj' id='dj"+hwnrSize+"' onchange='jsje("+hwnrSize+")'></td>"+
+				"<td><input type='text' class='form-control' aria-label='' aria-describedby='' name='je' id='je"+hwnrSize+"' readonly='readonly'></td>"+
+				"<td><button type='button' class='layui-btn layui-btn-danger' title='删除一行' onclick='deleteTrRow(this)'><i class='layui-icon'>&#xe640;</i></button></td>"+
+				"</tr>");
+		 addtr.appendTo(tables);     
+	}else{
+		index++;
+		var tables=$('#hwcpnrs');
+		var addtr = $("<tr>"+
+				"<th scope='row' style='text-align: center;line-height:38px;'>"+index+"</th>"+
+				"<td><input type='text' class='form-control' aria-label='' aria-describedby='' name='cpmc' id='cpmc"+index+"'></td>"+
+				"<td><input type='text' class='form-control' aria-label='' aria-describedby='' name='pp' id='pp"+index+"'></td>"+
+				"<td><input type='text' class='form-control' aria-label='' aria-describedby='' name='ggxh' id='ggxh"+index+"'></td>"+
+				"<td><input type='text' class='form-control' aria-label='' aria-describedby='' name='zypzcs' id='zypzcs"+index+"'></td>"+
+				"<td><input type='text' class='form-control' aria-label='' aria-describedby='' name='dw' id='dw"+index+"'></td>"+
+				"<td><input type='text' class='form-control' aria-label='' aria-describedby='' name='sl' id='sl"+index+"' onchange='jsje("+index+")'></td>"+
+				"<td><input type='text' class='form-control' aria-label='' aria-describedby='' name='dj' id='dj"+index+"' onchange='jsje("+index+")'></td>"+
+				"<td><input type='text' class='form-control' aria-label='' aria-describedby='' name'je' id='je"+index+"' readonly='readonly'></td>"+
+				"<td><button type='button' class='layui-btn layui-btn-danger' title='删除一行' onclick='deleteTrRow(this)'><i class='layui-icon'>&#xe640;</i></button></td>"+
+				"</tr>");
+		 addtr.appendTo(tables);
+	}
+}
+
+//表格删除一行
+function deleteTrRow(tr){
+	//获得表格长度
+	var hwnrSize=$('#hwnrSize').val();
+	if(hwnrSize!=""){
+		$(tr).parent().parent().remove();
+		hwnrSize--;
+		$('#hwnrSize').val(hwnrSize);
+	}else{
+		 $(tr).parent().parent().remove();
+		 index--;
+	}
+}
+
 function hwnrsh(){
 	var len = $('table tr').length;
     for(var i = 1;i<len;i++){
@@ -570,7 +628,94 @@ function hwnrsh(){
      
 }
 
+function jsje(index){
+	//获得输入数量的值
+	var sl=$('#sl'+index+'').val()*1;
+	//获得输入单价的值
+	var dj=$('#dj'+index+'').val()*1;
+	$('#dj'+index+'').attr("title",dj);
+	if(dj!=""){
+		var je=dj.toFixed(2); 
+		$('#dj'+index+'').val(je);
+	}
+	//设置金额
+	var je=(sl*1)*(dj*1);
+	var money=je.toFixed(2);
+	$('#je'+index+'').val(money);
+	$('#je'+index+'').attr("title",money);
+}
 
+//提交编辑后的货物产品内容
+function editHWCPNRS(){
+	var hwnrData=$('#hwnrData').val();
+	//货物当前表格
+	var tables=$('#hwcpnrs');
+	//获得表格所有行
+	var rows=tables[0].rows;
+	//遍历表格
+	for(var i=1;i<rows.length;i++){
+		//获得表格数据中的已存在的主键
+		var hwId="";
+		if($('input[name="hwnrId"]')[i-1]!=undefined){
+			hwId=$('input[name="hwnrId"]')[i-1].value;
+		}
+		//产品名称
+		var cpmc=$('input[name="cpmc"]')[i-1].value;
+		//品牌
+		var pp=$('input[name="pp"]')[i-1].value;
+		//规格型号
+		var ggxh=$('input[name="ggxh"]')[i-1].value;
+		//主要配置参数
+		var zypzcs=$('input[name="zypzcs"]')[i-1].value;
+		//单位
+		var dw=$('input[name="dw"]')[i-1].value;
+		//数量
+		var sl=$('input[name="sl"]')[i-1].value;
+		//单价
+		var dj=$('input[name="dj"]')[i-1].value;
+		//金额
+		var je=$('input[name="je"]')[i-1].value;
+		//拼接字符串
+		if(hwId!=""){
+			var str="{"+"hwId"+":"+hwId+","+"cpmc"+":"+cpmc+","+"pp"+":"+pp+","+"ggxh"+":"+ggxh+","+"zypzcs"+":"+zypzcs+","+"dw"+":"+dw+","+"sl"+":"+sl+","+"dj"+":"+dj+","+"je"+":"+je+"}";
+		}else{
+			var str="{"+"hwId"+":"+-1+","+"cpmc"+":"+cpmc+","+"pp"+":"+pp+","+"ggxh"+":"+ggxh+","+"zypzcs"+":"+zypzcs+","+"dw"+":"+dw+","+"sl"+":"+sl+","+"dj"+":"+dj+","+"je"+":"+je+"}";
+		}
+		if(undefined!=hwnrData){
+			hwnrData=hwnrData+"&"+str;
+			 $('#hwnrData').val(hwnrData);
+		 }else{
+			 hwnrData=str;
+			 $('#hwnrData').val(hwnrData);
+		 }
+	}
+	
+}
+
+
+function deleteData(hwId){
+	//ajax实现删除数据
+	layer.confirm('您确定要删除该数据吗？此操作将不可逆转!!!', {
+		  btn: ['确定','取消'], //按钮
+		  title:'提示'},function(index){
+			//删除数据
+			  $.ajax({  
+				    type: "post",  
+				    url:  "<c:url value='/xshtdj/deleteHWNRById.do'/>",
+				    dataType: 'json',
+				    async:false,
+				    data:{"id":hwId},
+				    error:function(){
+				    	alert("出错");
+				    },
+				    success: function (data) {  
+			    		layer.close(index);
+			    		window.location.reload();
+				    }  
+				});
+		  }
+	  );
+}
 
 </script>
 </body>

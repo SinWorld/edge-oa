@@ -47,5 +47,13 @@ public interface XiaoShouHTDJDao {
 	
 	//查询该销售合同对应的产品内容
 	public List<HuoWuInFor> hwnrs(@Param("proj_Info_Id")Integer proj_Info_Id);
-
+	
+	//通过Id查询对应的货物产品内容
+	public HuoWuInFor queryHuoWuInForById(@Param("hwId") Integer hwId);
+	
+	//编辑货物产品内容
+	public void editHWCPNR(HuoWuInFor huoWuInFor);
+	
+	//删除货物产品内容
+	public void deleteHWNRById(@Param("hwId") Integer hwId);
 }

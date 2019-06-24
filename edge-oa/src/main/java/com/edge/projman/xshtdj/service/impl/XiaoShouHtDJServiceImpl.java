@@ -214,4 +214,20 @@ public class XiaoShouHtDJServiceImpl implements XiaoShouHTDJService {
 		return xiaoShouHTDJDao.hwnrs(proj_Info_Id);
 	}
 
+	// 根据id查询对应的货物产品内容
+	public HuoWuInFor queryHuoWuInForById(Integer hwId) {
+		return xiaoShouHTDJDao.queryHuoWuInForById(hwId);
+	}
+
+	// 编辑货物产品内容
+	public void editHWCPNR(HuoWuInFor huoWuInFor) {
+		xiaoShouHTDJDao.editHWCPNR(huoWuInFor);
+
+	}
+
+	// 删除货物产品数据
+	public void deleteHWNRById(Integer hwId) {
+		xiaoShouHTDJDao.deleteHWNRById(hwId);
+	}
+
 }
