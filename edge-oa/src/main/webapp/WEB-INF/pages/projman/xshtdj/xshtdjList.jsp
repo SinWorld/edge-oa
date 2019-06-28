@@ -58,17 +58,17 @@
 					</select>
 				</div>
 		 	</div>
-		    <div class="layui-inline" style="left: -35px;width: 501px;">
+		    <div class="layui-inline" style="left: -44px;width: 512px;">
 		      <label class="layui-form-label" style="width: 71px;">提交时间</label>
 		      <div class="layui-input-inline">
 		        <input type="text" name="time1" id="date" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
 		      </div>
-		       <i class="u-date_line" style="margin-left: -212px;line-height: 35px;">—</i>
+		       <i class="u-date_line" style="margin-left: -14px;line-height: 35px;">—</i>
 		      <div class="layui-input-inline">
 		        <input type="text" name="time2" id="date2" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
 		      </div>
 			</div>
-			<button type="reset" class="layui-btn layui-btn-primary" style="margin-left: -26px;">重置</button>
+			<button type="reset" class="layui-btn layui-btn-primary" style="margin-left: -38px;">重置</button>
 	 	</div>
 	
 	</div> 

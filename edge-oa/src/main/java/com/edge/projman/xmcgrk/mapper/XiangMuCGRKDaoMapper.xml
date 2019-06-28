@@ -6,32 +6,69 @@
 	<!-- 定义缓存 一般是一级缓存，如果用同一个sqlsession 那么相同查询直接会从缓存中查找 <cache size="1024" flushInterval="60000" 
 		eviction="LRU" readOnly="false"></cache> -->
 	<!--分页查询所有的项目采购入库数据 -->
-	<select id="queryAllHWCPNR" resultType="HuoWuInFor"
-		parameterType="Xmcgrk_QueryVo">
-		select * from (select row_.*, rownum rownum_ from (select * from
-		huowucpnr order by hwid desc ) row_
+	<select id="queryAllXmrkInFo" resultType="XmrkInFo" parameterType="Xmcgrk_QueryVo">
+		select * from (select row_.*, rownum rownum_ from 
+		(select * from xmrkinfo order by rkinfoid desc) row_
 		<where>
-			rownum &lt;=#{size} and is_rk=1
+			rownum &lt;=#{size} and is_rk=1 
 			<if test="chanPinMC!=null"> and chanpinmc like '%${chanPinMC}%'</if>
 			<if test="pinPai!=null"> and pinpai like '%${pinPai}%'</if>
 			<if test="guiGeXH!=null"> and guigexh like '%${guiGeXH}%'</if>
 			<if test="zhuYaoPZCS!=null"> and zhuyaopzcs like '%${zhuYaoPZCS}%'</if>
 			<if test="danWei!=null"> and danwei like '%${danWei}%'</if>
-			<if test="shuLiang!=null"> and shuliang = #{shuLiang}</if>
 			<if test="price!=null"> and price = #{price}</if>
-			<if test="jinE!=null"> and jine = #{jinE}</if>
-			<if test="proj_Info_Id!=null"> and proj_info_id = #{proj_Info_Id}</if>
+			<if test="proj_Info_Id!=null"> and xmrkorckid = #{proj_Info_Id}</if>
+			<if test="jinE1 != null">AND
+				jine <![CDATA[>=]]>#{jinE1}
+			</if>
+			<if test="jinE2 != null">AND
+				jine<![CDATA[<=]]>#{jinE2}
+			</if>
 		</where>
 		)
 		<where>
 			rownum_ &gt;=#{page}
 		</where>
 	</select>
-
+	
+	<!--查询不重复的uuid  -->
+	<select id="queryUUId" resultType="String">
+		select  distinct x.uuid from xmrkinfo x
+		<where>
+			 x.is_rk=1
+		</where>
+	</select>
+	
 	<!--按条件查询所有项目信息数量 -->
-	<select id="queryAllXiangMuCGRKCount" resultType="Integer"
-		parameterType="Xmcgrk_QueryVo">
-		select count(1) from huowucpnr
+	<select id="queryAllXmrkInFoCount" resultType="Integer" parameterType="Xmcgrk_QueryVo">
+		 select count(1) from (select x.chanpinmc,
+		                             x.pinpai,
+		                             x.guigexh,
+		                             x.zhuyaopzcs,
+		                             x.danwei,
+		                             x.oldshuliang,
+		                             x.price,
+		                             x.jine,
+		                             x.is_rk,
+		                             x.is_ck,
+		                             x.xmrkorckid,
+		                             x.buyer,
+          		  					 x.bz 
+                              from xmrkinfo x
+		                    group by x.chanpinmc,
+		                             x.chanpinmc,
+		                             x.pinpai,
+		                             x.guigexh,
+		                             x.zhuyaopzcs,
+		                             x.danwei,
+		                             x.oldshuliang,
+		                             x.price,
+		                             x.jine,
+		                             x.is_rk,
+		                             x.is_ck,
+		                             x.xmrkorckid,
+		                             x.buyer,
+          		  					 x.bz )					 
 		<where>
 			is_rk=1
 			<if test="chanPinMC!=null"> and chanpinmc like '%${chanPinMC}%'</if>
@@ -39,10 +76,14 @@
 			<if test="guiGeXH!=null"> and guigexh like '%${guiGeXH}%'</if>
 			<if test="zhuYaoPZCS!=null"> and zhuyaopzcs like '%${zhuYaoPZCS}%'</if>
 			<if test="danWei!=null"> and danwei like '%${danWei}%'</if>
-			<if test="shuLiang!=null"> and shuliang = #{shuLiang}</if>
 			<if test="price!=null"> and price = #{price}</if>
-			<if test="jinE!=null"> and jine = #{jinE}</if>
-			<if test="proj_Info_Id!=null"> and proj_info_id = #{proj_Info_Id}</if>
+			<if test="proj_Info_Id!=null"> and xmrkorckid = #{proj_Info_Id}</if>
+			<if test="jinE1 != null">AND
+				jine <![CDATA[>=]]>#{jinE1}
+			</if>
+			<if test="jinE2 != null">AND
+				jine <![CDATA[<=]]>#{jinE2}
+			</if>
 		</where>
 	</select>
 
@@ -55,30 +96,144 @@
 		order by proj_info_id desc
 	</select>
 
-	<!--通过销售合同代码查询对应的货物产品内容 -->
-	<select id="queryHWCGNRS" parameterType="Integer" resultType="HuoWuInFor">
-		select * from huowucpnr h
+	<!--通过销售合同代码查询对应的项目采购入库内容 -->
+	<select id="queryXMCGRKByXSHTDM" parameterType="Integer" resultType="XiangMuCGRK">
+		select * from xmrkorck h
 		<where>
 			h.proj_info_id=#{proj_Info_Id} and is_rk=0
 		</where>
 	</select>
 	
-	<!--根据货物产品内容主键查询货物数据  -->
-	<select id="queryHWCPNRById" resultType="HuoWuInFor" parameterType="Integer">
-		select * from huowucpnr h
+	<!--根据项目采购入库代码查询项目采购详情数据(合并相同的项目采购入库下的项目采购详情数据) -->
+	<select id="queryXMRKXQById" resultType="XmrkInFo" parameterType="Integer">
+		select x.chanpinmc,
+       		   x.pinpai,
+		       x.guigexh,
+		       x.zhuyaopzcs,
+		       x.danwei,
+		       x.oldshuliang,
+		       x.price,
+		       x.jine,
+		       x.is_rk,
+		       x.is_ck,
+		       x.xmrkorckid
+        from xmrkinfo x
+        <where> x.xmrkorckid =#{xmrkorCkId} and x.is_rk=0</where> 
+		group by x.chanpinmc,
+		         x.pinpai,
+		         x.guigexh,
+		         x.zhuyaopzcs,
+		         x.danwei,
+		         x.oldshuliang,
+		         x.price,
+		         x.jine,
+		         x.is_rk,
+		         x.is_ck,
+		         x.xmrkorckid
+	</select>
+	
+	<!--根据项目采购入库代码查询项目采购详情数据(合并相同的项目采购入库下的项目采购详情的数量)  -->
+	<select id="queryXMRKCountXQById" parameterType="Integer" resultType="Integer">
+		select count(1) from xmrkinfo x
+		<where> x.xmrkorckid =#{xmrkorCkId} and x.is_rk=0</where> 
+		group by x.chanpinmc,
+		         x.pinpai,
+		         x.guigexh,
+		         x.zhuyaopzcs,
+		         x.danwei,
+		         x.oldshuliang,
+		         x.price,
+		         x.jine,
+		         x.is_rk,
+		         x.is_ck 
+	</select>
+	
+	<!-- 根据项目采购入库代码查询采购详情对象  -->
+	<select id="queryXMCGRKXQByRKId" parameterType="Integer" resultType="XmrkInFo">
+		select * from xmrkinfo x
 		<where>
-			h.hwid=#{hwId}
+			x.xmrkorckid=#{xmrkorCkId} and is_rk=0
 		</where>
 	</select>
 	
 	<!--货物入库  -->
-	<update id="hwrk" parameterType="HuoWuInFor">
-		update huowucpnr h
+	<update id="editXmrkInFo" parameterType="XmrkInFo">
+		update xmrkinfo 
 		<set>
-			h.is_rk=1
+			<if test="chanPinMC!=null">chanpinmc=#{chanPinMC},</if>
+			<if test="pinPai!=null">pinpai=#{pinPai},</if>
+			<if test="guiGeXH!=null">guigexh=#{guiGeXH},</if>
+			<if test="zhuYaoPZCS!=null">zhuyaopzcs=#{zhuYaoPZCS},</if>
+			<if test="danWei!=null">danwei=#{danWei},</if>
+			<if test="oldShuLiang!=null">oldshuliang=#{oldShuLiang},</if>
+			<if test="price!=null">price=#{price},</if>
+			<if test="jinE!=null">jine=#{jinE},</if>
+			<if test="is_rk!=null">is_rk=#{is_rk},</if>
+			<if test="is_ck!=null">is_ck=#{is_ck},</if>
+			<if test="buyer!=null">buyer=#{buyer},</if>
+			<if test="bz!=null">bz=#{bz},</if>
+			<if test="xmrkorCkId!=null">xmrkorckid=#{xmrkorCkId},</if>
+			<if test="uuid!=null">uuid=#{uuid}</if>
 		</set>
 		<where>
-			h.hwid=#{hwId}
+			rkinfoid=#{rkInfoId}
 		</where>
 	</update>
+	
+	<!--新增项目采购入库内容  -->
+	<insert id="addXMCGRK" parameterType="XiangMuCGRK">
+		insert into xmrkorck(HWID,CHANPINMC,PROJ_INFO_ID,IS_RK,IS_CK)
+		values(seq_hwrkId.Nextval,#{chanPinMC,jdbcType=VARCHAR},#{proj_Info_Id,jdbcType=NUMERIC},
+		#{is_rk,jdbcType=NUMERIC},#{is_ck,jdbcType=NUMERIC})
+	</insert>
+	
+	<!--根据项目采购入库主键查询项目采购入库对象  -->
+	<select id="queryXiangMuCGRKById" parameterType="Integer" resultType="XiangMuCGRK">
+		select * from xmrkorck x
+		<where>
+			x.hwid=#{hwId}
+		</where>
+	</select>
+	
+	<!--编辑项目采购入库（入库）  -->
+	<update id="editXMCGRKRK" parameterType="XiangMuCGRK">
+		update xmrkorck x
+		<set>
+			x.is_rk=1
+		</set>
+		<where>
+			x.hwid=#{hwId}
+		</where>
+	</update>
+	
+	<!--新增采购详情  -->
+	<insert id="addXmrkInFo" parameterType="XmrkInFo">
+		insert into xmrkinfo(RKINFOID,CHANPINMC,PINPAI,GUIGEXH,ZHUYAOPZCS,DANWEI,OLDSHULIANG,PRICE,JINE,IS_RK,IS_CK,BUYER,BZ,XMRKORCKID,UUID)
+		values(seq_rkInfoId.Nextval,#{chanPinMC,jdbcType=VARCHAR},#{pinPai,jdbcType=VARCHAR},#{guiGeXH,jdbcType=VARCHAR},
+		#{zhuYaoPZCS,jdbcType=VARCHAR},#{danWei,jdbcType=VARCHAR},#{oldShuLiang,jdbcType=NUMERIC},#{price,jdbcType=NUMERIC},
+		#{jinE,jdbcType=NUMERIC},#{is_rk,jdbcType=NUMERIC},#{is_ck,jdbcType=NUMERIC},#{buyer,jdbcType=VARCHAR},#{bz,jdbcType=VARCHAR},
+		#{xmrkorCkId,jdbcType=NUMERIC},#{uuid,jdbcType=VARCHAR})
+	</insert>
+	
+	<!--查询新增后的项目采购入库数据主键  -->
+	<select id="xmcgrkMaxId" resultType="Integer">
+		select max(k.hwid) from xmrkorck k
+	</select>
+	
+	<!--根据id查询项目入库详情对象  -->
+	<select id="queryXmrkInFoByid" resultType="XmrkInFo" parameterType="Integer">
+		select * from xmrkinfo
+		<where>
+			rkinfoid=#{rkInfoId}
+		</where>
+	</select>
+	
+	<!--通过销售合同代码查询对应的项目采购入库内容 -->
+	<select id="queryXMCGRKORCKByXSHTDM" parameterType="Integer" resultType="XiangMuCGRK">
+		select * from xmrkorck h
+		<where>
+			h.proj_info_id=#{proj_Info_Id} 
+		</where>
+	</select>
+	
 </mapper>

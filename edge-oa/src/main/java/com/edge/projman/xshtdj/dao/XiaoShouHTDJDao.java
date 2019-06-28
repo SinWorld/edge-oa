@@ -41,19 +41,21 @@ public interface XiaoShouHTDJDao {
 
 	// 编辑销售合同
 	public void editXSHT(XiaoShouHT xiaoShouHT);
-	
-	//新增货物产品内容
+
+	// 新增货物产品内容
 	public void addHWCPNR(HuoWuInFor huoWuInFor);
-	
-	//查询该销售合同对应的产品内容
-	public List<HuoWuInFor> hwnrs(@Param("proj_Info_Id")Integer proj_Info_Id);
-	
-	//通过Id查询对应的货物产品内容
+
+	// 查询该销售合同对应的产品内容
+	public List<HuoWuInFor> hwnrs(@Param("proj_Info_Id") Integer proj_Info_Id);
+
+	// 通过Id查询对应的货物产品内容
 	public HuoWuInFor queryHuoWuInForById(@Param("hwId") Integer hwId);
-	
-	//编辑货物产品内容
+
+	// 编辑货物产品内容
 	public void editHWCPNR(HuoWuInFor huoWuInFor);
-	
-	//删除货物产品内容
+
+	// 删除货物产品内容
 	public void deleteHWNRById(@Param("hwId") Integer hwId);
+
+	
 }

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edge.projman.xmssck.dao.XiangMuSSCKDao">
+	<!-- 定义缓存 一般是一级缓存，如果用同一个sqlsession 那么相同查询直接会从缓存中查找 <cache size="1024" flushInterval="60000" 
+		eviction="LRU" readOnly="false"></cache> -->
+
+	<select id="queryAllXmckInFo" resultType="XmrkInFo" parameterType="Xmcgrk_QueryVo">
+		select * from (select row_.*, rownum rownum_ from 
+		(select * from xmrkinfo order by rkinfoid desc) row_
+		<where>
+			rownum &lt;=#{size} and is_rk=1 and is_ck=1
+			<if test="chanPinMC!=null"> and chanpinmc like '%${chanPinMC}%'</if>
+			<if test="pinPai!=null"> and pinpai like '%${pinPai}%'</if>
+			<if test="guiGeXH!=null"> and guigexh like '%${guiGeXH}%'</if>
+			<if test="zhuYaoPZCS!=null"> and zhuyaopzcs like '%${zhuYaoPZCS}%'</if>
+			<if test="proj_Info_Id!=null"> and xmrkorckid = #{proj_Info_Id}</if>
+		</where>
+		)
+		<where>
+			rownum_ &gt;=#{page}
+		</where>
+	</select>
+	
+	
+	<!--按条件查询所有项目信息数量 -->
+	<select id="queryAllXmckInFoCount" resultType="Integer" parameterType="Xmcgrk_QueryVo">
+		 select count(1) from (select x.chanpinmc,
+		                             x.pinpai,
+		                             x.guigexh,
+		                             x.zhuyaopzcs,
+		                             x.danwei,
+		                             x.oldshuliang,
+		                             x.price,
+		                             x.jine,
+		                             x.is_rk,
+		                             x.is_ck,
+		                             x.xmrkorckid,
+		                             x.buyer,
+          		  					 x.bz 
+                              from xmrkinfo x
+		                    group by x.chanpinmc,
+		                             x.chanpinmc,
+		                             x.pinpai,
+		                             x.guigexh,
+		                             x.zhuyaopzcs,
+		                             x.danwei,
+		                             x.oldshuliang,
+		                             x.price,
+		                             x.jine,
+		                             x.is_rk,
+		                             x.is_ck,
+		                             x.xmrkorckid,
+		                             x.buyer,
+          		  					 x.bz )					 
+		<where>
+			is_rk=1 and is_ck=1
+			<if test="chanPinMC!=null"> and chanpinmc like '%${chanPinMC}%'</if>
+			<if test="pinPai!=null"> and pinpai like '%${pinPai}%'</if>
+			<if test="guiGeXH!=null"> and guigexh like '%${guiGeXH}%'</if>
+			<if test="zhuYaoPZCS!=null"> and zhuyaopzcs like '%${zhuYaoPZCS}%'</if>
+			<if test="proj_Info_Id!=null"> and xmrkorckid = #{proj_Info_Id}</if>
+		</where>
+	</select>
+
+	<!--通过销售合同代码查询对应的项目实施出库内容 -->
+	<select id="queryXMSSCKByXSHTDM" parameterType="Integer"
+		resultType="XiangMuCGRK">
+		select * from xmrkorck x
+ 		<where> x.hwid in (select distinct m.xmrkorckid
+                    from xmrkinfo m
+                   <where> m.is_rk = 1
+                     and m.is_ck = 0 </where>)
+   				and x.is_ck = 0 and x.proj_info_id=#{proj_Info_Id}
+   		</where>
+	</select>
+	
+	<!--根据项目采购入库代码查询项目采购详情数据(合并相同的项目实施出库下的项目采购详情数据) -->
+	<select id="queryXMCKXQById" resultType="XmrkInFo" parameterType="Integer">
+		select x.chanpinmc,
+       		   x.pinpai,
+		       x.guigexh,
+		       x.zhuyaopzcs,
+		       x.danwei,
+		       x.oldshuliang,
+		       x.price,
+		       x.jine,
+		       x.is_rk,
+		       x.is_ck,
+		       x.xmrkorckid
+        from xmrkinfo x
+        <where> x.xmrkorckid =#{xmrkorCkId} and x.is_rk=1 and x.is_ck=0</where> 
+		group by x.chanpinmc,
+		         x.pinpai,
+		         x.guigexh,
+		         x.zhuyaopzcs,
+		         x.danwei,
+		         x.oldshuliang,
+		         x.price,
+		         x.jine,
+		         x.is_rk,
+		         x.is_ck,
+		         x.xmrkorckid
+	</select>
+	
+	<!-- 根据项目实施出库代码查询采购详情对象  -->
+	<select id="queryXMSSCKXQByCKId" parameterType="Integer" resultType="XmrkInFo">
+		select * from xmrkinfo x
+		<where>
+			x.xmrkorckid=#{xmrkorCkId} and is_rk=1 and is_ck=0
+		</where>
+	</select>
+	
+	<!--编辑项目采购入库（出库）  -->
+	<update id="editXMCGRKCK" parameterType="XiangMuCGRK">
+		update xmrkorck x
+		<set>
+			x.is_ck=1
+		</set>
+		<where>
+			x.hwid=#{hwId}
+		</where>
+	</update>
+	
+
+
+</mapper>

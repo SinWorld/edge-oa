@@ -19,10 +19,11 @@ public class Xmcgrk_QueryVo {
 	private String guiGeXH;// 规格型号
 	private String zhuYaoPZCS;// 主要配置参数
 	private String danWei;// 单位
-	private Integer shuLiang;// 数量
 	private Double price;// 单价
-	private Double jinE;// 金额
+	private Double jinE1;// 金额
+	private Double jinE2;// 金额
 	private Integer proj_Info_Id;// 所属销售合同
+	private String uuid;// 不重复标志
 
 	public Integer getPage() {
 		return page;
@@ -88,14 +89,6 @@ public class Xmcgrk_QueryVo {
 		this.danWei = danWei;
 	}
 
-	public Integer getShuLiang() {
-		return shuLiang;
-	}
-
-	public void setShuLiang(Integer shuLiang) {
-		this.shuLiang = shuLiang;
-	}
-
 	public Double getPrice() {
 		return price;
 	}
@@ -104,12 +97,20 @@ public class Xmcgrk_QueryVo {
 		this.price = price;
 	}
 
-	public Double getJinE() {
-		return jinE;
+	public Double getJinE1() {
+		return jinE1;
 	}
 
-	public void setJinE(Double jinE) {
-		this.jinE = jinE;
+	public void setJinE1(Double jinE1) {
+		this.jinE1 = jinE1;
+	}
+
+	public Double getJinE2() {
+		return jinE2;
+	}
+
+	public void setJinE2(Double jinE2) {
+		this.jinE2 = jinE2;
 	}
 
 	public Integer getProj_Info_Id() {
@@ -120,12 +121,20 @@ public class Xmcgrk_QueryVo {
 		this.proj_Info_Id = proj_Info_Id;
 	}
 
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+
 	@Override
 	public String toString() {
 		return "Xmcgrk_QueryVo [page=" + page + ", size=" + size + ", startRow=" + startRow + ", chanPinMC=" + chanPinMC
 				+ ", pinPai=" + pinPai + ", guiGeXH=" + guiGeXH + ", zhuYaoPZCS=" + zhuYaoPZCS + ", danWei=" + danWei
-				+ ", shuLiang=" + shuLiang + ", price=" + price + ", jinE=" + jinE + ", proj_Info_Id=" + proj_Info_Id
-				+ "]";
+				+ ", price=" + price + ", jinE1=" + jinE1 + ", jinE2=" + jinE2 + ", proj_Info_Id=" + proj_Info_Id
+				+ ", uuid=" + uuid + "]";
 	}
 
 }

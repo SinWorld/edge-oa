@@ -186,8 +186,7 @@
 				  		</div>	
 						
 						<div>
-							 	<span>货物(产品)内容</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-							 	<span style="color:red">(注：绿色字体为已入库)</span>
+							 	<span>货物(产品)内容</span>
 							   	<table class="layui-hide" id="hwnr"></table>
 					    </div>
 					 
@@ -295,14 +294,6 @@ layui.use(['form', 'layedit', 'laydate','element','table'], function(){
 	      ,{field:'price', width:"8%",align:'center', title: '单价'}
 	      ,{field:'jinE', width:"8%",align:'center', title: '金额'}
 	    ]]
-  		,done: function(res, curr, count){
-		  	var that = this.elem.next();
-			    res.data.forEach(function (item, index) {
-			    	if(res.data[index].is_rk==1){
-			    		 var tr = that.find(".layui-table-box tbody tr[data-index='" + index + "']").css({"color":"#43CD80","font-weight":"bold"});
-			    	}
-		      });
-		}
 	  });
   
 //监听行工具事件

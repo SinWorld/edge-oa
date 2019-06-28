@@ -17,8 +17,6 @@ public class HuoWuInFor {
 	private Double price;// 单价
 	private Double jinE;// 金额
 	private Integer proj_Info_Id;// 所属销售合同
-	private Boolean is_rk;// 是否入库
-	private Boolean is_ck;// 是否出库
 
 	// 辅助属性
 	private String proj_Info_name;// 销售合同名称
@@ -103,22 +101,6 @@ public class HuoWuInFor {
 		this.proj_Info_Id = proj_Info_Id;
 	}
 
-	public Boolean getIs_rk() {
-		return is_rk;
-	}
-
-	public void setIs_rk(Boolean is_rk) {
-		this.is_rk = is_rk;
-	}
-
-	public Boolean getIs_ck() {
-		return is_ck;
-	}
-
-	public void setIs_ck(Boolean is_ck) {
-		this.is_ck = is_ck;
-	}
-
 	public String getProj_Info_name() {
 		return proj_Info_name;
 	}
@@ -131,8 +113,7 @@ public class HuoWuInFor {
 	public String toString() {
 		return "HuoWuInFor [hwId=" + hwId + ", chanPinMC=" + chanPinMC + ", pinPai=" + pinPai + ", guiGeXH=" + guiGeXH
 				+ ", zhuYaoPZCS=" + zhuYaoPZCS + ", danWei=" + danWei + ", shuLiang=" + shuLiang + ", price=" + price
-				+ ", jinE=" + jinE + ", proj_Info_Id=" + proj_Info_Id + ", is_rk=" + is_rk + ", is_ck=" + is_ck
-				+ ", proj_Info_name=" + proj_Info_name + "]";
+				+ ", jinE=" + jinE + ", proj_Info_Id=" + proj_Info_Id + ", proj_Info_name=" + proj_Info_name + "]";
 	}
 
 }

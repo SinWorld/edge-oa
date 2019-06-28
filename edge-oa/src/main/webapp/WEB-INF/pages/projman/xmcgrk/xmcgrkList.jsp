@@ -22,8 +22,7 @@
 						<label class="layui-form-label">销售合同</label>
 						<div class="layui-input-inline"
 							style="text-align: left; width: 60%">
-							<select name="proj_Info_Id" id="proj_Info_Id"
-								lay-filter="proj_Info_Id" lay-verify="proj_Info_Id"
+							<select name="proj_Info_Id" id="proj_Info_Id"lay-filter="proj_Info_Id" lay-verify="proj_Info_Id"
 								lay-search="">
 								<option value="" selected="selected">请选择所属销售合同</option>
 							</select>
@@ -76,35 +75,27 @@
 				</div>
 
 				<div class="layui-form-item">
-					<div class="layui-inline">
-						<label class="layui-form-label" style="width: 80px;">数量</label>
-						<div class="layui-input-inline">
-							<input type="text" name="shuLiang" lay-verify="shuLiang"
-								autocomplete="off" class="layui-input" style="width: 200px;"
-								id="shuLiang">
-						</div>
-					</div>
 					<div class="layui-inline" style="width: 30%;">
-						<label class="layui-form-label" style="width: 125px;">单价</label>
+						<label class="layui-form-label" style="width: 80px;">单价</label>
 						<div class="layui-input-inline">
 							<input type="text" name="price" lay-verify="price"
 								autocomplete="off" class="layui-input" style="width: 200px;"
-								id="price">
+								id="price" onchange="formatPrice()">
 						</div>
 					</div>
-					<div class="layui-inline" style="width: 33%;">
-						<label class="layui-form-label" style="width: 167px;">金额</label>
-						<div class="layui-input-inline">
-							<input type="text" name="jinE" lay-verify="jinE"
-								autocomplete="off" class="layui-input" style="width: 200px;"
-								id="jinE">
-						</div>
+					<div class="layui-inline" style="left: -20px;width: 501px;">
+					      <label class="layui-form-label" style="width: 71px;">金额</label>
+					      <div class="layui-input-inline">
+						     <input type="text" name="jinE1" lay-verify="jinE1"autocomplete="off" class="layui-input" style="width: 85px;"id="jinE1" onchange="formatJE1()">
+						  </div>
+				       	  <i class="u-date_line" style="margin-left: -115px;line-height: 35px;">—</i>
+ 					      <div class="layui-input-inline" style="left: -85px;">
+						     <input type="text" name="jinE2" lay-verify="jinE2"autocomplete="off" class="layui-input" style="width: 85px;"id="jinE2" onchange="formatJE2()">
+					      </div>
 					</div>
+					<button class="layui-btn" data-type="reload" type="button" id="do_search" style="margin-left: 7px;">搜索</button>
+					<button type="reset" class="layui-btn layui-btn-primary"style="margin-left: 65px;">重置</button>
 				</div>
-				<button class="layui-btn" data-type="reload" type="button"
-					id="do_search" style="margin-left: 110px;">搜索</button>
-				<button type="reset" class="layui-btn layui-btn-primary"
-					style="margin-left: 65px;">重置</button>
 			</div>
 		</div>
 	</form>
@@ -145,7 +136,7 @@
 					sort : true,
 					type : 'numbers'
 				}, {
-					field : 'proj_Info_name',
+					field : 'xshtmc',
 					width : "12%",
 					align : 'left',
 					title : '所属销售合同'
@@ -175,7 +166,7 @@
 					align : 'center',
 					title : '单位'
 				}, {
-					field : 'shuLiang',
+					field : 'oldShuLiang',
 					width : "6%",
 					align : 'center',
 					title : '数量'
@@ -189,7 +180,7 @@
 					width : "6%",
 					align : 'center',
 					title : '金额'
-				} ] ],
+				}]],
 				page : true,
 				id : 'testReload',
 				done : function(res, curr, count) {
@@ -228,7 +219,7 @@
 			table.on('row(hwnrs)', function(obj) {
 				var data = obj.data;
 				var url = $('#url').val();
-				var proj_Id = data.proj_Info_Id;
+				var id = data.rkInfoId;
 				layer.open({
 					type : 2,
 					title : '查看',
@@ -236,9 +227,7 @@
 					shadeClose : false,
 					resize : false,
 					anim : 1,
-					content : [
-							url + "xshtdj/xiaoShouHTShowById.do?proj_Id="
-									+ proj_Id, 'yes' ]
+					content : [url + "xmcgrk/xmcgrkInforShow.do?id="+id, 'yes' ]
 				});
 			});
 
@@ -251,9 +240,9 @@
 				var guiGeXH = $('#guiGeXH').val();//规格型号
 				var zhuYaoPZCS = $('#zhuYaoPZCS').val();//主要配置参数
 				var danWei = $('#danWei').val();//单位
-				var shuLiang = $('#shuLiang').val();//数量
 				var price = $('#price').val();//单价
-				var jinE = $('#jinE').val();//金额
+				var jinE1 = $('#jinE1').val();//金额
+				var jinE2 = $('#jinE2').val();//金额
 				table.reload('testReload', {
 					method : 'post',
 					where : {
@@ -263,9 +252,9 @@
 						'guiGeXH' : guiGeXH,
 						'zhuYaoPZCS' : zhuYaoPZCS,
 						'danWei' : danWei,
-						'shuLiang' : shuLiang,
 						'price' : price,
-						'jinE' : jinE,
+						'jinE1' : jinE1,
+						'jinE2' : jinE2,
 					},
 					page : {
 						curr : 1
@@ -301,7 +290,7 @@
 			var data = res.data;
 			var mergeIndex = 0;//定位需要添加合并属性的行数
 			var mark = 1; //这里涉及到简单的运算，mark是计算每次需要合并的格子数
-			var columsName = ['proj_Info_name'];//需要合并的列名称
+			var columsName = ['xshtmc'];//需要合并的列名称
 			var columsIndex = [1];//需要合并的列索引值
 			for (var k = 0; k < columsName.length; k++){//这里循环所有要合并的列
 				var trArr = $(".layui-table-body>.layui-table").find("tr");//所有行
@@ -328,7 +317,25 @@
 					}
 				}
 			}
-		}  
+		} 
+		
+		//格式化单价
+		function formatPrice(){
+			var price=$('#price').val()*1;
+			$('#price').val(price.toFixed(2));
+		}
+		
+		//格式化金额
+		function formatJE1(){
+			var je1=$('#jinE1').val()*1;
+			$('#jinE1').val(je1.toFixed(2));
+		}
+		//格式化金额
+		function formatJE2(){
+			var je1=$('#jinE2').val()*1;
+			$('#jinE2').val(je1.toFixed(2));
+		}
+		
 </script>
 </body>
 </html>

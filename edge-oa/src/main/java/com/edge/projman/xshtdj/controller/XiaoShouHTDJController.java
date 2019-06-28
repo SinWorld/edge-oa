@@ -16,6 +16,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -34,6 +35,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.edge.index.service.inter.IndexService;
 import com.edge.projman.approveproj.entity.Foll_up_Proj;
 import com.edge.projman.approveproj.service.inter.ApproveprojService;
+import com.edge.projman.xmcgrk.entity.XiangMuCGRK;
+import com.edge.projman.xmcgrk.entity.XmrkInFo;
 import com.edge.projman.xmcgrk.service.inter.XiangMuCGRKService;
 import com.edge.projman.xshtdj.entity.HuoWuInFor;
 import com.edge.projman.xshtdj.entity.XiaoShouHT;
@@ -310,11 +313,38 @@ public class XiaoShouHTDJController {
 			hwnr.setPrice(dj);
 			hwnr.setJinE(je);
 			hwnr.setProj_Info_Id(objId);
-			hwnr.setIs_rk(false);
-			hwnr.setIs_ck(false);
 			xiaoShouHTDJService.addHWCPNR(hwnr);
+			// new出项目采购入库对象
+			XiangMuCGRK xmcgrk = new XiangMuCGRK();
+			// 赋值
+			xmcgrk.setChanPinMC(cpmc);
+			xmcgrk.setProj_Info_Id(objId);
+			xmcgrk.setIs_rk(false);
+			xmcgrk.setIs_ck(false);
+			xiangMuCGRKService.addXMCGRK(xmcgrk);
+			Integer xmcgrkId = xiangMuCGRKService.xmcgrkMaxId();
+			String uuid = UUID.randomUUID().toString();
+			// 遍历入库数量 生成入库详情数据
+			for (int i = 0; i < number; i++) {
+				// new出项目入库详情对象
+				XmrkInFo xmrkInFo = new XmrkInFo();
+				xmrkInFo.setChanPinMC(cpmc);
+				xmrkInFo.setPinPai(pp);
+				xmrkInFo.setGuiGeXH(ggxh);
+				xmrkInFo.setZhuYaoPZCS(zypzcs);
+				xmrkInFo.setDanWei(dw);
+				xmrkInFo.setOldShuLiang(1);
+				xmrkInFo.setPrice(dj);
+				xmrkInFo.setJinE(je);
+				xmrkInFo.setIs_rk(false);
+				xmrkInFo.setIs_ck(false);
+				xmrkInFo.setXmrkorCkId(xmcgrkId);
+				xmrkInFo.setUuid(uuid);
+				xiangMuCGRKService.addXmrkInFo(xmrkInFo);
+			}
+
 		}
-		
+
 	}
 
 	// 跳转至查看页面并回显数据
@@ -392,7 +422,7 @@ public class XiaoShouHTDJController {
 
 	// 查询货物内容用于在编辑页面回显
 	private List<HuoWuInFor> queryHWNR(Integer xshtdm) {
-		List<HuoWuInFor> hwcgnrs = xiangMuCGRKService.queryHWCGNRS(xshtdm);
+		List<HuoWuInFor> hwcgnrs = xiaoShouHTDJService.hwnrs(xshtdm);
 		return hwcgnrs;
 	}
 
@@ -403,7 +433,7 @@ public class XiaoShouHTDJController {
 		// 设置审核状态为运行中
 		xsht.setAppr_Status(2);
 		xiaoShouHTDJService.editXSHT(xsht);
-		if(hwnrData!=null||hwnrData!="") {
+		if (hwnrData != null || hwnrData != "") {
 			this.editHWNRS(hwnrData, xsht.getProj_Info_Id());
 		}
 		model.addAttribute("flag", true);
@@ -460,9 +490,35 @@ public class XiaoShouHTDJController {
 				hwnr.setPrice(dj);
 				hwnr.setJinE(je);
 				hwnr.setProj_Info_Id(objId);
-				hwnr.setIs_rk(false);
-				hwnr.setIs_ck(false);
 				xiaoShouHTDJService.addHWCPNR(hwnr);
+				// new出项目采购入库对象
+				XiangMuCGRK xmcgrk = new XiangMuCGRK();
+				// 赋值
+				xmcgrk.setChanPinMC(cpmc);
+				xmcgrk.setProj_Info_Id(objId);
+				xmcgrk.setIs_rk(false);
+				xmcgrk.setIs_ck(false);
+				xiangMuCGRKService.addXMCGRK(xmcgrk);
+				Integer xmcgrkId = xiangMuCGRKService.xmcgrkMaxId();
+				String uuid = UUID.randomUUID().toString();
+				// 遍历入库数量 生成入库详情数据
+				for (int i = 0; i < number; i++) {
+					// new出项目入库详情对象
+					XmrkInFo xmrkInFo = new XmrkInFo();
+					xmrkInFo.setChanPinMC(cpmc);
+					xmrkInFo.setPinPai(pp);
+					xmrkInFo.setGuiGeXH(ggxh);
+					xmrkInFo.setZhuYaoPZCS(zypzcs);
+					xmrkInFo.setDanWei(dw);
+					xmrkInFo.setOldShuLiang(1);
+					xmrkInFo.setPrice(dj);
+					xmrkInFo.setJinE(je);
+					xmrkInFo.setIs_rk(false);
+					xmrkInFo.setIs_ck(false);
+					xmrkInFo.setXmrkorCkId(xmcgrkId);
+					xmrkInFo.setUuid(uuid);
+					xiangMuCGRKService.addXmrkInFo(xmrkInFo);
+				}
 			}
 
 		}
@@ -472,9 +528,9 @@ public class XiaoShouHTDJController {
 	// 删除货物内容数据
 	@RequestMapping(value = "/deleteHWNRById.do")
 	@ResponseBody
-	public String  deleteHWNRById(@RequestParam Integer id) {
+	public String deleteHWNRById(@RequestParam Integer id) {
 		xiaoShouHTDJService.deleteHWNRById(id);
-		JSONObject jsonObject=new JSONObject();
+		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("flag", "删除成功");
 		return jsonObject.toString();
 	}

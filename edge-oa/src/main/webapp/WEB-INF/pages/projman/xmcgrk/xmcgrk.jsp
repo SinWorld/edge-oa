@@ -16,31 +16,24 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
 <%@page isELIgnored="false" %>
 </head>
-<body onload="refreshAndClose()" style="width:100%;padding:0px; margin:0px;text-align: center;">
-	<div style="width:1280px;height:auto;padding:0px; margin:0 auto;" id="main">
-		<form class="layui-form" action="<c:url value='/xmcgrk/rk.do'/>" method="post" enctype="multipart/form-data">
-		<input type="hidden" id="url" value='<c:url value="/"/>'>
-		<input type="hidden" id="flag" value="${flag}"> 
-		<input type="hidden" id="dms" name="hwdms">
-		  <div class="layui-form-item" style="margin-top: 5%">
-		    <label class="layui-form-label" style="width: 120px;">销售合同名称</label>
-				<div class="layui-input-inline" style="width: 88%;text-align: left;">
-					<select name="proj_Id" id="proj_Id" lay-filter="proj_Id" lay-verify="proj_Id" lay-search="">
-						<option value="" selected="selected">请选择所属销售合同</option>
-					</select>
-				</div>
-		  </div>
-		  <div class="layui-form-item" style="text-align: left;margin-left: 120px;">
-		 	<div id="test4" class="demo-transfer"></div>
-		  </div>
-	
-		<div class="layui-form-item" style="text-align:center;">
-		    <div class="layui-input-block">
-		      <button class="layui-btn" lay-submit="" lay-filter="demo1" style="width:35%;margin-top:10px;">确认入库</button>
-		    </div>
-		</div>
-	</form>
- </div>
+<body  style="width:100%;padding:0px; margin:0px;text-align: center;">
+	<form class="layui-form">
+		<div style="width:1280px;height:auto;padding:0px; margin:0 auto;" id="main">
+			<input type="hidden" id="url" value='<c:url value="/"/>'>
+			<input type="hidden" id="dms" name="hwdms">
+			  <div class="layui-form-item" style="margin-top: 5%">
+			    <label class="layui-form-label" style="width: 120px;">销售合同名称</label>
+					<div class="layui-input-inline" style="width: 88%;text-align: left;">
+						<select name="proj_Id" id="proj_Id" lay-filter="proj_Id" lay-verify="proj_Id" lay-search="">
+							<option value="" selected="selected">请选择所属销售合同</option>
+						</select>
+					</div>
+			  </div>
+			  <div class="layui-form-item" style="text-align: left;margin-left: 120px;">
+			 	<div id="test4" class="demo-transfer"></div>
+			  </div>
+	 </div>
+ </form>
 <script src="../bootstrap-3.3.7-dist/js/bootstrap.js"></script>
 <script src="../layui-v2.5.4/layui/layui.js" charset="utf-8"></script>
 <script>
@@ -56,15 +49,6 @@ layui.use(['form', 'layedit', 'laydate','transfer','util'], function(){
   //创建一个编辑器
   var editIndex = layedit.build('LAY_demo_editor');
   
-  //监听提交
-  form.on('submit(demo1)', function(data){
-	  savehwcpnr();
-    layer.alert(JSON.stringify(data.field), {
-      title: '最终的提交信息'
-    })
-    return true;
-  });
- 
 //ajax实现下拉销售合同在搜索框中展现货物产品内容
 	form.on('select(proj_Id)', function(data){
 			//获取销售合同代码
@@ -72,7 +56,7 @@ layui.use(['form', 'layedit', 'laydate','transfer','util'], function(){
 			if(xshtdm!=""){
 				$.ajax({
 					type : "post",
-					url : "<c:url value='/xmcgrk/queryHWCPNRByXshtdm.do'/>",
+					url : "<c:url value='/xmcgrk/queryXMCKRKByXshtdm.do'/>",
 					async : false,
 					data:{"xshtdm":xshtdm},
 					dataType : 'json',
@@ -107,8 +91,8 @@ layui.use(['form', 'layedit', 'laydate','transfer','util'], function(){
 						    		var d=$('#dms').val();
 						    		layer.open({
 						          	  	type:2,
-						          	  	title:'货物内容',
-						          	  	area: ['70%','30%'],
+						          	  	title:'入库内容',
+						          	  	area: ['100%','100%'],
 						          	  	shadeClose: true,
 						          		resize:false,
 						          	    anim: 1,
@@ -171,13 +155,7 @@ function  allXSHT(form){
 	});
 }
 
-function refreshAndClose(){
-	var flag=$('#flag').val();
-	if(flag){
-		window.parent.location.reload();
-		window.close();
-	} 
-}
+
 </script>
 </body>
 </html>

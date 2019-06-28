@@ -181,10 +181,10 @@
 	
 	<!--新增货物产品内容  -->
 	<insert id="addHWCPNR" parameterType="HuoWuInFor">
-		insert into huowucpnr(HWID,CHANPINMC,PINPAI,GUIGEXH,ZHUYAOPZCS,DANWEI,SHULIANG,PRICE,JINE,PROJ_INFO_ID,IS_RK,IS_CK)
+		insert into huowucpnr(HWID,CHANPINMC,PINPAI,GUIGEXH,ZHUYAOPZCS,DANWEI,SHULIANG,PRICE,JINE,PROJ_INFO_ID)
 		values(seq_hwId.Nextval,#{chanPinMC,jdbcType=VARCHAR},#{pinPai,jdbcType=VARCHAR},#{guiGeXH,jdbcType=VARCHAR},
 		#{zhuYaoPZCS,jdbcType=VARCHAR},#{danWei,jdbcType=VARCHAR},#{shuLiang,jdbcType=NUMERIC},#{price,jdbcType=NUMERIC},
-		#{jinE,jdbcType=NUMERIC},#{proj_Info_Id,jdbcType=NUMERIC},#{is_rk,jdbcType=NUMERIC},#{is_ck,jdbcType=NUMERIC})
+		#{jinE,jdbcType=NUMERIC},#{proj_Info_Id,jdbcType=NUMERIC})
 	</insert>
 	
 	<!--查询销售合同对应的产品内容  -->
@@ -215,9 +215,7 @@
 			<if test="shuLiang!=null">shuliang=#{shuLiang},</if>
 			<if test="price!=null">price=#{price},</if>
 			<if test="jinE!=null">jine=#{jinE},</if>
-			<if test="proj_Info_Id!=null">proj_info_id=#{proj_Info_Id},</if>
-			<if test="is_rk!=null">is_rk=#{is_rk},</if>
-			<if test="is_ck!=null">is_ck=#{is_ck}</if>
+			<if test="proj_Info_Id!=null">proj_info_id=#{proj_Info_Id}</if>
 		</set>
 		<where>
 			hwid=#{hwId}

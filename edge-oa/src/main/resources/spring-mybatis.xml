@@ -51,6 +51,7 @@
 				<value>classpath*:com/edge/projman/xshtdj/mapper/*.xml</value>
 				<value>classpath*:com/edge/yyzx/wjg/mapper/*.xml</value>
 				<value>classpath*:com/edge/projman/xmcgrk/mapper/*.xml</value>
+				<value>classpath*:com/edge/projman/xmssck/mapper/*.xml</value>
 			</array>
 		</property>
 	</bean>
@@ -63,7 +64,7 @@
 			com.edge.system.user.dao;com.edge.login.dao;com.edge.index.dao;
 			com.edge.procedure.ProcessDefinition.dao;com.edge.test.vacation.dao;
 			com.edge.projman.approveproj.dao;com.edge.projman.xshtdj.dao;
-			com.edge.yyzx.wjg.dao;com.edge.projman.xmcgrk.dao" />
+			com.edge.yyzx.wjg.dao;com.edge.projman.xmcgrk.dao;com.edge.projman.xmssck.dao" />
 		<!--注入SqlSessionFactory -->
 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
 	</bean>
