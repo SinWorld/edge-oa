@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edge.reimburse.bxtb.dao.ReportDao">
+	<!-- 定义缓存 一般是一级缓存，如果用同一个sqlsession 那么相同查询直接会从缓存中查找 <cache size="1024" flushInterval="60000" 
+		eviction="LRU" readOnly="false"></cache> -->
+	<!--查询所有的费用类型  -->
+	<select id="queryAllFYLX" resultType="Reimburse_DM_FYLX">
+		select * from reimburse_dm_fylx
+	</select>
+	
+	<!--新增报销填报  -->
+	<insert id="saveReimbursement" parameterType="Reimbursement">
+		insert into reimbursement(REIMBURSEMENT_DM,PROJ_DM,REIMBURSEMENT_CODE,REIMBURSEMENT_DM_FYLX,REIMBURSEMENT_BEGINTIME,
+			REIMBURSEMENT_BXJE,REIMBURSEMENT_USER_DM,REIMBURSEMENT_BXR,REIMBURSEMENT_SHJE,REIMBURSEMENT_FPJE,REIMBURSEMENT_SUBMITTIME,
+			REIMBURSEMENT_DETAILS,APPR_STATUS,NEXTCZ,DB_MS,FINISH_TIME,IS_FFDJ)
+		values(seq_reimbursement_dm.Nextval,#{proj_dm,jdbcType=NUMERIC},#{reimbursement_code,jdbcType=VARCHAR},#{reimbursement_dm_fylx,jdbcType=NUMERIC},#{reimbursement_begintime,jdbcType=DATE},#{reimbursement_bxje,jdbcType=NUMERIC},
+			#{reimbursement_user_dm,jdbcType=NUMERIC},#{reimbursement_bxr,jdbcType=VARCHAR},#{reimbursement_shje,jdbcType=NUMERIC},#{reimbursement_fpje,jdbcType=NUMERIC},#{reimbursement_submittime,jdbcType=DATE},#{reimbursement_details,jdbcType=VARCHAR},
+			#{appr_status,jdbcType=NUMERIC},#{nextcz,jdbcType=VARCHAR},#{db_ms,jdbcType=VARCHAR},#{finish_time,jdbcType=DATE},#{is_ffdj,jdbcType=NUMERIC})
+	</insert>
+	
+	<!--修改报销填报  -->
+	<update id="editReimbursement"  parameterType="Reimbursement">
+		update reimbursement
+		<set>
+			<if test="proj_dm!=null">PROJ_DM=#{proj_dm},</if>
+			<if test="reimbursement_dm_fylx!=null">REIMBURSEMENT_DM_FYLX=#{reimbursement_dm_fylx},</if>
+			<if test="reimbursement_begintime!=null">REIMBURSEMENT_BEGINTIME=#{reimbursement_begintime},</if>
+			<if test="reimbursement_bxje!=null">REIMBURSEMENT_BXJE=#{reimbursement_bxje},</if>
+			<if test="reimbursement_user_dm!=null">REIMBURSEMENT_USER_DM=#{reimbursement_user_dm},</if>
+			<if test="reimbursement_shje!=null">REIMBURSEMENT_SHJE=#{reimbursement_shje},</if>
+			<if test="reimbursement_fpje!=null">REIMBURSEMENT_FPJE=#{reimbursement_fpje},</if>
+			<if test="reimbursement_details!=null">REIMBURSEMENT_DETAILS=#{reimbursement_details},</if>
+			<if test="appr_status!=null">APPR_STATUS=#{appr_status},</if>
+			<if test="nextcz!=null">NEXTCZ=#{nextcz},</if>
+			<if test="db_ms!=null">DB_MS=#{db_ms},</if>
+			<if test="finish_time!=null">FINISH_TIME=#{finish_time},</if>
+			<if test="is_ffdj!=null">IS_FFDJ=#{is_ffdj}</if>
+		</set>
+		<where>
+			REIMBURSEMENT_DM=#{reimbursement_dm}
+		</where>
+	</update>
+	
+	<!--删除报销填报  -->
+	<delete id="deleteReimbursementById">
+		delete from reimbursement
+		<where>
+			REIMBURSEMENT_DM=#{reimbursement_dm}
+		</where>
+	</delete>
+	
+	<!--分页显示我的报销记录  -->
+	<select id="queryMyReimbursement" parameterType="MyReport_QueryVo" resultType="Reimbursement">
+		select * from (select row_.*, rownum rownum_ from (select * from
+			reimbursement order by reimbursement_dm desc ) row_
+			<where>
+				rownum &lt;=#{size} and reimbursement_bxr=#{userName} and appr_status is null
+			</where>
+			)
+			<where>
+				rownum_ &gt;=#{page}
+			</where>
+	</select>
+	
+	<!--分页显示我的报销记录数量  -->
+	<select id="queryMyReimbursementCount" parameterType="MyReport_QueryVo" resultType="Integer">
+		select count(1) from reimbursement
+		<where>
+			reimbursement_bxr=#{userName} and appr_status is null
+		</where>
+	</select>
+	
+	<!--根据Id查询费用类型  -->
+	<select id="queryFYLXById" parameterType="Integer" resultType="Reimburse_DM_FYLX">
+		select * from reimburse_dm_fylx
+		<where>
+			fylx_dm=#{fylx_dm}
+		</where>
+	</select>
+	
+	<!--// 根据id查询报销填报对象  -->
+	<select id="queryReimbursementById" parameterType="Integer" resultType="Reimbursement"> 
+		select * from reimbursement
+		<where>
+			REIMBURSEMENT_DM=#{reimbursement_dm}
+		</where>
+	</select>
+	
+	<!--分页显示我的报销记录 (流程已启动)  -->
+	<select id="queryMyReimbursementLC" parameterType="MyReport_QueryVo" resultType="Reimbursement">
+		select * from (select row_.*, rownum rownum_ from (select * from
+			reimbursement order by reimbursement_dm desc ) row_
+			<where>
+				rownum &lt;=#{size} and reimbursement_bxr=#{userName} and appr_status is not null 
+			</where>
+			)
+			<where>
+				rownum_ &gt;=#{page}
+			</where>
+	</select>
+	
+	<!--分页显示我的报销记录数量  (流程已启动) -->
+	<select id="queryMyReimbursementCountLC" parameterType="MyReport_QueryVo" resultType="Integer">
+		select count(1) from reimbursement
+		<where>
+			reimbursement_bxr=#{userName} and appr_status is not null 
+		</where>
+	</select>
+	
+	<!--分页显示所有的报销记录 (流程已启动)  -->
+	<select id="queryAllReimbursementLC" parameterType="MyReport_QueryVo" resultType="Reimbursement">
+		select * from (select row_.*, rownum rownum_ from (select * from
+			reimbursement order by reimbursement_dm desc ) row_
+			<where>
+				rownum &lt;=#{size} and appr_status is not null 
+			</where>
+			)
+			<where>
+				rownum_ &gt;=#{page}
+			</where>
+	</select>
+	
+	<!--分页显示所有的报销记录数量  (流程已启动) -->
+	<select id="queryAllReimbursementCountLC" parameterType="MyReport_QueryVo" resultType="Integer">
+		select count(1) from reimbursement
+		<where>
+		   appr_status is not null 
+		</where>
+	</select>
+</mapper>

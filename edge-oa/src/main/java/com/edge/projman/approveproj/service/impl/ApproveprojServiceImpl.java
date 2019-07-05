@@ -1,7 +1,6 @@
 package com.edge.projman.approveproj.service.impl;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +12,6 @@ import javax.servlet.http.HttpSession;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.history.HistoricVariableInstance;
 import org.activiti.engine.impl.identity.Authentication;
-import org.activiti.engine.impl.interceptor.Session;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;

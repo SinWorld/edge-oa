@@ -52,6 +52,9 @@
 				<value>classpath*:com/edge/yyzx/wjg/mapper/*.xml</value>
 				<value>classpath*:com/edge/projman/xmcgrk/mapper/*.xml</value>
 				<value>classpath*:com/edge/projman/xmssck/mapper/*.xml</value>
+				<value>classpath*:com/edge/reimburse/bxtb/mapper/*.xml</value>
+				<value>classpath*:com/edge/reimburse/bxff/mapper/*.xml</value>
+				<value>classpath*:com/edge/reimburse/bxxq/mapper/*.xml</value>
 			</array>
 		</property>
 	</bean>
@@ -64,7 +67,9 @@
 			com.edge.system.user.dao;com.edge.login.dao;com.edge.index.dao;
 			com.edge.procedure.ProcessDefinition.dao;com.edge.test.vacation.dao;
 			com.edge.projman.approveproj.dao;com.edge.projman.xshtdj.dao;
-			com.edge.yyzx.wjg.dao;com.edge.projman.xmcgrk.dao;com.edge.projman.xmssck.dao" />
+			com.edge.yyzx.wjg.dao;com.edge.projman.xmcgrk.dao;
+			com.edge.projman.xmssck.dao;com.edge.reimburse.bxtb.dao;
+			com.edge.reimburse.bxff.dao;com.edge.reimburse.bxxq.dao;" />
 		<!--注入SqlSessionFactory -->
 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
 	</bean>
@@ -83,7 +88,7 @@
 	<bean id="processEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration">
 		<property name="transactionManager" ref="transactionManager" />
 		<property value="true" name="databaseSchemaUpdate" />
-		<!-- <property name="databaseSchema" value="ACT"/> -->
+	  <!-- 	<property name="databaseSchema" value="ACT"/>  -->
 		<!-- 必须注入数据源对象 -->
 		<property name="dataSource" ref="dataSource"></property>
 	</bean>

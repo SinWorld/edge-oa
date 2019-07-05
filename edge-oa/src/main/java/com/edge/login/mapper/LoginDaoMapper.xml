@@ -9,7 +9,7 @@
 	<select id="checkUser" resultType="User" parameterType="String">
 		select * from cwgl_user u
 		<where>
-			u.user_login_name=#{loginName} and u.user_password=#{password}
+			u.user_login_name=#{loginName,jdbcType=VARCHAR} and u.user_password=#{password,jdbcType=VARCHAR}
 		</where>
 	</select>
 </mapper>

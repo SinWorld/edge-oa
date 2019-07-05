@@ -11,14 +11,19 @@
 		select * from (select row_.*, rownum rownum_ from (select * from
 		foll_up_proj order by proj_id desc ) row_
 		<where>
-			rownum &lt;=#{size}  
+			rownum &lt;=#{size}
 			<if test="proj_Code!=null"> and proj_Code like '%${proj_Code}%'</if>
-			<if test="proj_Id!=null">  and proj_Id = #{proj_Id}</if>
-			<if test="user_Id!=null">  and user_Id = #{user_Id}</if>
-			<if test="nextCZ!=null">   and nextcz like '%${nextCZ}%'</if>
-			<if test="appr_Status!=null">  and appr_Status = #{appr_Status}</if>
-			<if test="date != null">AND subm_Time <![CDATA[>=]]> #{date}</if>
- 			<if test="date2 != null">AND subm_Time <![CDATA[<=]]>#{date2}</if>
+			<if test="proj_Id!=null"> and proj_Id = #{proj_Id}</if>
+			<if test="user_Id!=null"> and user_Id = #{user_Id}</if>
+			<if test="nextCZ!=null"> and nextcz like '%${nextCZ}%'</if>
+			<if test="appr_Status!=null"> and appr_Status = #{appr_Status}</if>
+			<if test="date != null">AND
+				subm_Time <![CDATA[>=]]>
+				#{date}
+			</if>
+			<if test="date2 != null">AND
+				subm_Time <![CDATA[<=]]>#{date2}
+			</if>
 		</where>
 		)
 		<where>
@@ -27,18 +32,24 @@
 	</select>
 
 	<!--按条件查询所有项目信息数量 -->
-	<select id="queryAllxiangMuXXCount" resultType="Integer" parameterType="Foll_QueryVo">
+	<select id="queryAllxiangMuXXCount" resultType="Integer"
+		parameterType="Foll_QueryVo">
 		select count(1)
 		from foll_up_proj
 		<where>
 			1=1
 			<if test="proj_Code!=null and proj_Code!=''"> and proj_Code like '%${proj_Code}%'</if>
-			<if test="proj_Id!=null and proj_Id!=''">  and proj_Id = #{proj_Id}</if>
-			<if test="user_Id!=null and user_Id!=''">  and user_Id = #{user_Id}</if>
-			<if test="nextCZ!=null and nextCZ!=''">   and nextcz like '%${nextCZ}%'</if>
-			<if test="appr_Status!=null and appr_Status!=''">  and appr_Status = #{appr_Status}</if>
-			<if test="date != null and date!=''">AND subm_Time <![CDATA[>=]]> #{date}</if>
-			<if test="date2 != null and date2!=''">AND subm_Time <![CDATA[<=]]>#{date2}</if>
+			<if test="proj_Id!=null and proj_Id!=''"> and proj_Id = #{proj_Id}</if>
+			<if test="user_Id!=null and user_Id!=''"> and user_Id = #{user_Id}</if>
+			<if test="nextCZ!=null and nextCZ!=''"> and nextcz like '%${nextCZ}%'</if>
+			<if test="appr_Status!=null and appr_Status!=''"> and appr_Status = #{appr_Status}</if>
+			<if test="date != null and date!=''">AND
+				subm_Time <![CDATA[>=]]>
+				#{date}
+			</if>
+			<if test="date2 != null and date2!=''">AND
+				subm_Time <![CDATA[<=]]>#{date2}
+			</if>
 		</where>
 	</select>
 
@@ -46,24 +57,24 @@
 	<select id="allZBFS" resultType="BP_DM_METHOD">
 		select * from BP_DM_METHOD
 	</select>
-	
-	<!--查询我方负责人  -->
+
+	<!--查询我方负责人 -->
 	<select id="allUser" resultType="User" parameterType="String">
 		select * from cwgl_user u
 		<where>
 			u.user_name &lt;&gt;#{userName} and u.user_is_delete=0
 		</where>
 	</select>
-	
-	<!--根据Id查询招标方式对象  -->
+
+	<!--根据Id查询招标方式对象 -->
 	<select id="queryZBFSById" parameterType="Integer" resultType="BP_DM_METHOD">
 		select * from BP_DM_METHOD b
 		<where>
 			b.bp_method_id=#{bp_Method_Id}
 		</where>
 	</select>
-	
-	<!--根据Id查询我方负责人  -->
+
+	<!--根据Id查询我方负责人 -->
 	<select id="queryUserById" parameterType="Integer" resultType="User">
 		select * from cwgl_user u
 		<where>
@@ -74,24 +85,27 @@
 
 	<!--项目立项 -->
 	<insert id="saveXiangMuXX" parameterType="Foll_up_Proj">
-		insert into foll_up_proj(PROJ_ID,PROJ_CODE,BUDGET_NAME,BUDGET_AMOUNT,PLAN_CONT_DATE,BP_METHOD,CUST_UNIT,CUST_CONTACT,CUST_PHONE,OFFI_TEL,PROJ_SUCC_RATE,OUR_UNIT,USER_ID,USER_NAME,MEMO_1,APPR_STATUS,SUBM_USER_ID,SUBM_NAME,DEPA_ID,DEPA,SUBM_TIME,FINISH_TIME,PROJ_STATUS,IS_TY,DB_MS,NEXTCZ)
+		insert into
+		foll_up_proj(PROJ_ID,PROJ_CODE,BUDGET_NAME,BUDGET_AMOUNT,PLAN_CONT_DATE,BP_METHOD,CUST_UNIT,CUST_CONTACT,CUST_PHONE,OFFI_TEL,PROJ_SUCC_RATE,OUR_UNIT,USER_ID,USER_NAME,MEMO_1,APPR_STATUS,SUBM_USER_ID,SUBM_NAME,DEPA_ID,DEPA,SUBM_TIME,FINISH_TIME,PROJ_STATUS,IS_TY,DB_MS,NEXTCZ)
 		values(seq_proj_Id.nextval,#{proj_Code,jdbcType=VARCHAR},#{budget_Name,jdbcType=VARCHAR},#{budget_Amount,jdbcType=NUMERIC},#{plan_Cont_Date,jdbcType=DATE},#{bp_method,jdbcType=NUMERIC},#{cust_Unit,jdbcType=VARCHAR},#{cust_Contact,jdbcType=VARCHAR},#{cust_Phone,jdbcType=VARCHAR},#{offi_Tel,jdbcType=VARCHAR},#{proj_Succ_Rate,jdbcType=NUMERIC},#{our_Unit,jdbcType=VARCHAR},#{user_Id,jdbcType=NUMERIC},#{user_Name,jdbcType=VARCHAR},#{memo_1,jdbcType=VARCHAR},#{appr_Status,jdbcType=NUMERIC},#{subm_User_Id,jdbcType=NUMERIC},#{subm_Name,jdbcType=VARCHAR},#{depa_Id,jdbcType=NUMERIC},#{depa,jdbcType=VARCHAR},#{subm_Time,jdbcType=DATE},#{finish_Time,jdbcType=DATE},#{proj_Status,jdbcType=VARCHAR},#{IS_TY,jdbcType=NUMERIC},#{db_ms,jdbcType=VARCHAR},#{nextCZ,jdbcType=VARCHAR})
 	</insert>
-	
-	<!--查询项目信息最大主键值  -->
+
+	<!--查询项目信息最大主键值 -->
 	<select id="xiangMuXXId" resultType="Integer">
-		select max(proj_Id) from foll_up_proj
+		select max(proj_Id) from
+		foll_up_proj
 	</select>
-	
-	<!--根据id查询项目信息对象  -->
-	<select id="queryXiangMuXXById" resultType="Foll_up_Proj" parameterType="Integer">
-	  select * from foll_up_proj p
+
+	<!--根据id查询项目信息对象 -->
+	<select id="queryXiangMuXXById" resultType="Foll_up_Proj"
+		parameterType="Integer">
+		select * from foll_up_proj p
 		<where>p.proj_Id=#{proj_Id}</where>
 	</select>
-	
-	<!--跟新项目信息  -->
+
+	<!--跟新项目信息 -->
 	<update id="editXiangMuXX" parameterType="Foll_up_Proj">
-		update foll_up_proj 
+		update foll_up_proj
 		<set>
 			<if test="budget_Name!=null">budget_Name=#{budget_Name},</if>
 			<if test="budget_Amount!=null">budget_Amount=#{budget_Amount},</if>
@@ -115,30 +129,34 @@
 			proj_Id=#{proj_Id}
 		</where>
 	</update>
-	
-	<!--根据Id查询审批状态  -->
-	<select id="queryStatus" resultType="APPR_DM_STATUS" parameterType="Integer">
+
+	<!--根据Id查询审批状态 -->
+	<select id="queryStatus" resultType="APPR_DM_STATUS"
+		parameterType="Integer">
 		select * from APPR_DM_STATUS a
 		<where>
 			a.appr_status_id=#{appr_Status_Id}
 		</where>
 	</select>
-	
-	<!--点击业务数据列表进入查看页显示对应的流程图返回流程部署Id  -->
-	<select id="queryProcinstById" parameterType="String" resultType="String">
+
+	<!--点击业务数据列表进入查看页显示对应的流程图返回流程部署Id -->
+	<select id="queryProcinstById" parameterType="String"
+		resultType="String">
 		select p.proc_def_id_ from act_hi_procinst p
 		<where>
 			p.id_=#{processInstanceId}
 		</where>
 	</select>
-	
-	<!--高级搜索下拉所有的项目信息  -->
+
+	<!--高级搜索下拉所有的项目信息 -->
 	<select id="queryAllXMXX" resultType="Foll_up_Proj">
-		select * from foll_up_proj order by proj_Id desc
+		select * from foll_up_proj
+		order by proj_Id desc
 	</select>
-	
-	<!--高级搜索区下拉所有的审批状态  -->
+
+	<!--高级搜索区下拉所有的审批状态 -->
 	<select id="queryAllSPZT" resultType="APPR_DM_STATUS">
-		select * from appr_dm_status
+		select * from
+		appr_dm_status
 	</select>
 </mapper>

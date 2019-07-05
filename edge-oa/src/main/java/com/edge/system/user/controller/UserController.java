@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.edge.login.service.inter.LoginService;
 import com.edge.system.department.entity.Department;
 import com.edge.system.department.service.inter.DepartmentService;
 import com.edge.system.user.entity.User;
@@ -41,7 +44,7 @@ public class UserController {
 
 	@Resource
 	private DepartmentService departmentService;
-	
+
 	@Resource
 	private UserRoleService userRoleService;
 
@@ -61,7 +64,7 @@ public class UserController {
 	@RequestMapping(value = "/saveUser.do")
 	public String saveUser(User user, Model model) {
 		user.setUser_is_delete(false);
-		user.setUser_password("000000".trim());	
+		user.setUser_password("000000".trim());
 		userService.saveUser(user);
 		model.addAttribute("flag", true);
 		return "sys/user/saveUser";
@@ -91,20 +94,20 @@ public class UserController {
 		map.put("msg", "");
 		map.put("count", userService.queryUserCount());
 		List<User> rows = pages.getRows();
-		//用于拼接角色名
-		String role_Name="";
+		// 用于拼接角色名
+		String role_Name = "";
 		// 遍历该集合 显示所属部门名称
 		for (User user : rows) {
 			// 根据部门id去查询部门名称
 			Department department = departmentService.queryDepartmentById(user.getUser_department_id());
 			user.setUser_department_name(department.getDep_name());
-			//查询当前用户的所有角色名
+			// 查询当前用户的所有角色名
 			List<String> roleNames = userService.userRoleNames(user.getUser_id());
-			//遍历角色名集合
+			// 遍历角色名集合
 			for (String roleName : roleNames) {
-				role_Name+=roleName.trim()+" ";
+				role_Name += roleName.trim() + " ";
 			}
-			//设置用户的角色名
+			// 设置用户的角色名
 			user.setUserRoleName(role_Name);
 		}
 		map.put("data", pages.getRows());
@@ -142,7 +145,7 @@ public class UserController {
 		User user = userService.queryUserById(user_id);
 		user.setUser_is_delete(true);
 		userService.editUser(user);
-		//删除该用户的同时也删除该用户的所有角色
+		// 删除该用户的同时也删除该用户的所有角色
 		userRoleService.deleteUserRole(user_id);
 		mv.setViewName("redirect:initUserList.do");
 		return mv;
@@ -178,5 +181,46 @@ public class UserController {
 	public String initSetRole(@RequestParam Integer user_id, Model model) {
 		model.addAttribute("user_id", user_id);
 		return "sys/user/setRoleList";
+	}
+
+	// 跳转至修改密码页面
+	@RequestMapping(value = "/initSecuritySetting.do")
+	public String initSecuritySetting() {
+		return "sys/user/securitySetting";
+	}
+
+	// 验证用户输入的密码
+	@RequestMapping(value = "/checkPassword.do")
+	@ResponseBody
+	public String checkPassword(@RequestParam String oldPasswordValue, Integer userId) {
+		// 通过用户主键查询用户对象
+		User user = userService.queryUserById(userId);
+		JSONObject jsonObject = new JSONObject();
+		// 比较输入的原密码和密码
+		if (oldPasswordValue.equals(user.getUser_password())) {
+			// 原密码输入正确给出提示
+			jsonObject.put("flag", true);
+		} else {
+			jsonObject.put("flag", false);
+		}
+		return jsonObject.toString();
+
+	}
+
+	// 修改密码
+	@RequestMapping(value = "/setPassword.do")
+	public String setPassword(@RequestParam Integer userId, String newPassword, HttpServletRequest request,
+			Model model) {
+		// 根据用户主键得到用户对象
+		User user = userService.queryUserById(userId);
+		// 设置密码
+		user.setUser_password(newPassword);
+		userService.editUser(user);
+		HttpSession session = request.getSession();
+		// 清除session
+		session.invalidate();
+		model.addAttribute("flag", true);
+		return "sys/user/securitySetting";
+
 	}
 }

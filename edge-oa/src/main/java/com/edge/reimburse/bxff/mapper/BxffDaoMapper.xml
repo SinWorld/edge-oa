@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edge.reimburse.bxff.dao.BxffDao">
+	<!-- 定义缓存 一般是一级缓存，如果用同一个sqlsession 那么相同查询直接会从缓存中查找 <cache size="1024" flushInterval="60000" 
+		eviction="LRU" readOnly="false"></cache> -->
+
+	<!--分页显示我的报销记录 (流程已启动) -->
+	<select id="queryMyReimbursementLC" parameterType="MyReport_QueryVo"
+		resultType="Reimbursement">
+		select * from (select row_.*, rownum rownum_ from (select * from
+		reimbursement order by reimbursement_dm desc ) row_
+		<where>
+			rownum &lt;=#{size} and reimbursement_bxr=#{userName} and appr_status is
+			not null and is_ffdj=1
+		</where>
+		)
+		<where>
+			rownum_ &gt;=#{page}
+		</where>
+	</select>
+
+	<!--分页显示我的报销记录数量 (流程已启动) -->
+	<select id="queryMyReimbursementCountLC" parameterType="MyReport_QueryVo"
+		resultType="Integer">
+		select count(1) from reimbursement
+		<where>
+			reimbursement_bxr=#{userName} and appr_status is not null and is_ffdj=1
+		</where>
+	</select>
+
+	<!--分页显示所有的报销记录 (流程已启动) -->
+	<select id="queryAllReimbursementLC" parameterType="MyReport_QueryVo"
+		resultType="Reimbursement">
+		select * from (select row_.*, rownum rownum_ from (select * from
+		reimbursement order by reimbursement_dm desc ) row_
+		<where>
+			rownum &lt;=#{size} and appr_status is not null and is_ffdj=1
+		</where>
+		)
+		<where>
+			rownum_ &gt;=#{page}
+		</where>
+	</select>
+
+	<!--分页显示所有的报销记录数量 (流程已启动) -->
+	<select id="queryAllReimbursementCountLC" parameterType="MyReport_QueryVo"
+		resultType="Integer">
+		select count(1) from reimbursement
+		<where>
+			appr_status is not null and is_ffdj=1
+		</where>
+	</select>
+</mapper>

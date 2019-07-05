@@ -46,7 +46,7 @@ layui.use(['form','table'], function(){
       ,{field:'user_id', width:"12%",align:'center', title: '请假人'}
       ,{field:'days', width:"10%", align:'center', title: '请假天数'}
       ,{field:'reason', width:"30%", align:'center', title: '请假事由'}
-      ,{field:'beginDate', width:"20%", align:'center', title: '请假时间'}
+      ,{field:'beginDate', width:"20%", align:'center', title: '请假时间',templet:'<div>{{ layui.util.toDateString(d.beginDate, "yyyy-MM-dd HH:mm:ss") }}</div>'}
       ,{field:'state', width:"10%", align:'center', title: '请假状态'}
       ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:"10%",align:'center'}
     ]]

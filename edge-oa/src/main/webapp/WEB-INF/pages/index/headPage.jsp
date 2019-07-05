@@ -14,6 +14,7 @@
   <ul class="layui-tab-title">
     <li class="layui-this">待办</li>
     <li>已完成</li>
+    
   </ul>
   <div class="layui-tab-content">
     <div class="layui-tab-item layui-show">
@@ -24,6 +25,7 @@
     <div class="layui-tab-item">
     	<table class="layui-hide" id="ywc" lay-filter="ywc"></table>
     </div>
+   
   </div>
 </div>
 <!--  <script type="text/html" id="dbcz">
@@ -103,10 +105,19 @@ layui.use(['element','form','table'], function(){
 		       	    anim: 1,
 		       	  	content:[url+"xshtdj/xshtdjShow.do?id="+data.id+"&task_id="+data.taskId,'yes']
 	     	  });
+	    	}else if(obj=='Reimbursement'){
+	    		layer.open({
+		       	  	type:2,
+		       	  	title:'任务信息',
+		       	  	area: ['100%','100%'],
+		       		shadeClose: false,
+		       		resize:false,
+		       	    anim: 1,
+		       	  	content:[url+"bxtb/reimburseShow.do?id="+data.id+"&task_id="+data.taskId,'yes']
+	     	  });
 	    	}
 	    }  
 	});
-	
 	  
   });
   
@@ -151,7 +162,17 @@ layui.use(['element','form','table'], function(){
 			       	    anim: 1,
 			       	 	content:[url+"xshtdj/ObjYWCShow.do?id="+data.id+"&proIndeId="+data.proIndeId+"&PROC_DEF_ID_="+data.PROC_DEF_ID_,'yes']
 		     	  });
-		    	} 
+		    	}else if(data.obj=='Reimbursement'){
+		    		layer.open({
+			       	  	type:2,
+			       	  	title:'任务信息',
+			       	  	area: ['100%','100%'],
+			       		shadeClose: false,
+			       		resize:false,
+			       	    anim: 1,
+			       	 	content:[url+"bxtb/ObjYWCShow.do?id="+data.id+"&proIndeId="+data.proIndeId+"&PROC_DEF_ID_="+data.PROC_DEF_ID_,'yes']
+		     	  });
+		    	}  
 		    }
 		});
   });

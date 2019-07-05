@@ -39,8 +39,8 @@
 	
 	<!--新增功能权限  -->
 	<insert id="saveRolePrivilege" parameterType="Role_Privilege">
-		insert into cwgl_role_privilege(ROLE_PRIVILEGE_ID,ROLE_ID,PRIVILEGE_ID,ICON)
-		values(role_privilege_Id.nextval,#{role_Id},#{privilege_Id},#{icon})
+		insert into cwgl_role_privilege(ROLE_PRIVILEGE_ID,ROLE_ID,PRIVILEGE_ID)
+		values(role_privilege_Id.nextval,#{role_Id},#{privilege_Id})
 	</insert>
 	
 	

@@ -239,7 +239,7 @@ layui.use(['form','layedit', 'laydate'], function(){
 		var kg=false;
 		//遍历表格
 		for(var i=1;i<rows.length;i++){
-			//获得复选框表格前的复选框
+			//获得表格前的复选框
 			var checboxs=$('input[name="qx"]')[i-1].checked;
 			if(checboxs==true){
 				//获得表格数据中的已存在的项目入库数据主键

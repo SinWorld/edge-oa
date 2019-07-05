@@ -25,10 +25,10 @@
    		<input type="hidden" value='<c:url value="/"/>' id="url">
         <dl class="layui-nav-child">
           <dd><a onclick="userShow()">基本资料</a></dd>
-          <dd><a onclick="securitySetting()">安全设置</a></dd>
+          <dd><a onclick="initSecuritySetting()">修改密码</a></dd>
         </dl>
       </li>
-      <li class="layui-nav-item"><a href='<c:url value="/login/exit.do"/>'>退出</a></li>
+      <li class="layui-nav-item"><a  onclick="exit()" style="cursor:pointer;">退出</a></li>
     </ul>
   </div>
   
@@ -94,6 +94,31 @@ function loadTopWindow(){
 		window.top.location= document.URL; //这样就可以让登陆窗口显示在整个窗口了 
 	} 
 } 
+
+//跳转至修改密码页面
+function initSecuritySetting (){
+	var url=$('#url').val();
+	layer.open({
+  	  	type:2,
+  	  	title:'修改密码',
+  	  	area: ['38%','40%'],
+  		shadeClose: false,
+  		resize:false,
+  	    anim: 1,
+  	  	content:[url+"user/initSecuritySetting.do",'yes']
+	 });
+}
+
+//退出系统
+function exit(){
+	 layer.confirm('您确定要退出系统么？', {
+		  btn: ['确定','取消'], //按钮
+		  title:'提示',icon:7},function(){
+			  location.href='<c:url value="/login/exit.do"/>';
+		  }
+	  );
+	
+}
 </script>
 </body>
 </html>
