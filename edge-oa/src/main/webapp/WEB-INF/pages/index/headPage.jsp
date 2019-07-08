@@ -12,7 +12,7 @@
 <body>
 <div class="layui-tab">
   <ul class="layui-tab-title">
-    <li class="layui-this">待办</li>
+    <li class="layui-this">待办 <span class="layui-badge">${dbCount}</span></li>
     <li>已完成</li>
     
   </ul>

@@ -93,7 +93,32 @@
 		select * from (select row_.*, rownum rownum_ from (select * from
 			reimbursement order by reimbursement_dm desc ) row_
 			<where>
-				rownum &lt;=#{size} and reimbursement_bxr=#{userName} and appr_status is not null 
+				rownum &lt;=#{size} and reimbursement_bxr=#{userName} and appr_status is not null
+				<if test="reimbursement_code!=null"> and reimbursement_code like '%${reimbursement_code}%'</if>
+				<if test="proj_dm!=null"> and proj_dm = #{proj_dm}</if>
+				<if test="reimbursement_dm_fylx!=null"> and reimbursement_dm_fylx = #{reimbursement_dm_fylx}</if>
+				<if test="reimbursement_bxje1 != null">AND
+					reimbursement_bxje <![CDATA[>=]]>#{reimbursement_bxje1}
+				</if>
+				<if test="reimbursement_bxje2 != null">AND
+					reimbursement_bxje <![CDATA[<=]]>#{reimbursement_bxje2}
+				</if>
+				<if test="reimbursement_user_dm!=null"> and reimbursement_user_dm = #{reimbursement_user_dm}</if>
+				<if test="reimbursement_bxr!=null"> and reimbursement_bxr like '%${reimbursement_bxr}%'</if>
+				<if test="appr_status!=null"> and appr_status = #{appr_status}</if>
+				<if test="nextcz!=null"> and nextcz like '%${nextcz}%'</if>
+				<if test="reimbursement_begintime1 != null">AND
+					reimbursement_begintime <![CDATA[>=]]>#{reimbursement_begintime1}
+				</if>
+				<if test="reimbursement_begintime2 != null">AND
+					reimbursement_begintime <![CDATA[<=]]>#{reimbursement_begintime2}
+				</if>
+				<if test="reimbursement_submittime1 != null">AND
+					reimbursement_submittime <![CDATA[>=]]>#{reimbursement_submittime1}
+				</if>
+				<if test="reimbursement_submittime2 != null">AND
+					reimbursement_submittime <![CDATA[<=]]>#{reimbursement_submittime2}
+				</if> 
 			</where>
 			)
 			<where>
@@ -105,7 +130,32 @@
 	<select id="queryMyReimbursementCountLC" parameterType="MyReport_QueryVo" resultType="Integer">
 		select count(1) from reimbursement
 		<where>
-			reimbursement_bxr=#{userName} and appr_status is not null 
+			reimbursement_bxr=#{userName} and appr_status is not null
+			<if test="reimbursement_code!=null"> and reimbursement_code like '%${reimbursement_code}%'</if>
+				<if test="proj_dm!=null"> and proj_dm = #{proj_dm}</if>
+				<if test="reimbursement_dm_fylx!=null"> and reimbursement_dm_fylx = #{reimbursement_dm_fylx}</if>
+				<if test="reimbursement_bxje1 != null">AND
+					reimbursement_bxje <![CDATA[>=]]>#{reimbursement_bxje1}
+				</if>
+				<if test="reimbursement_bxje2 != null">AND
+					reimbursement_bxje <![CDATA[<=]]>#{reimbursement_bxje2}
+				</if>
+				<if test="reimbursement_user_dm!=null"> and reimbursement_user_dm = #{reimbursement_user_dm}</if>
+				<if test="reimbursement_bxr!=null"> and reimbursement_bxr like '%${reimbursement_bxr}%'</if>
+				<if test="appr_status!=null"> and appr_status = #{appr_status}</if>
+				<if test="nextcz!=null"> and nextcz like '%${nextcz}%'</if>
+				<if test="reimbursement_begintime1 != null">AND
+					reimbursement_begintime <![CDATA[>=]]>#{reimbursement_begintime1}
+				</if>
+				<if test="reimbursement_begintime2 != null">AND
+					reimbursement_begintime <![CDATA[<=]]>#{reimbursement_begintime2}
+				</if>
+				<if test="reimbursement_submittime1 != null">AND
+					reimbursement_submittime <![CDATA[>=]]>#{reimbursement_submittime1}
+				</if>
+				<if test="reimbursement_submittime2 != null">AND
+					reimbursement_submittime <![CDATA[<=]]>#{reimbursement_submittime2}
+				</if> 
 		</where>
 	</select>
 	
@@ -114,7 +164,32 @@
 		select * from (select row_.*, rownum rownum_ from (select * from
 			reimbursement order by reimbursement_dm desc ) row_
 			<where>
-				rownum &lt;=#{size} and appr_status is not null 
+				rownum &lt;=#{size} and appr_status is not null
+				<if test="reimbursement_code!=null"> and reimbursement_code like '%${reimbursement_code}%'</if>
+				<if test="proj_dm!=null"> and proj_dm = #{proj_dm}</if>
+				<if test="reimbursement_dm_fylx!=null"> and reimbursement_dm_fylx = #{reimbursement_dm_fylx}</if>
+				<if test="reimbursement_bxje1 != null">AND
+					reimbursement_bxje <![CDATA[>=]]>#{reimbursement_bxje1}
+				</if>
+				<if test="reimbursement_bxje2 != null">AND
+					reimbursement_bxje <![CDATA[<=]]>#{reimbursement_bxje2}
+				</if>
+				<if test="reimbursement_user_dm!=null"> and reimbursement_user_dm = #{reimbursement_user_dm}</if>
+				<if test="reimbursement_bxr!=null"> and reimbursement_bxr like '%${reimbursement_bxr}%'</if>
+				<if test="appr_status!=null"> and appr_status = #{appr_status}</if>
+				<if test="nextcz!=null"> and nextcz like '%${nextcz}%'</if>
+				<if test="reimbursement_begintime1 != null">AND
+					reimbursement_begintime <![CDATA[>=]]>#{reimbursement_begintime1}
+				</if>
+				<if test="reimbursement_begintime2 != null">AND
+					reimbursement_begintime <![CDATA[<=]]>#{reimbursement_begintime2}
+				</if>
+				<if test="reimbursement_submittime1 != null">AND
+					reimbursement_submittime <![CDATA[>=]]>#{reimbursement_submittime1}
+				</if>
+				<if test="reimbursement_submittime2 != null">AND
+					reimbursement_submittime <![CDATA[<=]]>#{reimbursement_submittime2}
+				</if> 
 			</where>
 			)
 			<where>
@@ -126,7 +201,32 @@
 	<select id="queryAllReimbursementCountLC" parameterType="MyReport_QueryVo" resultType="Integer">
 		select count(1) from reimbursement
 		<where>
-		   appr_status is not null 
+		   appr_status is not null
+		   <if test="reimbursement_code!=null"> and reimbursement_code like '%${reimbursement_code}%'</if>
+				<if test="proj_dm!=null"> and proj_dm = #{proj_dm}</if>
+				<if test="reimbursement_dm_fylx!=null"> and reimbursement_dm_fylx = #{reimbursement_dm_fylx}</if>
+				<if test="reimbursement_bxje1 != null">AND
+					reimbursement_bxje <![CDATA[>=]]>#{reimbursement_bxje1}
+				</if>
+				<if test="reimbursement_bxje2 != null">AND
+					reimbursement_bxje <![CDATA[<=]]>#{reimbursement_bxje2}
+				</if>
+				<if test="reimbursement_user_dm!=null"> and reimbursement_user_dm = #{reimbursement_user_dm}</if>
+				<if test="reimbursement_bxr!=null"> and reimbursement_bxr like '%${reimbursement_bxr}%'</if>
+				<if test="appr_status!=null"> and appr_status = #{appr_status}</if>
+				<if test="nextcz!=null"> and nextcz like '%${nextcz}%'</if>
+				<if test="reimbursement_begintime1 != null">AND
+					reimbursement_begintime <![CDATA[>=]]>#{reimbursement_begintime1}
+				</if>
+				<if test="reimbursement_begintime2 != null">AND
+					reimbursement_begintime <![CDATA[<=]]>#{reimbursement_begintime2}
+				</if>
+				<if test="reimbursement_submittime1 != null">AND
+					reimbursement_submittime <![CDATA[>=]]>#{reimbursement_submittime1}
+				</if>
+				<if test="reimbursement_submittime2 != null">AND
+					reimbursement_submittime <![CDATA[<=]]>#{reimbursement_submittime2}
+				</if> 
 		</where>
 	</select>
 </mapper>

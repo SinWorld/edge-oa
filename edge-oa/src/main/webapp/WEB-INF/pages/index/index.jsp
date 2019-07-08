@@ -18,7 +18,7 @@
     <ul class="layui-nav layui-layout-right">
       <li class="layui-nav-item">
         <a href="javascript:;">
-           <img src="../login/images/photo-pic.png"  class="layui-nav-img">
+        <img src="../login/images/photo-pic.png"  class="layui-nav-img"> 
       			${userName}
         </a>
         <input type="hidden" value="${userId}" id="userId">

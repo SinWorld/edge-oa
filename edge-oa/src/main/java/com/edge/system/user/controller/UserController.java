@@ -94,8 +94,6 @@ public class UserController {
 		map.put("msg", "");
 		map.put("count", userService.queryUserCount());
 		List<User> rows = pages.getRows();
-		// 用于拼接角色名
-		String role_Name = "";
 		// 遍历该集合 显示所属部门名称
 		for (User user : rows) {
 			// 根据部门id去查询部门名称
@@ -103,6 +101,8 @@ public class UserController {
 			user.setUser_department_name(department.getDep_name());
 			// 查询当前用户的所有角色名
 			List<String> roleNames = userService.userRoleNames(user.getUser_id());
+			// 用于拼接角色名
+			String role_Name = "";
 			// 遍历角色名集合
 			for (String roleName : roleNames) {
 				role_Name += roleName.trim() + " ";

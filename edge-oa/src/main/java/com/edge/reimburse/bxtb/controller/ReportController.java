@@ -111,8 +111,8 @@ public class ReportController {
 			second = 0 + second;
 		}
 		// 产生六位随机数
-		Random r = new Random();
-		String x = String.valueOf(r.nextInt(999999));
+		int a=(int) ((Math.random()*9+1)*100000);
+		String x=String.valueOf(a);
 		String time = year + month + day + Hourse + minute + second;
 		String bh = "C" + time + x;
 		return bh;
@@ -164,7 +164,8 @@ public class ReportController {
 	// 分页显示我的报销记录
 	@RequestMapping(value = "/queryAllReimbursement.do")
 	@ResponseBody
-	public String queryAllReimbursement(Integer page, HttpServletRequest request) {
+	public String queryAllReimbursement(Integer page, HttpServletRequest request, MyReport_QueryVo myReport_QueryVo,
+			String time1, String time2, String subTime1, String subTime2, Double jinE1, Double jinE2) {
 		// new出QueryVo查询对象
 		MyReport_QueryVo vo = new MyReport_QueryVo();
 		HttpSession session = request.getSession();
@@ -172,6 +173,7 @@ public class ReportController {
 		// 获得Page对象
 		Page<Reimbursement> pages = new Page<Reimbursement>();
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");// 设置日期格式
 		// 每页数
 		if (vo != null) {
 			pages.setPage((page - 1) * vo.getSize() + 1);
@@ -211,7 +213,8 @@ public class ReportController {
 	// 分页显示报销记录（阮玲玲、邓成丽、高云飞能看见所有的报销记录，其余只能看自己的）
 	@RequestMapping(value = "/reimbursementList.do")
 	@ResponseBody
-	public String reimbursementList(Integer page, HttpServletRequest request) {
+	public String reimbursementList(Integer page, HttpServletRequest request ,MyReport_QueryVo myReport_QueryVo,
+			String time1, String time2, String subTime1, String subTime2, Double jinE1, Double jinE2) {
 		// new出QueryVo查询对象
 		MyReport_QueryVo vo = new MyReport_QueryVo();
 		HttpSession session = request.getSession();
@@ -219,6 +222,7 @@ public class ReportController {
 		// 获得Page对象
 		Page<Reimbursement> pages = new Page<Reimbursement>();
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");// 设置日期格式
 		// 每页数
 		if (vo != null) {
 			pages.setPage((page - 1) * vo.getSize() + 1);
@@ -226,6 +230,63 @@ public class ReportController {
 			vo.setStartRow((pages.getPage()));
 			vo.setSize(page * 10);
 			vo.setUserName(userName);
+			if (myReport_QueryVo.getReimbursement_code() != null && myReport_QueryVo.getReimbursement_code() != "") {
+				vo.setReimbursement_code(myReport_QueryVo.getReimbursement_code().trim());// 审批编号
+			}
+			if (myReport_QueryVo.getProj_dm() != null) {
+				vo.setProj_dm(myReport_QueryVo.getProj_dm());// 所属项目
+			}
+			if (myReport_QueryVo.getReimbursement_dm_fylx() != null) {
+				vo.setReimbursement_dm_fylx(myReport_QueryVo.getReimbursement_dm_fylx());// 费用类型
+			}
+			if (jinE1 != null) {
+				vo.setReimbursement_bxje1(jinE1);// 报销金额
+			}
+			if (jinE2 != null) {
+				vo.setReimbursement_bxje2(jinE2);// 报销金额
+			}
+			if (myReport_QueryVo.getReimbursement_user_dm() != null) {
+				vo.setReimbursement_user_dm(myReport_QueryVo.getReimbursement_user_dm());// 费用所属
+			}
+			if (myReport_QueryVo.getReimbursement_bxr() != null && myReport_QueryVo.getReimbursement_bxr() != "") {
+				vo.setReimbursement_bxr(myReport_QueryVo.getReimbursement_bxr().trim());// 报销人
+			}
+			if (myReport_QueryVo.getAppr_status() != null) {
+				vo.setAppr_status(myReport_QueryVo.getAppr_status());// 审批状态
+			}
+			if (myReport_QueryVo.getNextcz() != null && myReport_QueryVo.getNextcz() != "") {
+				vo.setNextcz(myReport_QueryVo.getNextcz().trim());// 当前操作
+			}
+			if (time1 != null && time1 != "") {// 发生日期
+				// 将String类型转换为Date类型
+				try {
+					vo.setReimbursement_begintime1(sdf.parse(time1));
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+			}
+			if (time2 != null && time2 != "") {// 发生日期
+				try {
+					vo.setReimbursement_begintime2(sdf.parse(time2));
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+			}
+			if (subTime1 != null && subTime1 != "") {// 提交日期
+				// 将String类型转换为Date类型
+				try {
+					vo.setReimbursement_submittime1(sdf.parse(subTime1));
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+			}
+			if (subTime2 != null && subTime2 != "") {// 提交日期
+				try {
+					vo.setReimbursement_submittime2(sdf.parse(subTime2));
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 		// 总页数
 		if ("阮玲玲".equals(userName) || "邓成丽".equals(userName) || "高云飞".equals(userName)) {

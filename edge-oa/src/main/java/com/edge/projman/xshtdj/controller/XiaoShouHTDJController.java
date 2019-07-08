@@ -277,8 +277,8 @@ public class XiaoShouHTDJController {
 			second = 0 + second;
 		}
 		// 产生六位随机数
-		Random r = new Random();
-		String x = String.valueOf(r.nextInt(999999));
+		int a=(int) ((Math.random()*9+1)*100000);
+		String x=String.valueOf(a);
 		String time = year + month + day + Hourse + minute + second;
 		String bh = "S" + time + x;
 		return bh;

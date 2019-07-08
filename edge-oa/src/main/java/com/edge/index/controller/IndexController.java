@@ -100,7 +100,11 @@ public class IndexController {
 
 	// 跳转至首页显示代办、已办、已完成
 	@RequestMapping(value = "/headPage.do")
-	public String headPage() {
+	public String headPage(HttpServletRequest request,Model model) {
+		HttpSession session = request.getSession();
+		String user_name = (String) session.getAttribute("userName");
+		Integer dbCount = indexService.myTaskCount(user_name);
+		model.addAttribute("dbCount", dbCount);
 		return "index/headPage";
 	}
 

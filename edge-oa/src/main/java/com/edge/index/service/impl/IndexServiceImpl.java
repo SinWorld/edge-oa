@@ -97,21 +97,8 @@ public class IndexServiceImpl implements IndexService {
 		// 使用当前的任务ID，查询当前流程对应的历史任务ID
 		// 使用当前任务ID，获取当前任务对象
 		String proc_Inst_id = null;
-		List<HistoricTaskInstance> list = processEngine.getHistoryService().createHistoricTaskInstanceQuery().list();
-		for (HistoricTaskInstance l : list) {
-			if (taskId.equals(l.getId())) {
-				proc_Inst_id = l.getProcessInstanceId();
-				break;
-			}
-		}
-		// Task task =
-		// processEngine.getTaskService().createTaskQuery().taskId(taskId).singleResult();
-		// 获取流程实例Id
-		// String proc_Inst_id=null;
-		// if(task!=null) {
-		// proc_Inst_id = task.getProcessInstanceId();
-		// }
-
+		HistoricTaskInstance his = processEngine.getHistoryService().createHistoricTaskInstanceQuery().taskId(taskId).singleResult();
+		proc_Inst_id = his.getProcessInstanceId();
 		return queryReviewOpinions(proc_Inst_id);
 	}
 
@@ -152,19 +139,12 @@ public class IndexServiceImpl implements IndexService {
 
 	// 获取任务Id，获取任务对象，使用任务对象获取流程定义Id，查询流程定义对象
 	public ProcessDefinition queryProcessDefinitionByTaskId(String taskId) {
-		List<HistoricTaskInstance> his = new ArrayList<HistoricTaskInstance>();
+		//List<HistoricTaskInstance> his = new ArrayList<HistoricTaskInstance>();
 		// 使用任务Id去查询历史任务
-		List<HistoricTaskInstance> list = processEngine.getHistoryService().createHistoricTaskInstanceQuery().list();
-		for (HistoricTaskInstance l : list) {
-			if (taskId.equals(l.getId())) {
-				taskId = l.getProcessInstanceId();
-				his.add(l);
-				break;
-			}
-		}
+		HistoricTaskInstance his = processEngine.getHistoryService().createHistoricTaskInstanceQuery().taskId(taskId).singleResult();
 		// 取得历史任务中的流程定义Id
-		if (his.size() > 0 && his != null) {
-			String processDefinitionId = his.get(0).getProcessDefinitionId();
+		if (his != null) {
+			String processDefinitionId = his.getProcessDefinitionId();
 			ProcessDefinition pd = processEngine.getRepositoryService().createProcessDefinitionQuery()// 创建流程定义查询对象
 					// 对应表act_re_procdef
 					.processDefinitionId(processDefinitionId)// 使用流程定义Id对象
@@ -194,13 +174,10 @@ public class IndexServiceImpl implements IndexService {
 		// 获取流程定义Id
 		String processDefinitionId = null;
 		String processInstanceId = null;
-		List<HistoricTaskInstance> list = processEngine.getHistoryService().createHistoricTaskInstanceQuery().list();
-		for (HistoricTaskInstance l : list) {
-			if (taskId.equals(l.getId())) {
-				processDefinitionId = l.getProcessDefinitionId();
-				processInstanceId = l.getProcessInstanceId();
-				break;
-			}
+		HistoricTaskInstance his = processEngine.getHistoryService().createHistoricTaskInstanceQuery().taskId(taskId).singleResult();
+		if(his!=null) {
+			processDefinitionId = his.getProcessDefinitionId();
+			processInstanceId = his.getProcessInstanceId();
 		}
 		// 获取流程定义的实体对象（对应.bpmn文件中的数据）
 		ProcessDefinitionEntity processDefinitionEntity = (ProcessDefinitionEntity) processEngine.getRepositoryService()

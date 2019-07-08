@@ -102,7 +102,6 @@
 					bxjes.push(msg[i].reimbursement_bxje);
 				}
 				myChart.setOption({
-					    color : [ '#3398DB' ],
 					 	tooltip: {
 					        trigger: 'axis',
 					        axisPointer: {
@@ -321,7 +320,6 @@
 						bxjes.push(msg[i].reimbursement_bxje);
 					}
 					myChart.setOption({
-						color : [ '#3398DB' ],
 					 	tooltip: {
 					        trigger: 'axis',
 					        axisPointer: {
@@ -384,7 +382,7 @@
 			      	<button type="button" onclick="queryRq()"  class="layui-btn layui-btn-normal" title="搜索"><i class="layui-icon">&#xe615;</i></button>
 			      </div>
 			</div>
-		</div>
+	</div>
 	<input type="hidden" id="zztShow" value="false">
 	<input type="hidden" id="zxtShow" value="false">
 	<input type="hidden" id="bztShow" value="false">
