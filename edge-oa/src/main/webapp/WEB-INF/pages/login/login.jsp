@@ -7,8 +7,7 @@
 <title>登录界面</title>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
 <%@page isELIgnored="false"%>
-<link href="../login/css/style.css" rel="stylesheet" type="text/css"
-	media="all" />
+<link href="../login/css/style.css" rel="stylesheet" type="text/css" media="all" />
 <link rel="stylesheet" href="../layui-v2.4.5/layui/css/layui.css">
 <script src="../jquery/jquery-3.3.1.js"></script>
 <script src="../layui-v2.4.5/layui/layui.js"></script>

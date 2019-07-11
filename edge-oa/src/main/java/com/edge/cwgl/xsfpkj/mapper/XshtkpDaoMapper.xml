@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edge.cwgl.xsfpkj.dao.XshtkpDao">
+	<!-- 定义缓存 一般是一级缓存，如果用同一个sqlsession 那么相同查询直接会从缓存中查找 <cache size="1024" flushInterval="60000" 
+		eviction="LRU" readOnly="false"></cache> -->
+	<!--查询所有的进销项 -->
+	<select id="queryAllJXX" resultType="JXX_DM">
+		select * from JXX_DM
+	</select>
+
+	<!--查询所有的发票类别 -->
+	<select id="queryAllFPLB" resultType="FPLB_DM">
+		select * from FPLB_DM
+	</select>
+
+	<!--查询当前销售合同下累计的开票金额 -->
+	<select id="queryLJKPJE" resultType="Double" parameterType="Integer">
+		select sum(xshtkp_kpje) from cwgl_xshtkp
+		<where>
+			xshtkp_xshtdm=#{xshtdm} and is_kp=1
+		</where>
+	</select>
+
+	<!--开票新增页面保存操作 -->
+	<insert id="saveXSHTKP" parameterType="XSHTKP">
+		insert into
+		cwgl_xshtkp(XSHTKP_DM,XSHTKP_CODE,XSHTKP_DM_JXX,XSHTKP_DM_FPLB,XSHTKP_FPSL,XSHTKP_FPBH,
+		XSHTKP_KPRQ,XSHTKP_KPJE,XSHTKP_WSJE,XSHTKP_SJ,XSHTKP_BZ,XSHTKP_DJR,XSHTKP_XSHTDM,XSHTKP_UUID,IS_KP,XSHTKP_LXR,XSHTKP_LXDH)
+		values(seq_xshtkp_dm.nextval,#{xshtkp_code,jdbcType=VARCHAR},#{xshtkp_dm_jxx,jdbcType=NUMERIC},#{xshtkp_dm_fplb,jdbcType=NUMERIC},
+		#{xshtkp_fpsl,jdbcType=NUMERIC},#{xshtkp_fpbh,jdbcType=VARCHAR},#{xshtkp_kprq,jdbcType=DATE},#{xshtkp_kpje,jdbcType=NUMERIC},
+		#{xshtkp_wsje,jdbcType=NUMERIC},#{xshtkp_sj,jdbcType=NUMERIC},#{xshtkp_bz,jdbcType=VARCHAR},#{xshtkp_djr,jdbcType=VARCHAR},
+		#{xshtkp_xshtdm,jdbcType=NUMERIC},#{xshtkp_uuid,jdbcType=VARCHAR},#{is_kp,jdbcType=NUMERIC},#{xshtkp_lxr,jdbcType=VARCHAR},#{xshtkp_lxdh,jdbcType=VARCHAR})
+	</insert>
+
+	<!--新增页面查询我填写的开票信息 -->
+	<select id="queryMyXSHTKP" resultType="XSHTKP" parameterType="String">
+		select * from cwgl_xshtkp
+		<where>
+			xshtkp_djr=#{userName} and is_kp=0
+		</where>
+	</select>
+
+	<!--根据id查询进销项 -->
+	<select id="queryjxxById" parameterType="Integer" resultType="JXX_DM">
+		select * from jxx_dm
+		<where>
+			jxx_dm=#{jxx_dm}
+		</where>
+	</select>
+
+	<!--根据id查询发票类别 -->
+	<select id="queryfplbById" parameterType="Integer" resultType="FPLB_DM">
+		select * from fplb_dm
+		<where>
+			fplb_dm=#{fplb_dm}
+		</where>
+	</select>
+	
+	<!--根据Id查询销售合同开票对象  -->
+	<select id="queryXshtkpById" parameterType="Integer" resultType="XSHTKP">
+		select * from cwgl_xshtkp
+		<where>
+			xshtkp_dm=#{xshtkp_dm}
+		</where>
+	</select>
+	
+	<!--编辑操作  -->
+	<update id="editXshtkp" parameterType="XSHTKP">
+		update cwgl_xshtkp
+		<set>
+			<if test="xshtkp_dm_jxx!=null">xshtkp_dm_jxx=#{xshtkp_dm_jxx},</if>
+			<if test="xshtkp_dm_fplb!=null">xshtkp_dm_fplb=#{xshtkp_dm_fplb},</if>
+			<if test="xshtkp_fpsl!=null">xshtkp_fpsl=#{xshtkp_fpsl},</if>
+			<if test="xshtkp_fpbh!=null">xshtkp_fpbh=#{xshtkp_fpbh},</if>
+			<if test="xshtkp_kprq!=null">xshtkp_kprq=#{xshtkp_kprq},</if>
+			<if test="xshtkp_kpje!=null">xshtkp_kpje=#{xshtkp_kpje},</if>
+			<if test="xshtkp_wsje!=null">xshtkp_wsje=#{xshtkp_wsje},</if>
+			<if test="xshtkp_sj!=null">xshtkp_sj=#{xshtkp_sj},</if>
+			<if test="xshtkp_djr!=null">xshtkp_djr=#{xshtkp_djr},</if>
+			<if test="xshtkp_xshtdm!=null">xshtkp_xshtdm=#{xshtkp_xshtdm},</if>
+			<if test="is_kp!=null">is_kp=#{is_kp},</if>
+			<if test="xshtkp_bz!=null">xshtkp_bz=#{xshtkp_bz},</if>
+			<if test="xshtkp_uuid!=null">xshtkp_uuid=#{xshtkp_uuid}</if>
+		</set>
+		<where>
+			xshtkp_dm=#{xshtkp_dm}
+		</where>
+	</update>
+	
+	<!--删除操作  -->
+	<delete id="deleteXshtkpById" parameterType="Integer">
+		delete from cwgl_xshtkp
+		<where>
+			xshtkp_dm=#{xshtkp_dm}
+		</where>
+	</delete>
+	
+	<!--分页查询开票记录  -->
+	<select id="queryAllXshtkp" parameterType="Xshtkp_QueryVo" resultType="XSHTKP">
+		select * from (select row_.*, rownum rownum_ from (select p.xshtkp_uuid,p.xshtkp_xshtdm,p.xshtkp_djr,p.xshtkp_kprq 
+		 from cwgl_xshtkp p <where>p.is_kp =1</where> 
+		 group by p.xshtkp_uuid,p.xshtkp_xshtdm,p.xshtkp_djr,p.xshtkp_kprq 
+		 order by p.xshtkp_kprq desc ) row_
+		<where>
+			rownum &lt;=#{size} 
+		</where>
+		)
+		<where>
+			rownum_ &gt;=#{page}
+		</where>
+	</select>
+	
+	<!--查询开票记录数量  -->
+	<select id="queryAllXshtkpCount" parameterType="Xshtkp_QueryVo" resultType="Integer">
+		select count(1)
+  		from (select p.xshtkp_uuid, p.xshtkp_xshtdm, p.xshtkp_djr, p.xshtkp_kprq
+          	  from cwgl_xshtkp p
+         	  <where>p.is_kp = 1</where> 
+	         group by p.xshtkp_uuid,
+	                  p.xshtkp_xshtdm,
+	                  p.xshtkp_djr,
+	                  p.xshtkp_kprq
+	         order by p.xshtkp_kprq desc)
+	</select>
+	
+	<!--列表页面通过uuid查看开票记录  -->
+	<select id="queryXshtkpByuuid" resultType="XSHTKP" parameterType="String">
+		select * from cwgl_xshtkp
+		<where>
+			xshtkp_uuid=#{xshtkp_uuid} and is_kp=1
+		</where>
+	</select>
+</mapper>

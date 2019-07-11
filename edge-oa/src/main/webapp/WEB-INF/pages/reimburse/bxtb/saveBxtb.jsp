@@ -521,44 +521,7 @@ layui.use(['form', 'layedit', 'laydate','table'], function(){
 		}
 	}
 	
-	//表单验证
-	function formChecked(){
-		//获取所属项目
-		var xmxx=$('#proj_dm').val();
-		if(xmxx==""){
-			return layer.alert("所属项目不能为空!",{icon:7});
-		}
-		//获取费用类型
-		var fylx=$('#reimbursement_dm_fylx').val();
-		if(fylx==""){
-			return layer.alert("费用类型不能为空!",{icon:7});
-		}
-		//获取发生日期
-		var fsrq=$('#reimbursement_begintime').val();
-		if(fsrq==""){
-			return layer.alert("发生日期不能为空!",{icon:7});
-		}
-		//获取报销金额
-		var bxje=$('#reimbursement_bxje').val();
-		if(bxje==""){
-			return layer.alert("报销金额不能为空!",{icon:7});
-		}
-		//获取费用所属
-		var fyss=$('#reimbursement_user_dm').val();
-		if(fyss==""){
-			return layer.alert("费用所属不能为空!",{icon:7});
-		}
-		//获取审核金额
-		var shje=$('#reimbursement_shje').val();
-		if(shje==""){
-			return layer.alert("审核金额不能为空!",{icon:7});
-		}
-		//获取发票金额
-		var fpje=$('#reimbursement_fpje').val();
-		if(fpje==""){
-			return layer.alert("发票金额不能为空!",{icon:7});
-		}
-	}
+
 
 		//提交表单
 		$('#tj').click(function(){

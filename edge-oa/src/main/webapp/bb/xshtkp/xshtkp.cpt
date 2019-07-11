@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WorkBook xmlVersion="20170720" releaseVersion="10.0.0">
+<TableDataMap>
+<TableData name="cwgl" class="com.fr.data.impl.DBTableData">
+<Parameters>
+<Parameter>
+<Attributes name="uuid"/>
+<O>
+<![CDATA[]]></O>
+</Parameter>
+</Parameters>
+<Attributes maxMemRowCount="-1"/>
+<Connection class="com.fr.data.impl.NameDatabaseConnection">
+<DatabaseName>
+<![CDATA[cwgl]]></DatabaseName>
+</Connection>
+<Query>
+<![CDATA[select rownum as 序号,
+	  p.cust_unit    as 客户单位,
+       fp.fplb_mc     as 发票类别,
+       kp.xshtkp_kprq as 开票日期,
+       kp.xshtkp_fpbh as 发票编号,
+       kp.xshtkp_fpsl as 税率,
+       kp.xshtkp_kpje as 开票金额，
+       kp.xshtkp_uuid as uuid
+  from cwgl_xshtkp kp
+  left join proj_info p
+    on kp.xshtkp_xshtdm = p.proj_info_id
+  left join fplb_dm fp
+    on fp.fplb_dm = kp.xshtkp_dm_fplb
+  where kp.xshtkp_uuid='${uuid}'
+
+  ]]></Query>
+<PageQuery>
+<![CDATA[]]></PageQuery>
+</TableData>
+<TableData name="开票总金额" class="com.fr.data.impl.DBTableData">
+<Parameters>
+<Parameter>
+<Attributes name="uuid"/>
+<O>
+<![CDATA[2]]></O>
+</Parameter>
+</Parameters>
+<Attributes maxMemRowCount="-1"/>
+<Connection class="com.fr.data.impl.NameDatabaseConnection">
+<DatabaseName>
+<![CDATA[cwgl]]></DatabaseName>
+</Connection>
+<Query>
+<![CDATA[  select sum(kp.xshtkp_kpje) as 开票总金额 from  cwgl_xshtkp kp
+  where kp.xshtkp_uuid='${uuid}']]></Query>
+<PageQuery>
+<![CDATA[]]></PageQuery>
+</TableData>
+</TableDataMap>
+<Report class="com.fr.report.worksheet.WorkSheet" name="sheet1">
+<ReportPageAttr>
+<HR/>
+<FR/>
+<HC/>
+<FC/>
+</ReportPageAttr>
+<ColumnPrivilegeControl/>
+<RowPrivilegeControl/>
+<RowHeight defaultValue="723900">
+<![CDATA[5090160,975360,853440,1371600,723900,723900,723900,723900,673100,723900,723900,723900,1524000,723900]]></RowHeight>
+<ColumnWidth defaultValue="2743200">
+<![CDATA[0,2560320,2560320,1889760,2743200,1950720,2743200,2164080,3048000,3596640,2743200,2743200]]></ColumnWidth>
+<CellElementList>
+<C c="1" r="1" cs="9" s="0">
+<O>
+<![CDATA[安徽爱吉泰克科技有限公司]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="1" r="2" cs="9" s="0">
+<O>
+<![CDATA[发票签收单]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="1" r="3" cs="9" s="1">
+<O t="DSColumn">
+<Attributes dsName="cwgl" columnName="客户单位"/>
+<Condition class="com.fr.data.condition.ListCondition"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Result>
+<![CDATA[$$$+":"]]></Result>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="0" leftParentDefault="false" left="A2"/>
+</C>
+<C c="1" r="4" cs="9" s="2">
+<O>
+<![CDATA[  尊敬的客户，您好！首先感谢您长期以来对我公司的大力支持!]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="1" r="5" cs="9" rs="3" s="3">
+<O>
+<![CDATA[  为了确保开具给贵单位的发票能准确、及时的交到您手中，请您及时核对您所收到的发票，并在签收单上签字盖章确认，如有任何疑问请及时与我公司相关人员联系。]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="1" r="8" cs="9" s="4">
+<O>
+<![CDATA[  如一周内未收到寄件或传真（传真件有效），视为收到正确发票。]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="1" r="9" cs="9">
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="1" r="10" s="5">
+<O>
+<![CDATA[序号]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="2" r="10" cs="2" s="5">
+<O>
+<![CDATA[发票类别]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="4" r="10" cs="2" s="5">
+<O>
+<![CDATA[出票日期]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="10" cs="2" s="5">
+<O>
+<![CDATA[发票编号]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="8" r="10" s="5">
+<O>
+<![CDATA[税率]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="9" r="10" s="5">
+<O>
+<![CDATA[开票金额]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="1" r="11" s="6">
+<O t="DSColumn">
+<Attributes dsName="cwgl" columnName="序号"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="0"/>
+</C>
+<C c="2" r="11" cs="2" s="7">
+<O t="DSColumn">
+<Attributes dsName="cwgl" columnName="发票类别"/>
+<Condition class="com.fr.data.condition.ListCondition"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper">
+<Attr divideMode="1"/>
+</RG>
+<Result>
+<![CDATA[$$$]]></Result>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="0"/>
+</C>
+<C c="4" r="11" cs="2" s="7">
+<O t="DSColumn">
+<Attributes dsName="cwgl" columnName="开票日期"/>
+<Condition class="com.fr.data.condition.ListCondition"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper">
+<Attr divideMode="1"/>
+</RG>
+<Result>
+<![CDATA[$$$]]></Result>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="0"/>
+</C>
+<C c="6" r="11" cs="2" s="7">
+<O t="DSColumn">
+<Attributes dsName="cwgl" columnName="发票编号"/>
+<Condition class="com.fr.data.condition.ListCondition"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper">
+<Attr divideMode="1"/>
+</RG>
+<Result>
+<![CDATA[$$$]]></Result>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="0"/>
+</C>
+<C c="8" r="11" s="8">
+<O t="DSColumn">
+<Attributes dsName="cwgl" columnName="税率"/>
+<Condition class="com.fr.data.condition.ListCondition"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper">
+<Attr divideMode="1"/>
+</RG>
+<Result>
+<![CDATA[$$$/100]]></Result>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="0"/>
+</C>
+<C c="9" r="11" s="9">
+<O t="DSColumn">
+<Attributes dsName="cwgl" columnName="开票金额"/>
+<Condition class="com.fr.data.condition.ListCondition"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper">
+<Attr divideMode="1"/>
+</RG>
+<Result>
+<![CDATA[$$$]]></Result>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="0"/>
+</C>
+<C c="0" r="12">
+<O t="DSColumn">
+<Attributes dsName="开票总金额" columnName="开票总金额"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="0"/>
+</C>
+<C c="1" r="12" s="5">
+<O>
+<![CDATA[合计]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="2" r="12" cs="2" s="10">
+<O>
+<![CDATA[人民币大写:]]></O>
+<PrivilegeControl/>
+<CellPageAttr/>
+<Expand dir="0"/>
+</C>
+<C c="4" r="12" cs="5" s="11">
+<O t="XMLable" class="com.fr.base.Formula">
+<Attributes>
+<![CDATA[=CNMONEY(A13)]]></Attributes>
+</O>
+<PrivilegeControl/>
+<Expand dir="0"/>
+</C>
+<C c="9" r="12" s="12">
+<O t="DSColumn">
+<Attributes dsName="开票总金额" columnName="开票总金额"/>
+<Condition class="com.fr.data.condition.ListCondition"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Result>
+<![CDATA[$$$]]></Result>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="0"/>
+</C>
+<C c="1" r="13" cs="9" rs="7">
+<O>
+<![CDATA[    再次对您的合作致以衷心的感谢！]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="7" r="20" s="13">
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="8" r="20" s="13">
+<O>
+<![CDATA[签收人：]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="7" r="21">
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="7" r="22" s="13">
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="8" r="22" s="13">
+<O>
+<![CDATA[日 期：]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+</CellElementList>
+<ReportAttrSet>
+<ReportSettings headerHeight="0" footerHeight="0">
+<PaperSetting/>
+<Background name="ColorBackground" color="-1"/>
+</ReportSettings>
+<Header reportPageType="0">
+<Background name="NullBackground"/>
+<LeftList/>
+<CenterList/>
+<RightList/>
+</Header>
+<Footer reportPageType="0">
+<Background name="NullBackground"/>
+<LeftList/>
+<CenterList/>
+<RightList/>
+</Footer>
+</ReportAttrSet>
+<PrivilegeControl/>
+</Report>
+<ReportParameterAttr>
+<Attributes showWindow="true" delayPlaying="true" windowPosition="1" align="0" useParamsTemplate="true"/>
+<PWTitle>
+<![CDATA[参数]]></PWTitle>
+</ReportParameterAttr>
+<StyleList>
+<Style horizontal_alignment="0" imageLayout="1">
+<FRFont name="SimSun" style="1" size="120"/>
+<Background name="NullBackground"/>
+<Border/>
+</Style>
+<Style horizontal_alignment="2" textStyle="1" imageLayout="1" paddingLeft="0">
+<FRFont name="SimSun" style="1" size="72"/>
+<Background name="NullBackground"/>
+<Border>
+<Top color="-16777216"/>
+<Bottom color="-16777216"/>
+<Left color="-16777216"/>
+<Right color="-16777216"/>
+</Border>
+</Style>
+<Style textStyle="1" imageLayout="1" paddingLeft="5" lineSpacing="2">
+<FRFont name="SimSun" style="0" size="72"/>
+<Background name="NullBackground"/>
+<Border>
+<Top color="-16777216"/>
+<Bottom color="-16777216"/>
+<Left color="-16777216"/>
+<Right color="-16777216"/>
+</Border>
+</Style>
+<Style imageLayout="1" paddingLeft="5" paddingRight="0" lineSpacing="8">
+<FRFont name="SimSun" style="0" size="72"/>
+<Background name="NullBackground"/>
+<Border>
+<Top color="-16777216"/>
+<Bottom color="-16777216"/>
+<Left color="-16777216"/>
+<Right color="-16777216"/>
+</Border>
+</Style>
+<Style imageLayout="1" paddingLeft="4" lineSpacing="2">
+<FRFont name="SimSun" style="0" size="72"/>
+<Background name="NullBackground"/>
+<Border/>
+</Style>
+<Style horizontal_alignment="0" imageLayout="1">
+<FRFont name="SimSun" style="1" size="72"/>
+<Background name="NullBackground"/>
+<Border>
+<Top style="1"/>
+<Bottom style="1"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" imageLayout="1">
+<Format class="com.fr.base.CoreDecimalFormat">
+<![CDATA[#0]]></Format>
+<FRFont name="SimSun" style="0" size="72"/>
+<Background name="NullBackground"/>
+<Border>
+<Top style="1"/>
+<Bottom style="1"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" imageLayout="1">
+<FRFont name="SimSun" style="0" size="72"/>
+<Background name="NullBackground"/>
+<Border>
+<Top style="1"/>
+<Bottom style="1"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" imageLayout="1">
+<Format class="com.fr.base.CoreDecimalFormat">
+<![CDATA[#0%]]></Format>
+<FRFont name="SimSun" style="0" size="72"/>
+<Background name="NullBackground"/>
+<Border>
+<Top style="1"/>
+<Bottom style="1"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="4" imageLayout="1" paddingLeft="0" paddingRight="5">
+<Format class="com.fr.base.CoreDecimalFormat">
+<![CDATA[#0.00]]></Format>
+<FRFont name="SimSun" style="0" size="72"/>
+<Background name="NullBackground"/>
+<Border>
+<Top style="1"/>
+<Bottom style="1"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style imageLayout="1">
+<FRFont name="SimSun" style="1" size="72"/>
+<Background name="NullBackground"/>
+<Border>
+<Bottom style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="2" imageLayout="1">
+<FRFont name="SimSun" style="1" size="72"/>
+<Background name="NullBackground"/>
+<Border>
+<Top style="1"/>
+<Bottom style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="4" imageLayout="1" paddingLeft="0" paddingRight="5">
+<Format class="com.fr.base.CoreDecimalFormat">
+<![CDATA[¤#0.00]]></Format>
+<FRFont name="SimSun" style="1" size="72"/>
+<Background name="NullBackground"/>
+<Border>
+<Top style="1"/>
+<Bottom style="1"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" imageLayout="1">
+<FRFont name="SimSun" style="0" size="72"/>
+<Background name="NullBackground"/>
+<Border/>
+</Style>
+</StyleList>
+<DesignerVersion DesignerVersion="KAA"/>
+<PreviewType PreviewType="0"/>
+<TemplateIdAttMark class="com.fr.base.iofile.attr.TemplateIdAttrMark">
+<TemplateIdAttMark TemplateId="4e32c800-6446-4081-993d-4dc7d57baae1"/>
+</TemplateIdAttMark>
+</WorkBook>

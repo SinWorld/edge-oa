@@ -11,6 +11,8 @@
 <title>销售合同登记查看页</title>
 <link rel="stylesheet" href="../layui-v2.4.5/layui/css/layui.css">
 <link rel="stylesheet" href="../login/css/static.css">
+<link href="../login/css/xshtfp.css" rel="stylesheet"/>
+
 <script src="../jquery/jquery-3.3.1.js"></script>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
 <%@page isELIgnored="false" %>
@@ -37,6 +39,8 @@
 						<input type="hidden" id="taskId" value="${taskId}" >
 						<input type="hidden" id="objId" value="${xsht.proj_Info_Id}">
 						<input type="hidden" value="${xsht.is_LX }" id="sflx">
+						<input type="hidden" id="kpmb" value="false">
+						<input type="hidden" id="lcsfwc" value="${xsht.appr_Status}">
 						
 						<div class="layui-form-item" >
 					    <label class="layui-form-label">销售合同<br/>编号</label>
@@ -241,6 +245,13 @@
 			</div>
 		</div>
 	<!-- 操作 End -->
+	    	<div class="m-operation" style="width:180px;height:60%;" id="mb">
+				<h2 style="width: 150px;">操作</h2>
+				<span id="xsfpkjAppend" style="width: 170px;">销售发票开具</span>
+				<i id="caoZuo">操作</i>
+				<em id="fanHui"></em>
+			</div>
+		
 <script type="text/html" id="barDemo">
   <!--<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="yl" name="defaultAD">预览</a>-->
   <a class="layui-btn layui-btn-xs" lay-event="xz">下载</a>
@@ -358,6 +369,7 @@ layui.use(['form', 'layedit', 'laydate','element','table'], function(){
  
   lct();
   xmsflx(form);
+  $('#mb').width(0);
 
 });
 
@@ -426,6 +438,38 @@ function lct(){
 			form.render()
 		}
  }
+ 
+ $('#caoZuo').click(function(){
+	 var flag=$('#kpmb').val();
+	 if(flag=='false'){
+		 $('#mb').animate({width:'180px'});
+		 $('#kpmb').val(true);
+	 }else{
+		 $('#mb').animate({width:'0px'});
+		 $('#kpmb').val(false);
+	 }
+ });
+ 
+ $('#xsfpkjAppend').click(function(){
+	 var url=$('#url').val();
+	 var objId=$('#objId').val();
+	 //获取流程是否完成
+	 var lcsfwc=$('#lcsfwc').val();
+	 if(lcsfwc==1){
+		 parent.layer.open({
+	    	  	type:2,
+	    	  	title:'销售发票开具',
+	    	  	area: ['100%','100%'],
+	    		shadeClose: false,
+	    		resize:false,
+	    	    anim: 4,
+	    	  	content:[url+"xsfpkj/initXsfpkj.do?xshtdm="+objId,'yes']
+	    });
+	 }else{
+		 //流程没完成的销售合同不允许发起开票
+		return  layer.alert("当前销售合同流程未审核完成，不允许发起开票",{icon:7});
+	 }
+ });
 
 </script>
 </body>

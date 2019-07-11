@@ -1,0 +1,17 @@
+ /*操作 Begin*/
+.m-operation{background:#212833;color:#efefef;text-align:center;position:fixed;top:50px;right:0px;font-family:'Microsoft YaHei';font-size:14px;}
+.m-operation h2{margin:0;padding:20px 20px; color:#9eadc3;border-bottom:1px solid #2f3949;margin-bottom: 10px;}
+.m-operation span{display:block;padding:8px 10px;cursor:pointer;}
+.m-operation span:hover{background:#2d3746;transition:all 0.15s linear 0s;}
+.m-operation i{width:90px;height:40px;display:inline-block;background:url(../images/operation-pic.png) no-repeat;position: absolute;top:90px;left:-90px;font-size:12px;font-style:normal;font-weight:bold;padding:12px 0 0 15px;cursor:pointer;}
+.m-operation em{width:13px;height:30px;background:url(../images/arrow-pic.png) -51px 0 no-repeat;position: absolute;top:86px;left:-13px;display:none;cursor:pointer;}
+/*操作 End*/
+
+/*基本信息 Begin*/
+.m-xm_message_box{padding:20px 30px;background:#fbfbfb;}
+.m-xm_message_box strong{font-size:22px;color:#4391e1;}
+.m-xm_message_box .u-f13{font-size:13px;}
+.m-xm_message_box .oim-field{ margin:10px 40px 0 0;}
+.u-header_link {color: #4391e1; text-decoration: none;cursor: pointer;}
+.u-header_link:hover {text-decoration:underline;}
+/*基本信息 End*/
