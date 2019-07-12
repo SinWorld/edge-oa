@@ -126,15 +126,32 @@ layui.use(['tree', 'util','form','table','layedit','laydate'], function(){
 	    var wjgdm=$('#wjgdm').val();
 	    var flag=$('#flag').val();
 	    if(obj.event=='getCheckData'){
-	    	 layer.open({
-	      	  	type:2,
-	      	  	title:'上传附件',
-	      	  	area: ['100%','100%'],
-	      		shadeClose: false,
-	      		resize:false,
-	      	    anim: 1,
-	      	  	content:[url+"wjg/initupload.do",'yes']
-	    	 });
+	    	var address="/wjg/initupload.do";
+	    	$.ajax({
+	    		type : "post",
+	    		url : "<c:url value='/checkPower/checkPower.do'/>",
+	    		async : false,
+	    		dataType : 'json',
+	    		data:{"url":address},
+	    		error : function() {
+	    			alert("出错");
+	    		},
+	    		success : function(data) {
+	    			if(data.flag){
+	    				 layer.open({
+	    			      	  	type:2,
+	    			      	  	title:'上传附件',
+	    			      	  	area: ['100%','100%'],
+	    			      		shadeClose: false,
+	    			      		resize:false,
+	    			      	    anim: 1,
+	    			      	  	content:[url+"wjg/initupload.do",'yes']
+	    			    	 });
+	    			}else{
+	    				return layer.alert("无此功能权限，请联系管理员授权！",{icon:7});
+	    			}
+	    		}
+	    	});
 	    }else if(obj.event=='xz'){
 	    	var checkStatus=table.checkStatus(obj.config.id);
 	    	var data=checkStatus.data;//获取选中数据
@@ -185,24 +202,41 @@ layui.use(['tree', 'util','form','table','layedit','laydate'], function(){
 	    var id=data.wenJianGDM;
 	 
 	    if(obj.event === 'del'){
+	    	var address="/wjg/deleteWjById.do";
 	    	 layer.confirm('您确定要删除该文件吗？', {
 				  btn: ['确定','取消'], //按钮
 				  title:'提示'},function(index){
-					//删除文件
-					  $.ajax({  
-						    type: "post",  
-						    url:  "<c:url value='/wjg/deleteWjById.do'/>",
-						    dataType: 'json',
-						    async:false,
-						    data:{"id":id},
-						    error:function(){
-						    	alert("出错");
-						    },
-						    success: function (data) {  
-					    		layer.close(index);
-					    		window.location.reload();
-						    }  
-						});
+					  $.ajax({
+				    		type : "post",
+				    		url : "<c:url value='/checkPower/checkPower.do'/>",
+				    		async : false,
+				    		dataType : 'json',
+				    		data:{"url":address},
+				    		error : function() {
+				    			alert("出错");
+				    		},
+				    		success : function(data) {
+				    			if(data.flag){
+				    				//删除文件
+									  $.ajax({  
+										    type: "post",  
+										    url:  "<c:url value='/wjg/deleteWjById.do'/>",
+										    dataType: 'json',
+										    async:false,
+										    data:{"id":id},
+										    error:function(){
+										    	alert("出错");
+										    },
+										    success: function (msg) {  
+									    		layer.close(index);
+									    		window.location.reload();
+										    }  
+										});
+				    			}else{
+				    				return layer.alert("无此功能权限，请联系管理员授权！",{icon:7});
+				    			}
+				    		}
+				    	});
 				  }
 			  );
 	    }
@@ -274,44 +308,94 @@ function initTree(layui,form,tree,table){
 		        	    //Ajax 操作
 		        	    var id = data.id; //得到节点索引
 		        	    if(type === 'add'){ //增加节点
-		        	    	layer.open({
-		    					type : 2,
-		    					title : '文件夹新增',
-		    					area : [ '50%', '60%' ],
-		    					shadeClose : false,
-		    					resize : false,
-		    					anim : 1,
-		    					content : [ url + "wjg/initSaveWjj.do?id="+id, 'yes' ]
-		    				});
-		        	   
+		        	    	var address="/wjg/initSaveWjj.do";
+		        	    	$.ajax({
+					    		type : "post",
+					    		url : "<c:url value='/checkPower/checkPower.do'/>",
+					    		async : false,
+					    		dataType : 'json',
+					    		data:{"url":address},
+					    		error : function() {
+					    			alert("出错");
+					    		},
+					    		success : function(data) {
+					    			if(data.flag){
+					    				layer.open({
+					    					type : 2,
+					    					title : '文件夹新增',
+					    					area : [ '50%', '60%' ],
+					    					shadeClose : false,
+					    					resize : false,
+					    					anim : 1,
+					    					content : [ url + "wjg/initSaveWjj.do?id="+id, 'yes' ]
+					    				});
+					    			}else{
+					    				return layer.alert("无此功能权限，请联系管理员授权！",{icon:7});
+					    			}
+					    		}
+					    	});
 		        	    } else if(type === 'update'){ //修改节点
-		        	    	layer.open({
-		    					type : 2,
-		    					title : '文件夹修改',
-		    					area : [ '50%', '60%' ],
-		    					shadeClose : false,
-		    					resize : false,
-		    					anim : 1,
-		    					content : [ url + "wjg/initEditWJg.do?id="+id, 'yes' ]
-		    				});
+		        	    	var address="/wjg/initEditWJg.do";
+		        	    	$.ajax({
+					    		type : "post",
+					    		url : "<c:url value='/checkPower/checkPower.do'/>",
+					    		async : false,
+					    		dataType : 'json',
+					    		data:{"url":address},
+					    		error : function() {
+					    			alert("出错");
+					    		},
+					    		success : function(data) {
+					    			if(data.flag){
+					    				layer.open({
+					    					type : 2,
+					    					title : '文件夹修改',
+					    					area : [ '50%', '60%' ],
+					    					shadeClose : false,
+					    					resize : false,
+					    					anim : 1,
+					    					content : [ url + "wjg/initEditWJg.do?id="+id, 'yes' ]
+					    				});
+					    			}else{
+					    				return layer.alert("无此功能权限，请联系管理员授权！",{icon:7});
+					    			}
+					    		}
+					    	});
 		        	    } else if(type === 'del'){ //删除节点
+		        	    	var address="/wjg/deleteWJJ.do";
 		        	    	layer.confirm('您确定要删除该文件夹吗？', {
 		        				  btn: ['确定','取消'], //按钮
 		        				  title:'提示'},function(index){
-				        	    	 $.ajax({  
-				        	 		    type: "post",  
-				        	 		    url:  "<c:url value='/wjg/deleteWJJ.do'/>",
-				        	 		    data:{"id":id},
-				        	 		    dataType: 'json',
-				        	 		    async:false,
-				        	 		    error:function(){
-				        	 		    	alert("出错");
-				        	 		    },
-				        	 		    success: function (data) {
-				        	 		    	layer.close(index);
-				        	 		   		layer.msg(data.flag);
-				        	 		    }  
-				        	 		});
+		        					  $.ajax({
+		  					    		type : "post",
+		  					    		url : "<c:url value='/checkPower/checkPower.do'/>",
+		  					    		async : false,
+		  					    		dataType : 'json',
+		  					    		data:{"url":address},
+		  					    		error : function() {
+		  					    			alert("出错");
+		  					    		},
+		  					    		success : function(data) {
+		  					    			if(data.flag){
+		  					    			   $.ajax({  
+		  					        	 		    type: "post",  
+		  					        	 		    url:  "<c:url value='/wjg/deleteWJJ.do'/>",
+		  					        	 		    data:{"id":id},
+		  					        	 		    dataType: 'json',
+		  					        	 		    async:false,
+		  					        	 		    error:function(){
+		  					        	 		    	alert("出错");
+		  					        	 		    },
+		  					        	 		    success: function (data) {
+		  					        	 		    	layer.close(index);
+		  					        	 		   		layer.msg(data.flag);
+		  					        	 		    }  
+		  					        	 		});
+		  					    			}else{
+		  					    				return layer.alert("无此功能权限，请联系管理员授权！",{icon:7});
+		  					    			}
+		  					    		}
+		  					    	});
 		        				  }
 		        	    	 );
 		        	   	};

@@ -455,16 +455,33 @@ function lct(){
 	 var objId=$('#objId').val();
 	 //获取流程是否完成
 	 var lcsfwc=$('#lcsfwc').val();
+	 var address="/xsfpkj/initXsfpkj.do";
 	 if(lcsfwc==1){
-		 parent.layer.open({
-	    	  	type:2,
-	    	  	title:'销售发票开具',
-	    	  	area: ['100%','100%'],
-	    		shadeClose: false,
-	    		resize:false,
-	    	    anim: 4,
-	    	  	content:[url+"xsfpkj/initXsfpkj.do?xshtdm="+objId,'yes']
-	    });
+		 $.ajax({
+	    		type : "post",
+	    		url : "<c:url value='/checkPower/checkPower.do'/>",
+	    		async : false,
+	    		dataType : 'json',
+	    		data:{"url":address},
+	    		error : function() {
+	    			alert("出错");
+	    		},
+	    		success : function(data) {
+	    			if(data.flag){
+	    				 parent.layer.open({
+	    			    	  	type:2,
+	    			    	  	title:'销售发票开具',
+	    			    	  	area: ['100%','100%'],
+	    			    		shadeClose: false,
+	    			    		resize:false,
+	    			    	    anim: 4,
+	    			    	  	content:[url+"xsfpkj/initXsfpkj.do?xshtdm="+objId,'yes']
+	    			    });
+	    			}else{
+	    				return layer.alert("无此功能权限，请联系管理员授权！",{icon:7});
+	    			}
+	    		}
+	    	});
 	 }else{
 		 //流程没完成的销售合同不允许发起开票
 		return  layer.alert("当前销售合同流程未审核完成，不允许发起开票",{icon:7});

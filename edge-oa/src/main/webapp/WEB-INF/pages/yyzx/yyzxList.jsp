@@ -41,17 +41,34 @@
 			var form = layui.form;
 			var layer = layui.layer;
 			var url = $('#url').val();
+			var address="/yyzx/wjgList.do";
 			$('#wjg').click(function() {
 				var layer = layui.layer;
-				layer.open({
-					type : 2,
-					title : '文件柜',
-					area : [ '100%', '100%' ],
-					shadeClose : false,
-					resize : false,
-					anim : 1,
-					content : [ url + "yyzx/wjgList.do", 'yes' ]
-				});
+				$.ajax({
+		    		type : "post",
+		    		url : "<c:url value='/checkPower/checkPower.do'/>",
+		    		async : false,
+		    		dataType : 'json',
+		    		data:{"url":address},
+		    		error : function() {
+		    			alert("出错");
+		    		},
+		    		success : function(data) {
+		    			if(data.flag){
+		    				layer.open({
+		    					type : 2,
+		    					title : '文件柜',
+		    					area : [ '100%', '100%' ],
+		    					shadeClose : false,
+		    					resize : false,
+		    					anim : 1,
+		    					content : [ url + "yyzx/wjgList.do", 'yes' ]
+		    				});
+		    			}else{
+		    				return layer.alert("无此功能权限，请联系管理员授权！",{icon:7});
+		    			}
+		    		}
+		    	});
 			});
 
 		});

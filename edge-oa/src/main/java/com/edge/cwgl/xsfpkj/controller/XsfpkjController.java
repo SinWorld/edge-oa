@@ -59,7 +59,7 @@ public class XsfpkjController {
 		String qdrq = null;
 		Double ljkpje = 0.d;
 		Double jebl = 0.d;
-		Double sykpje=0.d;
+		Double sykpje = 0.d;
 		if (xsht != null) {
 			// 查询所属的项目
 			xmxx = approveprojService.queryXiangMuXXById(xsht.getProj_Id());
@@ -71,11 +71,11 @@ public class XsfpkjController {
 			if (ljkpje == null) {
 				jebl = 0.d;
 				ljkpje = 0.d;
-				sykpje=xsht.getCont_Amount();
+				sykpje = xsht.getCont_Amount();
 			} else {
 				jebl = ljkpje / xsht.getCont_Amount();
 				jebl = jebl * 100;
-				sykpje=xsht.getCont_Amount()-ljkpje;
+				sykpje = xsht.getCont_Amount() - ljkpje;
 			}
 		}
 		model.addAttribute("xsht", xsht);
@@ -281,9 +281,10 @@ public class XsfpkjController {
 	// 分页查询开票信息
 	@RequestMapping(value = "/xshtkpList.do")
 	@ResponseBody
-	public String xshtkpList(Integer page) {
+	public String xshtkpList(Integer page, Xshtkp_QueryVo Xshtkp_QueryVo, String time1, String time2) {
 		// new出QueryVo查询对象
 		Xshtkp_QueryVo vo = new Xshtkp_QueryVo();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");// 设置日期格式
 		// 获得Page对象
 		Page<XSHTKP> pages = new Page<XSHTKP>();
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
@@ -293,6 +294,27 @@ public class XsfpkjController {
 			vo.setPage((page - 1) * vo.getSize() + 1);
 			vo.setStartRow((pages.getPage()));
 			vo.setSize(page * 10);
+			if (Xshtkp_QueryVo.getXshtkp_xshtdm() != null) {
+				vo.setXshtkp_xshtdm(Xshtkp_QueryVo.getXshtkp_xshtdm());
+			}
+			if(Xshtkp_QueryVo.getXshtkp_djr()!=null&&Xshtkp_QueryVo.getXshtkp_djr()!="") {
+				vo.setXshtkp_djr(Xshtkp_QueryVo.getXshtkp_djr().trim());
+			}
+			if (time1 != null && time1 != "") {
+				// 将String类型转换为Date类型
+				try {
+					vo.setDate(sdf.parse(time1));
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+			}
+			if (time2 != null && time2 != "") {
+				try {
+					vo.setDate2(sdf.parse(time2));
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 		// 总页数
 		pages.setTotal(xshtkpService.queryAllXshtkpCount(vo));
@@ -322,7 +344,7 @@ public class XsfpkjController {
 		Foll_up_Proj xmxx = null;
 		Double ljkpje = 0.d;
 		Double jebl = 0.d;
-		Double sykpje=0.d;
+		Double sykpje = 0.d;
 		if (xsht != null) {
 			// 查询所属的项目
 			xmxx = approveprojService.queryXiangMuXXById(xsht.getProj_Id());
@@ -332,11 +354,11 @@ public class XsfpkjController {
 			if (ljkpje == null) {
 				jebl = 0.d;
 				ljkpje = 0.d;
-				sykpje=xsht.getCont_Amount();
+				sykpje = xsht.getCont_Amount();
 			} else {
 				jebl = ljkpje / xsht.getCont_Amount();
 				jebl = jebl * 100;
-				sykpje=xsht.getCont_Amount()-ljkpje;
+				sykpje = xsht.getCont_Amount() - ljkpje;
 			}
 		}
 		model.addAttribute("xsht", xsht);

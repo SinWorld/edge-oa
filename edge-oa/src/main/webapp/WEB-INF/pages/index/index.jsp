@@ -43,6 +43,7 @@
         	<a class="" href="javascript:;"><i class="layui-icon">${p.icon}</i>&nbsp;&nbsp;${p.privilege_name}</a>
         </c:if>
         <c:if test="${not empty p.privilege_url}">
+        	
         	<a class="" href='<c:url value="${p.privilege_url}"/>' target="iframe_a"><i class="layui-icon">${p.icon}</i>&nbsp;&nbsp;${p.privilege_name}</a>
         </c:if>
           <c:forEach items="${p.children}" var="c">

@@ -18,7 +18,7 @@
 			    <div class="layui-inline" style="width:490px;">
 					  	<label class="layui-form-label">销售合同</label>
 						<div class="layui-input-inline" style="text-align: left;width: 75%">
-							<select name="proj_dm" id="proj_dm" lay-filter="proj_dm" lay-verify="proj_dm" lay-search="">
+							<select name="xshtkp_xshtdm" id="xshtkp_xshtdm" lay-filter="xshtkp_xshtdm" lay-verify="xshtkp_xshtdm" lay-search="">
 								<option value="" selected="selected">请选择所属销售合同</option>
 							</select>
 						</div>
@@ -26,7 +26,7 @@
 				<div class="layui-inline" style="left: -25px;">
 				      <label class="layui-form-label" style="width: 71px;">登记人</label>
 				      <div class="layui-input-inline" style="width: 160px;">
-					     <input type="text" name="reimbursement_bxr" lay-verify="reimbursement_bxr"autocomplete="off" class="layui-input" style="width: 145px;" id="reimbursement_bxr">
+					     <input type="text" name="xshtkp_djr" lay-verify="xshtkp_djr"autocomplete="off" class="layui-input" style="width: 145px;" id="xshtkp_djr">
 					  </div>
 				 </div>
 		 	</div>
@@ -36,11 +36,11 @@
 				 <div class="layui-inline" style="left: 8px;width: 512px;">
 				      <label class="layui-form-label" style="width: 71px;">发生日期</label>
 				      <div class="layui-input-inline">
-				        <input type="text" name="begintime1" id="date" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+				        <input type="text" name="date" id="date" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
 				      </div>
 				       <i class="u-date_line" style="margin-left: -14px;line-height: 35px;">—</i>
 				      <div class="layui-input-inline">
-				        <input type="text" name="begintime2" id="date2" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input" style="width: 162px;">
+				        <input type="text" name="date2" id="date2" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input" style="width: 162px;">
 				      </div>
 				 </div>
 					<button class="layui-btn" data-type="reload" type="button" id="do_search" style="margin-left: 56px;">搜索</button>
@@ -84,13 +84,6 @@ layui.use(['table','form','layedit', 'laydate','element'], function(){
   });
   laydate.render({
 	elem: '#date2'
-  });
-  //日期
-  laydate.render({
-    elem: '#subTime1'
-  });
-  laydate.render({
-	elem: '#subTime2'
   });
   $('#gjssq').hide();
   //未发放登记
@@ -141,54 +134,35 @@ layui.use(['table','form','layedit', 'laydate','element'], function(){
    	  });
   });
   
+  allXSHT(form);
+  
   // 执行搜索，表格重载
   $('#do_search').on('click', function () {
       // 搜索条件
-      var reimbursement_code = $('#reimbursement_code').val();//报销填报编号
-      var proj_dm=$('#proj_dm').val();//所属项目
-      var reimbursement_dm_fylx=$('#reimbursement_dm_fylx').val();//费用类型
-      var jinE1=$('#jinE1').val();//报销金额
-      var jinE2=$('#jinE2').val();//报销金额
-      var reimbursement_user_dm=$('#reimbursement_user_dm').val();//费用所属
-      var reimbursement_bxr=$('#reimbursement_bxr').val();//报销人
-      var appr_status=$('#appr_status').val();//审批状态
-      var nextcz=$('#nextcz').val();//当前操作
+      var xshtkp_xshtdm = $('#xshtkp_xshtdm').val();//所属销售合同
+   	  var xshtkp_djr=$('#xshtkp_djr').val();//登记人
       var date=$('#date').val();//发生日期
       var date2=$('#date2').val();//发生日期
-      var subTime1=$('#subTime1').val();//提交日期
-      var subTime2=$('#subTime2').val();//提交日期
       table.reload('testReload', {
           method: 'post'
           , where: {
-              'reimbursement_code': reimbursement_code,
-              'proj_dm':proj_dm,
-              'reimbursement_dm_fylx':reimbursement_dm_fylx,
-              'jinE1':jinE1,
-              'jinE2':jinE2,
-              'reimbursement_user_dm':reimbursement_user_dm,
-              'reimbursement_bxr':reimbursement_bxr,
-              'appr_status':appr_status,
-              'nextcz':nextcz,
+              'xshtkp_xshtdm': xshtkp_xshtdm,
+              'xshtkp_djr':xshtkp_djr,
               'time1':date,
-              'time2':date2,
-              'subTime1':subTime1,
-              'subTime2':subTime2
+              'time2':date2
           }
           , page: {
               curr: 1
           }
       });
   });
-  ylxXmXX(form);
-  allfylx(form);
-  allUser(form);
-  allSPZT(form);
+  
 });
-//ajax加载所有的已立项的项目
-function ylxXmXX(form){
+//ajax实现查询所有的销售合同信息
+function  allXSHT(form){
 	$.ajax({
 		type : "post",
-		url : "<c:url value='/xshtdj/queryAllYLXXMXX.do'/>",
+		url : "<c:url value='/xshtdj/queryAllXSHT.do'/>",
 		async : false,
 		dataType : 'json',
 		error : function() {
@@ -196,85 +170,13 @@ function ylxXmXX(form){
 		},
 		success : function(msg) {
 			for (var i = 0; i < msg.length; i++) {
-				$("#proj_dm").append(
-						"<option value='"+msg[i].proj_Id+"'>"+ msg[i].budget_Name +"</option>");
+				$("#xshtkp_xshtdm").append(
+						"<option value='"+msg[i].proj_Info_Id+"'>"+ msg[i].proj_Name +"</option>");
 			}
 			form.render('select');
 		}
 	});
 }
-
-//ajax加载所有的费用类型
-function allfylx(form){
-	$.ajax({
-		type : "post",
-		url : "<c:url value='/bxtb/queryAllFYLX.do'/>",
-		async : false,
-		dataType : 'json',
-		error : function() {
-			alert("出错");
-		},
-		success : function(msg) {
-			for (var i = 0; i < msg.length; i++) {
-				$("#reimbursement_dm_fylx").append(
-						"<option value='"+msg[i].fylx_dm+"'>"+ msg[i].fylx_mc +"</option>");
-			}
-			form.render('select');
-		}
-	});
-}
-
-//ajax实现查询所有的费用所属
-function  allUser(form){
-	$.ajax({
-		type : "post",
-		url : "<c:url value='/approveproj/allUser.do'/>",
-		async : false,
-		dataType : 'json',
-		error : function() {
-			alert("出错");
-		},
-		success : function(msg) {
-			for (var i = 0; i < msg.length; i++) {
-				$("#reimbursement_user_dm").append(
-						"<option value='"+msg[i].user_id+"'>"+ msg[i].user_name +"</option>");
-			}
-			form.render('select');
-		}
-	});
-}
-
-//ajax实现查询所有的审批状态
-function  allSPZT(form){
-	$.ajax({
-		type : "post",
-		url : "<c:url value='/approveproj/queryAllSPZT.do'/>",
-		async : false,
-		dataType : 'json',
-		error : function() {
-			alert("出错");
-		},
-		success : function(msg) {
-			for (var i = 0; i < msg.length; i++) {
-				$("#appr_status").append(
-						"<option value='"+msg[i].appr_Status_Id+"'>"+ msg[i].appr_Status_Name +"</option>");
-			}
-			form.render('select');
-		}
-	});
-}
-
-//格式化金额
-function formatJE1(){
-	var je1=$('#jinE1').val()*1;
-	$('#jinE1').val(je1.toFixed(2));
-}
-//格式化金额
-function formatJE2(){
-	var je1=$('#jinE2').val()*1;
-	$('#jinE2').val(je1.toFixed(2));
-}
-
 </script>
 </body>
 </html>

@@ -30,7 +30,7 @@
              <label for="" class="oim-field_label u-f13">累计开票</label>
              <span id="_leiJiKPJE">${ljkpje}</span>
                 <span class="u-rmb">元</span>
-				<div class="layui-progress layui-progress-big" lay-showpercent="true" style="left:540px;top:-18px;width: 120px;">
+				<div class="layui-progress layui-progress-big" lay-showpercent="true" style="left:580px;top:-18px;width: 120px;">
 				  <div class="layui-progress-bar" lay-percent="${jebl}%"></div>
 				</div>
 			<label for="" class="oim-field_label u-f13">剩余开票金额</label>
@@ -92,7 +92,6 @@
 		  		  ,page: false
 		  		  ,id:'idTest'
 			});
-		  xshykpbb();
 	});
 
 	$('#_field_xiangMuQC').click(function(){

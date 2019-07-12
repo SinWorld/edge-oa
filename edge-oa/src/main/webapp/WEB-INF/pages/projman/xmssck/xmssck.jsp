@@ -89,7 +89,7 @@ layui.use(['form', 'layedit', 'laydate','transfer','util'], function(){
 						    		}
 						    		//弹出页面查看货物信息
 						    		var d=$('#dms').val();
-						    		layer.open({
+						    		parent.layer.open({
 						          	  	type:2,
 						          	  	title:'出库内容',
 						          	  	area: ['100%','100%'],

@@ -12,7 +12,6 @@
 <body>
 <form id="form" method="post">
 	<input type="hidden" value='<c:url value="/"/>' id="url">
- 	<span id="qx"><textarea  rows="" cols="100%" id="sjqx">${sjqxs}</textarea></span>
  	<div style="position:relative;top: -10px;">
  		<table class="layui-hide" id="test" lay-filter="test"></table>
  	</div>
@@ -35,7 +34,6 @@
  <script type="text/javascript" src="../jquery/jquery-3.3.1.js"></script>
 <script>
 layui.use(['form','table'], function(){
-  gnyc();	
   var table = layui.table;
   var url=$('#url').val();
   var form = layui.form;
@@ -56,42 +54,17 @@ layui.use(['form','table'], function(){
   //头工具栏事件
   table.on('toolbar(test)', function(obj){
     var url=$('#url').val();
-    //得到三级权限json串
-    var sjqxs=$('#sjqx').val();
-    //将json串转化为json对象
-    var flag=false;
-    if(sjqxs!=""){
-	   	 var JsonObject = JSON.parse(sjqxs);
-	   	 //遍历该对象
-	   	   	for(var i=0;i<JsonObject.length;i++){
-	   	   		//得到obj中的权限名称
-	   	   		var qxmc=JsonObject[i].privilege_name;
-	   	   		//判断权限名称的名字来控制按钮显示、隐藏
-	   	   		if(qxmc=='角色添加'){
-	   	   			flag=true;
-	   	   			break;
-	   	   		}
-	   	   	}
-    }
-    if(flag){
-    	 if(obj.event=='getCheckData'){
-        	 layer.open({
-          	  	type:2,
-          	  	title:'新增角色',
-          	  	area: ['50%','60%'],
-          		shadeClose: false,
-          		resize:false,
-          	    anim: 1,
-          	  	content:[url+"role/initSaveRole.do",'yes']
-        	  	});
-        }
-    }else{
-    	layer.alert('无此功能的权限，请联系管理员授权', {
-			icon : 7
-		});
-		return;
-    }
-   
+   	if(obj.event=='getCheckData'){
+       	 layer.open({
+         	  	type:2,
+         	  	title:'新增角色',
+         	  	area: ['50%','60%'],
+         		shadeClose: false,
+         		resize:false,
+         	    anim: 1,
+         	  	content:[url+"role/initSaveRole.do",'yes']
+       	  	});
+       }
   });
   
   //监听行工具事件
@@ -99,107 +72,40 @@ layui.use(['form','table'], function(){
     var data = obj.data;
     var url=$('#url').val();
     var roleId=data.role_id;
-    //得到三级权限json串
-    var sjqxs=$('#sjqx').val();
-    //将json串转化为json对象
-    //new出数组
-    var array = new Array()
-    var flag=false;
-    if(sjqxs!=""){
-    	 var JsonObject = JSON.parse(sjqxs);
-    	 	 //遍历该对象
-    	   	for(var i=0;i<JsonObject.length;i++){
-    	   		//得到obj中的权限名称
-    	   		var qxmc=JsonObject[i].privilege_name;
-    	   		//判断权限名称的名字来控制按钮显示、隐藏
-    	   		if(qxmc=='角色删除'){
-    	   			array.push(1);
-    	   			continue;
-    	   		}else if(qxmc=='角色编辑'){
-    	   			array.push(2);
-    	   			continue;
-    	   		}else if(qxmc=='角色授权'){
-    	   			array.push(3);
-    	   			continue;
-    	   		}
-    	   	}
-    }
     if(obj.event === 'del'){
-    	for(var i=0;i<array.length;i++){
-			if(array[i]==1){
-				flag=true;
-			}
-		}
-    	if(flag){
-    		layer.confirm('您确定要删除该角色吗？', {
-  			  btn: ['确定','取消'], //按钮
-  			  title:'提示'},function(index){
-  				  //获取表单
-  				  var form=document.getElementById('form');
-  				  form.action=url+"role/deleteRole.do?roleId="+roleId;
-  				  form.submit();
-  				  layer.close(index);
-  			  }
-  		  );
-    	}
-    	if(flag==false){
-    		layer.alert('无此功能的权限，请联系管理员授权', {
-				icon : 7
-			});
-    		return;
-    	}
+   		layer.confirm('您确定要删除该角色吗？', {
+ 			  btn: ['确定','取消'], //按钮
+ 			  title:'提示'},function(index){
+ 				  //获取表单
+ 				  var form=document.getElementById('form');
+ 				  form.action=url+"role/deleteRole.do?roleId="+roleId;
+ 				  form.submit();
+ 				  layer.close(index);
+ 			  }
+ 		  );
     } else if(obj.event === 'edit'){
-    	for(var i=0;i<array.length;i++){
-			if(array[i]==2){
-				flag=true;
-			}
-		}
-    	if(flag){
-    		layer.open({
-         	  	type:2,
-         	  	title:'编辑角色',
-         	  	area: ['50%','60%'],
-         		shadeClose: false,
-          		resize:false,
-          	    anim: 1,
-         	  	content:[url+"role/initEditRole.do?roleId="+roleId,'yes']
-       	  	});
-    	}if(flag==false){
-    		layer.alert('无此功能的权限，请联系管理员授权', {
-				icon : 7
-			});
-    		return;
-    	}
+   		layer.open({
+        	  	type:2,
+        	  	title:'编辑角色',
+        	  	area: ['50%','60%'],
+        		shadeClose: false,
+         		resize:false,
+         	    anim: 1,
+        	  	content:[url+"role/initEditRole.do?roleId="+roleId,'yes']
+      	  	});
     }else if(obj.event === 'detail'){
-    	for(var i=0;i<array.length;i++){
-			if(array[i]==3){
-				flag=true;
-			}
-		}
-    	if(flag){
-    		layer.open({
-         	  	type:2,
-         	  	title:'角色授权',
-         	  	area: ['100%','100%'],
-         		shadeClose: false,
-          		resize:false,
-          	    anim: 1,
-         	  	content:[url+"privilege/initPrivilegeList.do?roleId="+roleId,'yes']
-       	  	});
-    	}
-    	if(flag==false){
-    		layer.alert('无此功能的权限，请联系管理员授权', {
-				icon : 7
-			});
-    		return;
-    	}
-    }
+   		layer.open({
+        	  	type:2,
+        	  	title:'角色授权',
+        	  	area: ['100%','100%'],
+        		shadeClose: false,
+         		resize:false,
+         	    anim: 1,
+        	  	content:[url+"privilege/initPrivilegeList.do?roleId="+roleId,'yes']
+      	  	});
+     }
   });
 });
-
-function gnyc(){
-	$('#qx').hide()
-}
 </script>
 </body>
 </html>

@@ -79,7 +79,9 @@ public class IndexController {
 			List<Privilege> ejChildrenList = indexService.ejChildrenList(userId, privilege.getPrivilege_id());
 			// 遍历二级子权限集合 将二级子权限添加到权限对象的set集合中
 			for (Privilege ej : ejChildrenList) {
-				privilege.setChildren(ej);
+				if(ej.getIs_yc()==false) {
+					privilege.setChildren(ej);
+				}
 				// 得到用户二级下所有的三级权限
 				List<Privilege> sjChildrenList = indexService.ejChildrenList(userId, ej.getPrivilege_id());
 				// 遍历所有的三级权限添加到JSONArray数组中

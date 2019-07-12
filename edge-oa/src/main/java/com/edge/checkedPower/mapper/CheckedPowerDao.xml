@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edge.checkedPower.dao.CheckedPowerDao">
+	<!-- 定义缓存 一般是一级缓存，如果用同一个sqlsession 那么相同查询直接会从缓存中查找 <cache size="1024" flushInterval="60000" 
+		eviction="LRU" readOnly="false"></cache> -->
+	<!--查询该用户是否已有角色 -->
+	<select id="queryRoleByUser" parameterType="Integer" resultType="Integer">
+		select r.role_id from cwgl_user_role r
+		<where>
+			r.user_id=#{userId}
+		</where>
+	</select>
+
+	<!--查询该角色下所有的权限集合代码 -->
+	<select id="queryPrivilegeByRole" parameterType="Integer" resultType="Integer">
+		select p.privilege_id from cwgl_role_privilege p
+		<where>
+			p.role_id=#{roleId}
+		</where>
+    </select>
+    
+    <!--根据权限代码查询权限对象  -->
+    <select id="queryPrivilegeById" parameterType="Integer" resultType="Privilege">
+    	select * from  cwgl_privilege p
+    	<where>
+    		p.privilege_id=#{privilege_id}
+    	</where>
+    </select>
+</mapper>

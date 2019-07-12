@@ -1,5 +1,7 @@
 package com.edge.cwgl.xsfpkj.entity;
 
+import java.util.Date;
+
 /**
  * 高级搜索查询实体类
  * 
@@ -14,6 +16,10 @@ public class Xshtkp_QueryVo {
 	// 开始行
 	private Integer startRow = 0;
 	private String xshtkp_djr;// 登记人
+	private Integer xshtkp_xshtdm;// 所属销售合同
+	// 提交时间 时间段
+	private Date date;
+	private Date date2;
 
 	public Integer getStartRow() {
 		return startRow;
@@ -47,10 +53,34 @@ public class Xshtkp_QueryVo {
 		this.xshtkp_djr = xshtkp_djr;
 	}
 
+	public Integer getXshtkp_xshtdm() {
+		return xshtkp_xshtdm;
+	}
+
+	public void setXshtkp_xshtdm(Integer xshtkp_xshtdm) {
+		this.xshtkp_xshtdm = xshtkp_xshtdm;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
+	public Date getDate2() {
+		return date2;
+	}
+
+	public void setDate2(Date date2) {
+		this.date2 = date2;
+	}
+
 	@Override
 	public String toString() {
 		return "Xshtkp_QueryVo [page=" + page + ", size=" + size + ", startRow=" + startRow + ", xshtkp_djr="
-				+ xshtkp_djr + "]";
+				+ xshtkp_djr + ", xshtkp_xshtdm=" + xshtkp_xshtdm + ", date=" + date + ", date2=" + date2 + "]";
 	}
 
 }

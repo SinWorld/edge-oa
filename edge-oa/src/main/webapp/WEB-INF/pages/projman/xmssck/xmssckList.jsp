@@ -150,16 +150,34 @@
 			table.on('toolbar(hwnrs)', function(obj) {
 				var url = $('#url').val();
 				var flag = $('#flag').val();
+				var address="/xmssck/initXMSSCK.do";
 				if (obj.event == 'getCheckData') {
-					layer.open({
-						type : 2,
-						title : '出库',
-						area : [ '100%', '100%' ],
-						shadeClose : false,
-						resize : false,
-						anim : 1,
-						content : [ url + "xmssck/initXMSSCK.do", 'yes' ]
-					});
+					//ajax进行权限验证
+			    	$.ajax({
+			    		type : "post",
+			    		url : "<c:url value='/checkPower/checkPower.do'/>",
+			    		async : false,
+			    		dataType : 'json',
+			    		data:{"url":address},
+			    		error : function() {
+			    			alert("出错");
+			    		},
+			    		success : function(data) {
+			    			if(data.flag){
+			    				layer.open({
+									type : 2,
+									title : '出库',
+									area : [ '100%', '100%' ],
+									shadeClose : false,
+									resize : false,
+									anim : 1,
+									content : [ url + "xmssck/initXMSSCK.do", 'yes' ]
+								});
+			    			}else{
+			    				return layer.alert("无此功能权限，请联系管理员授权！",{icon:7});
+			    			}
+			    		}
+			    	});
 				} else if (obj.event == 'gjss') {
 					if (flag == 'false') {
 						$('#gjssq').fadeIn();

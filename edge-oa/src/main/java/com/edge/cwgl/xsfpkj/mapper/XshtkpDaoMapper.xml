@@ -105,6 +105,15 @@
 		 order by p.xshtkp_kprq desc ) row_
 		<where>
 			rownum &lt;=#{size} 
+			<if test="xshtkp_xshtdm!=null"> and xshtkp_xshtdm = #{xshtkp_xshtdm}</if>
+			<if test="xshtkp_djr!=null"> and xshtkp_djr like '%${xshtkp_djr}%'</if>
+			<if test="date != null">AND
+				xshtkp_kprq <![CDATA[>=]]>
+				#{date}
+			</if>
+			<if test="date2 != null">AND
+				xshtkp_kprq <![CDATA[<=]]>#{date2}
+			</if>
 		</where>
 		)
 		<where>
@@ -117,7 +126,18 @@
 		select count(1)
   		from (select p.xshtkp_uuid, p.xshtkp_xshtdm, p.xshtkp_djr, p.xshtkp_kprq
           	  from cwgl_xshtkp p
-         	  <where>p.is_kp = 1</where> 
+         	  <where>
+         	  	p.is_kp = 1
+         	  	<if test="xshtkp_xshtdm!=null"> and xshtkp_xshtdm = #{xshtkp_xshtdm}</if>
+				<if test="xshtkp_djr!=null"> and xshtkp_djr like '%${xshtkp_djr}%'</if>
+				<if test="date != null">AND
+					xshtkp_kprq <![CDATA[>=]]>
+					#{date}
+				</if>
+				<if test="date2 != null">AND
+					xshtkp_kprq <![CDATA[<=]]>#{date2}
+				</if>
+         	  </where> 
 	         group by p.xshtkp_uuid,
 	                  p.xshtkp_xshtdm,
 	                  p.xshtkp_djr,

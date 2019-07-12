@@ -46,7 +46,6 @@
 				<value>classpath*:com/edge/login/mapper/*.xml</value>
 				<value>classpath*:com/edge/index/mapper/*.xml</value>
 				<value>classpath*:com/edge/procedure/ProcessDefinition/mapper/*.xml</value>
-				<value>classpath*:com/edge/test/vacation/mapper/*.xml</value>
 				<value>classpath*:com/edge/projman/approveproj/mapper/*.xml</value>
 				<value>classpath*:com/edge/projman/xshtdj/mapper/*.xml</value>
 				<value>classpath*:com/edge/yyzx/wjg/mapper/*.xml</value>
@@ -56,6 +55,7 @@
 				<value>classpath*:com/edge/reimburse/bxff/mapper/*.xml</value>
 				<value>classpath*:com/edge/reimburse/bxxq/mapper/*.xml</value>
 				<value>classpath*:com/edge/cwgl/xsfpkj/mapper/*.xml</value>
+				<value>classpath*:com/edge/checkedPower/mapper/*.xml</value>
 			</array>
 		</property>
 	</bean>
@@ -66,12 +66,10 @@
 		<property name="basePackage"
 			value="com.edge.system.role.dao;com.edge.system.department.dao;
 			com.edge.system.user.dao;com.edge.login.dao;com.edge.index.dao;
-			com.edge.procedure.ProcessDefinition.dao;com.edge.test.vacation.dao;
-			com.edge.projman.approveproj.dao;com.edge.projman.xshtdj.dao;
-			com.edge.yyzx.wjg.dao;com.edge.projman.xmcgrk.dao;
-			com.edge.projman.xmssck.dao;com.edge.reimburse.bxtb.dao;
-			com.edge.reimburse.bxff.dao;com.edge.reimburse.bxxq.dao;
-			com.edge.cwgl.xsfpkj.dao;" />
+			com.edge.procedure.ProcessDefinition.dao;com.edge.projman.approveproj.dao;
+			com.edge.projman.xshtdj.dao;com.edge.yyzx.wjg.dao;com.edge.projman.xmcgrk.dao;
+			com.edge.projman.xmssck.dao;com.edge.reimburse.bxtb.dao;com.edge.reimburse.bxff.dao;
+			com.edge.reimburse.bxxq.dao;com.edge.cwgl.xsfpkj.dao;com.edge.checkedPower.dao;" />
 		<!--注入SqlSessionFactory -->
 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
 	</bean>
