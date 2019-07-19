@@ -61,7 +61,7 @@ public class CheckedPowerController {
 	@RequestMapping(value = "/checkPower.do")
 	@ResponseBody
 	public String checkPower(@RequestParam String url) {
-		// 的到当前角色所有的功能权限代码集合
+		// 得到当前角色所有的功能权限代码集合
 		Set<Integer> privileges = this.queryPrivilegeByRoleId();
 		// new出JSONObject对象
 		JSONObject jsonObject = new JSONObject();

@@ -9,11 +9,11 @@
 	<!--新增用户 -->
 	<insert id="saveUser" parameterType="User">
 		insert into cwgl_user
-		(USER_ID,USER_LOGIN_NAME,USER_NAME,USER_PASSWORD,USER_PHONE,USER_EMAIL,USER_GENDER,USER_DEPARTMENT_ID,USER_IS_DELETE)
-		values(seq_user_id.nextval,#{user_login_name},#{user_name},#{user_password},#{user_phone},#{user_email},#{user_gender},#{user_department_id,jdbcType=NUMERIC},#{user_is_delete})
+		(USER_ID,USER_LOGIN_NAME,USER_NAME,USER_PASSWORD,USER_PHONE,USER_EMAIL,USER_GENDER,USER_DEPARTMENT_ID,USER_IS_DELETE,USER_POSITTION)
+		values(seq_user_id.nextval,#{user_login_name},#{user_name},#{user_password},#{user_phone},#{user_email},#{user_gender},#{user_department_id,jdbcType=NUMERIC},#{user_is_delete,jdbcType=NUMERIC},#{user_posittion,jdbcType=NUMERIC})
 	</insert>
-	
-	<!--分页显示用户-->
+
+	<!--分页显示用户 -->
 	<select id="userList" parameterType="QueryVo" resultType="User">
 		select * from (select row_.*, rownum rownum_ from (select * from
 		cwgl_user order by user_id desc ) row_
@@ -25,7 +25,7 @@
 			rownum_ &gt;=#{page}
 		</where>
 	</select>
-	
+
 	<!--查询用户总数量 -->
 	<select id="queryUserCount" resultType="Integer">
 		select count(1) from cwgl_user u
@@ -33,16 +33,16 @@
 			u.user_is_delete=0
 		</where>
 	</select>
-	
-	<!--根据Id查询当前用户  -->
+
+	<!--根据Id查询当前用户 -->
 	<select id="queryUserById" parameterType="Integer" resultType="User">
 		select * from cwgl_user u
 		<where>
 			u.user_id=#{user_id}
 		</where>
 	</select>
-	
-	<!--编辑用户  -->
+
+	<!--编辑用户 -->
 	<update id="editUser" parameterType="User">
 		update cwgl_user u
 		<set>
@@ -78,14 +78,27 @@
 			u.user_id=#{user_id}
 		</where>
 	</update>
-	
-	<!--多表关联查询用户的角色名称  -->
+
+	<!--多表关联查询用户的角色名称 -->
 	<select id="userRoleNames" parameterType="Integer" resultType="String">
 		select r.role_name from cwgl_user_role u
-		  left join cwgl_role r
-		    on r.role_id = u.role_id
-		   <where>
-		   		  u.user_id =#{user_id}
-		   </where>
+		left join cwgl_role r
+		on r.role_id = u.role_id
+		<where>
+			u.user_id =#{user_id}
+		</where>
+	</select>
+	
+	<!--加载所有的岗位  -->
+	<select id="queryAllPosittion" resultType="User_DM_Posittion">
+		select * from user_dm_posittion
+	</select>
+	
+	<!--根据id查询所属岗位  -->
+	<select id="queryPosittionById" parameterType="Integer" resultType="User_DM_Posittion">
+		select * from user_dm_posittion p
+		<where>
+			p.posittion_dm=#{posittion_dm}
+		</where>
 	</select>
 </mapper>

@@ -6,8 +6,10 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSONArray;
 import com.edge.system.user.dao.UserDao;
 import com.edge.system.user.entity.User;
+import com.edge.system.user.entity.User_DM_Posittion;
 import com.edge.system.user.service.inter.UserService;
 import com.edge.utils.QueryVo;
 
@@ -44,6 +46,16 @@ public class UserServiceImpl implements UserService {
 	// 查询用户列表中所有的用户对应的角色
 	public List<String> userRoleNames(Integer user_id) {
 		return userDao.userRoleNames(user_id);
+	}
+
+	// 加载所有的岗位
+	public JSONArray queryAllPosittion() {
+		return userDao.queryAllPosittion();
+	}
+
+	// 根据id加载所属岗位
+	public User_DM_Posittion queryPosittionById(Integer posittion_dm) {
+		return userDao.queryPosittionById(posittion_dm);
 	}
 
 }

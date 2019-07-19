@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edge.WagePerformance.gzff.dao.GzffDao">
+	<!-- 定义缓存 一般是一级缓存，如果用同一个sqlsession 那么相同查询直接会从缓存中查找 <cache size="1024" flushInterval="60000" 
+		eviction="LRU" readOnly="false"></cache> -->
+		
+	<!--分页显示填报记录  -->
+	<select id="queryAllWagePerformance" parameterType="Gzff_QueryVo" resultType="WagePerformance">
+		select * from (select row_.*, rownum rownum_ from (select * from
+			wagePerformance order by wage_per_id desc ) row_
+			<where>
+				rownum &lt;=#{size} and is_wcgztb=1 and is_ffdj=1
+				<if test="wage_Code!=null"> and wage_per_code like '%${wage_Code}%'</if>
+				<if test="wage_Month!=null"> and wage_per_month = #{wage_Month}</if>
+				<if test="wage_Name!=null"> and wage_per_name = #{wage_Name}</if>
+				<if test="wage_Yfgz1!= null">AND
+					wage_per_yfgz <![CDATA[>=]]>#{wage_Yfgz1}
+				</if>
+				<if test="wage_Yfgz2!= null">AND
+					wage_per_yfgz <![CDATA[<=]]>#{wage_Yfgz2}
+				</if>
+				<if test="wage_Sfgz1!= null">AND
+					wage_per_sfgz <![CDATA[>=]]>#{wage_Sfgz1}
+				</if>
+				<if test="wage_Sfgz2!= null">AND
+					wage_per_sfgz <![CDATA[<=]]>#{wage_Sfgz2}
+				</if>
+				<if test="wage_Yglx!=null"> and wage_per_yglx = #{wage_Yglx}</if>
+				<if test="wage_Tbr!=null"> and wage_per_tbr like '%${wage_Tbr}%'</if>
+				<if test="bms!=null"> and wage_per_department = #{bms}</if>
+				<if test="user_posittion!=null"> and wage_per_position =#{user_posittion}</if>
+			</where>
+			)
+			<where>
+				rownum_ &gt;=#{page}
+			</where>
+	</select>
+	
+	<!--分页显示填报记录数量  -->
+	<select id="queryAllWagePerformanceCount" parameterType="Gzff_QueryVo" resultType="Integer">
+		select count(1) from wagePerformance
+		<where>
+			 is_wcgztb=1 and is_ffdj=1
+			 <if test="wage_Code!=null"> and wage_per_code like '%${wage_Code}%'</if>
+				<if test="wage_Month!=null"> and wage_per_month = #{wage_Month}</if>
+				<if test="wage_Name!=null"> and wage_per_name = #{wage_Name}</if>
+				<if test="wage_Yfgz1!= null">AND
+					wage_per_yfgz <![CDATA[>=]]>#{wage_Yfgz1}
+				</if>
+				<if test="wage_Yfgz2!= null">AND
+					wage_per_yfgz <![CDATA[<=]]>#{wage_Yfgz2}
+				</if>
+				<if test="wage_Sfgz1!= null">AND
+					wage_per_sfgz <![CDATA[>=]]>#{wage_Sfgz1}
+				</if>
+				<if test="wage_Sfgz2!= null">AND
+					wage_per_sfgz <![CDATA[<=]]>#{wage_Sfgz2}
+				</if>
+				<if test="wage_Yglx!=null"> and wage_per_yglx = #{wage_Yglx}</if>
+				<if test="wage_Tbr!=null"> and wage_per_tbr like '%${wage_Tbr}%'</if>
+				<if test="bms!=null"> and wage_per_department = #{bms}</if>
+				<if test="user_posittion!=null"> and wage_per_position =#{user_posittion}</if>
+		</where>
+	</select>	
+		
+	<!--查询所有的部门  -->
+	<select id="queryAllBM" resultType="Department">
+		select * from cwgl_department d 
+		<where>
+			d.dep_parentid is not null and d.dep_is_delete=0
+		</where>
+	</select>
+</mapper>

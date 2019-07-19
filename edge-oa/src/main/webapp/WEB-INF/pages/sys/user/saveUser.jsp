@@ -72,6 +72,15 @@
 					</select>
 				</div>
 			</div>
+			
+			<div class="layui-form-item" style="margin-bottom: 10px;">
+				<label class="layui-form-label" style="width: 15%">所属岗位</label>
+				<div class="layui-input-inline">
+					<select name="user_posittion" id="user_posittion" lay-filter="user_posittion" lay-verify="user_posittion">
+						<option value="" selected="selected">请选择岗位</option>
+					</select>
+				</div>
+			</div>
 
 			<div class="layui-form-item" style="margin-bottom: 0px;">
 				<label class="layui-form-label" style="width: 15%">联系方式</label>
@@ -164,6 +173,7 @@ layui.use(['form', 'layedit', 'laydate'], function(){
 	     }
 	   }
 	}); 
+   	queryAllPosittion(form);
 });
 
 //登录名清除
@@ -218,6 +228,26 @@ function initOrgTree(form) {
 			}
 			form.render('select');
 		}
+	});
+}
+
+//ajax加载所有的岗位
+function queryAllPosittion(form) {
+	$.ajax({
+		type : "post",
+		url : "<c:url value='/user/queryAllPosittion.do'/>",
+		async : false,
+		dataType : 'json',
+		error : function() {
+			alert("出错");
+		},
+		success : function(msg) {
+				for(var j=0;j<msg.length;j++){
+					$("#user_posittion").append(
+					    "<option value='"+msg[j].posittion_dm+"'>"+ msg[j].posittion_mc +"</option>"); 
+				}
+				form.render('select');
+			}
 	});
 }
 </script>

@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.alibaba.fastjson.JSONArray;
 import com.edge.system.user.entity.User;
+import com.edge.system.user.entity.User_DM_Posittion;
 import com.edge.utils.QueryVo;
 
 public interface UserDao {
@@ -25,5 +27,11 @@ public interface UserDao {
 	
 	//查询用户列表中所有的用户对应的角色
 	public List<String> userRoleNames(@Param("user_id")Integer user_id);
+	
+	//加载所有的岗位
+	public JSONArray queryAllPosittion();
+	
+	//根据id查询岗位
+	public User_DM_Posittion queryPosittionById(@Param("posittion_dm")Integer posittion_dm);
 	
 }

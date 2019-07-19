@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.edge.WagePerformance.entity.WagePerformance;
+import com.edge.WagePerformance.service.inter.WagePerService;
 import com.edge.index.service.inter.IndexService;
 import com.edge.projman.approveproj.entity.Foll_up_Proj;
 import com.edge.projman.approveproj.service.inter.ApproveprojService;
@@ -32,10 +34,10 @@ import com.edge.reimburse.bxtb.entity.Reimbursement;
 import com.edge.reimburse.bxtb.service.inter.ReportService;
 import com.edge.system.role.entity.Privilege;
 import com.edge.system.user.service.inter.UserService;
-import com.edge.utils.TaskYWC;
 import com.edge.utils.MyTask;
 import com.edge.utils.Page;
 import com.edge.utils.QueryVo;
+import com.edge.utils.TaskYWC;
 import com.google.gson.Gson;
 
 @Controller
@@ -51,6 +53,8 @@ public class IndexController {
 	private XiaoShouHTDJService xiaoShouHTDJService;
 	@Resource
 	private ReportService reportService;
+	@Resource
+	private WagePerService wagePerService;
 
 	// 跳转至登录首页
 	@RequestMapping(value = "/index.do")
@@ -168,6 +172,12 @@ public class IndexController {
 				// 获得任务描述 设置待办任务描述
 				String taskDecription = "【" + myTask.getNAME_() + "】" + "  " + "【" + "任务名称:" + reimbursement.getDb_ms() + "】";
 				myTask.setTaskDecription(taskDecription);
+			}else if ("WagePerformance".equals(object)) {// 表示工资填报
+				// 获得WagePerformance对象
+				WagePerformance wagePerformance = wagePerService.queryWageById(Integer.parseInt(id));
+				// 获得任务描述 设置待办任务描述
+				String taskDecription = "【" + myTask.getNAME_() + "】" + "  " + "【" + "任务名称:" + wagePerformance.getDb_Ms() + "】";
+				myTask.setTaskDecription(taskDecription);
 			}
 		}
 		map.put("data", pages.getRows());
@@ -246,6 +256,12 @@ public class IndexController {
 				Reimbursement reimbursement = reportService.queryReimbursementById(Integer.parseInt(id));
 				// 获得任务描述 设置待办任务描述
 				String taskDecription = "【" + ywc.getNAME_() + "】" + "  " + "【" + "任务名称:" + reimbursement.getDb_ms() + "】";
+				ywc.setTaskDecription(taskDecription);
+			}else if ("WagePerformance".equals(object)) {// 表示工资填报
+				// 获得WagePerformance对象
+				WagePerformance wagePerformance = wagePerService.queryWageById(Integer.parseInt(id));
+				// 获得任务描述 设置待办任务描述
+				String taskDecription = "【" + ywc.getNAME_() + "】" + "  " + "【" + "任务名称:" + wagePerformance.getDb_Ms() + "】";
 				ywc.setTaskDecription(taskDecription);
 			}
 		}

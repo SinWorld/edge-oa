@@ -115,6 +115,16 @@ layui.use(['element','form','table'], function(){
 		       	    anim: 1,
 		       	  	content:[url+"bxtb/reimburseShow.do?id="+data.id+"&task_id="+data.taskId,'yes']
 	     	  });
+	    	}else if(obj=='WagePerformance'){
+	    		layer.open({
+		       	  	type:2,
+		       	  	title:'任务信息',
+		       	  	area: ['100%','100%'],
+		       		shadeClose: false,
+		       		resize:false,
+		       	    anim: 1,
+		       	  	content:[url+"wage/wagePerformanceShow.do?id="+data.id+"&task_id="+data.taskId,'yes']
+	     	  });
 	    	}
 	    }  
 	});
@@ -171,6 +181,16 @@ layui.use(['element','form','table'], function(){
 			       		resize:false,
 			       	    anim: 1,
 			       	 	content:[url+"bxtb/ObjYWCShow.do?id="+data.id+"&proIndeId="+data.proIndeId+"&PROC_DEF_ID_="+data.PROC_DEF_ID_,'yes']
+		     	  });
+		    	}else if(data.obj=='WagePerformance'){
+		    		layer.open({
+			       	  	type:2,
+			       	  	title:'任务信息',
+			       	  	area: ['100%','100%'],
+			       		shadeClose: false,
+			       		resize:false,
+			       	    anim: 1,
+			       	 	content:[url+"wage/ObjYWCShow.do?id="+data.id+"&proIndeId="+data.proIndeId+"&PROC_DEF_ID_="+data.PROC_DEF_ID_,'yes']
 		     	  });
 		    	}  
 		    }

@@ -223,4 +223,11 @@ public class UserController {
 		return "sys/user/securitySetting";
 
 	}
+
+	// 加载所有的岗位
+	@RequestMapping(value = "/queryAllPosittion.do")
+	@ResponseBody
+	public String queryAllPosittion() {
+		return userService.queryAllPosittion().toString();
+	}
 }

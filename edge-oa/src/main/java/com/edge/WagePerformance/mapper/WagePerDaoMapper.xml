@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edge.WagePerformance.dao.WagePerDao">
+	<!-- 定义缓存 一般是一级缓存，如果用同一个sqlsession 那么相同查询直接会从缓存中查找 <cache size="1024" flushInterval="60000" 
+		eviction="LRU" readOnly="false"></cache> -->
+		
+	<!--分页显示填报记录  -->
+	<select id="queryAllWagePerformance" parameterType="Wage_QueryVo" resultType="WagePerformance">
+		select * from (select row_.*, rownum rownum_ from (select * from
+			wagePerformance order by wage_per_id desc ) row_
+			<where>
+				rownum &lt;=#{size} and is_wcgztb=1
+				<if test="wage_Code!=null"> and wage_per_code like '%${wage_Code}%'</if>
+				<if test="wage_Month!=null"> and wage_per_month = #{wage_Month}</if>
+				<if test="wage_Name!=null"> and wage_per_name = #{wage_Name}</if>
+				<if test="wage_Yfgz1!= null">AND
+					wage_per_yfgz <![CDATA[>=]]>#{wage_Yfgz1}
+				</if>
+				<if test="wage_Yfgz2!= null">AND
+					wage_per_yfgz <![CDATA[<=]]>#{wage_Yfgz2}
+				</if>
+				<if test="wage_Sfgz1!= null">AND
+					wage_per_sfgz <![CDATA[>=]]>#{wage_Sfgz1}
+				</if>
+				<if test="wage_Sfgz2!= null">AND
+					wage_per_sfgz <![CDATA[<=]]>#{wage_Sfgz2}
+				</if>
+				<if test="wage_Yglx!=null"> and wage_per_yglx = #{wage_Yglx}</if>
+				<if test="wage_Tbr!=null"> and wage_per_tbr like '%${wage_Tbr}%'</if>
+				<if test="appr_Status!=null"> and appr_status = #{appr_Status}</if>
+				<if test="nextCz!=null"> and nextcz like '%${nextCz}%'</if>
+			</where>
+			)
+			<where>
+				rownum_ &gt;=#{page}
+			</where>
+	</select>
+	
+	<!--分页显示填报记录数量  -->
+	<select id="queryAllWagePerformanceCount" parameterType="Wage_QueryVo" resultType="Integer">
+		select count(1) from wagePerformance
+		<where>
+			 is_wcgztb=1
+		 		<if test="wage_Code!=null"> and wage_per_code like '%${wage_Code}%'</if>
+				<if test="wage_Month!=null"> and wage_per_month = #{wage_Month}</if>
+				<if test="wage_Name!=null"> and wage_per_name = #{wage_Name}</if>
+				<if test="wage_Yfgz1!= null">AND
+					wage_per_yfgz <![CDATA[>=]]>#{wage_Yfgz1}
+				</if>
+				<if test="wage_Yfgz2!= null">AND
+					wage_per_yfgz <![CDATA[<=]]>#{wage_Yfgz2}
+				</if>
+				<if test="wage_Sfgz1!= null">AND
+					wage_per_sfgz <![CDATA[>=]]>#{wage_Sfgz1}
+				</if>
+				<if test="wage_Sfgz2!= null">AND
+					wage_per_sfgz <![CDATA[<=]]>#{wage_Sfgz2}
+				</if>
+				<if test="wage_Yglx!=null"> and wage_per_yglx = #{wage_Yglx}</if>
+				<if test="wage_Tbr!=null"> and wage_per_tbr like '%${wage_Tbr}%'</if>
+				<if test="appr_Status!=null"> and appr_status = #{appr_Status}</if>
+				<if test="nextCz!=null"> and nextcz like '%${nextCz}%'</if>
+		</where>
+	</select>	
+		
+		
+		
+		
+	<!--ajax加载所有的用户  -->
+	<select id="querAllUser" resultType="User">
+		select * from cwgl_user u
+		<where>
+			u.user_is_delete = 0 and u.user_id &lt;&gt;-1
+		</where>
+	</select>
+	
+	<!--下拉用户带出所属部门和所属岗位  -->
+	<select id="queryUserBMandGW" parameterType="Integer" resultType="User">
+		select * from  cwgl_user u 
+		<where>
+			u.user_id=#{user_id}
+		</where>
+	</select>
+	
+	<!--加载所有的员工类型  -->
+	<select id="querAllYGLX" resultType="User_DM_YGLX">
+		select * from USER_DM_YGLX
+	</select>
+	
+	<!--根据id查询所属的员工类型  -->
+	<select id="queryYGLXById" parameterType="Integer" resultType="User_DM_YGLX">
+		select * from User_DM_YGLX
+		<where>
+			yglx_dm=#{yglx_dm}
+		</where>
+	</select>
+	
+	<!--加载个人所填写的工资记录  -->
+	<select id="queryMyGZJLS" parameterType="String" resultType="WagePerformance">
+		select * from wagePerformance w
+		<where>
+			w.wage_per_tbr=#{wage_per_Tbr} and w.is_wcgztb=0
+		</where>
+	</select>
+	
+	<!--新增操作  -->
+	<insert id="saveWage" parameterType="WagePerformance">
+		insert into wagePerformance(WAGE_PER_ID,WAGE_PER_CODE,WAGE_PER_MONTH,WAGE_PER_NAME,WAGE_PER_DEPARTMENT,WAGE_PER_POSITION,
+		WAGE_PER_BASEWAGE,WAGE_PER_POSITIONWAGE,WAGE_PER_ACHIEVEMENTBONUS,WAGE_PER_OVERTIMEPAY,WAGE_PER_SBJFJS,WAGE_PER_SBGRBF,WAGE_PER_SBDWBF,
+		WAGE_PER_SBBT,WAGE_PER_QT,WAGE_PER_YFGZ,WAGE_PER_WCQKK,WAGE_PER_QTKK,WAGE_PER_SBDK,WAGE_PER_GSDK,WAGE_PER_SFGZ,WAGE_PER_YGLX,WAGE_PER_TBR,
+		WAGE_PER_BZ,APPR_STATUS,NEXTCZ,DB_MS,IS_WCGZTB,IS_FFDJ,WAGE_PER_DHF)
+		values(seq_wage_per_Id.nextval,#{wage_per_Code,jdbcType=VARCHAR},#{wage_per_Month,jdbcType=DATE},#{wage_per_Name,jdbcType=NUMERIC}
+			,#{wage_per_Department,jdbcType=NUMERIC},#{wage_per_Position,jdbcType=NUMERIC},#{wage_per_BaseWage,jdbcType=NUMERIC},#{wage_per_PositionWage,jdbcType=NUMERIC}
+			,#{wage_per_AchievementBonus,jdbcType=NUMERIC},#{wage_per_OverTimePay,jdbcType=NUMERIC},#{wage_per_Sbjfjs,jdbcType=NUMERIC},#{wage_per_Sbgrbf,jdbcType=NUMERIC}
+			,#{wage_per_Sbdwbf,jdbcType=NUMERIC},#{wage_per_Sbbt,jdbcType=NUMERIC},#{wage_per_Qt,jdbcType=NUMERIC},#{wage_per_Yfgz,jdbcType=NUMERIC},#{wage_per_Wcqkk,jdbcType=NUMERIC}
+			,#{wage_per_Qtkk,jdbcType=NUMERIC},#{wage_per_Sbdk,jdbcType=NUMERIC},#{wage_per_Gsdk,jdbcType=NUMERIC},#{wage_per_Sfgz,jdbcType=NUMERIC},#{wage_per_Yglx,jdbcType=NUMERIC}
+			,#{wage_per_Tbr,jdbcType=VARCHAR},#{wage_per_Bz,jdbcType=VARCHAR},#{appr_Status,jdbcType=NUMERIC},#{nextCz,jdbcType=VARCHAR},#{db_Ms,jdbcType=VARCHAR},#{is_wcgztb,jdbcType=NUMERIC}
+			,#{is_ffdj,jdbcType=NUMERIC},#{wage_per_dhf,jdbcType=NUMERIC})
+	</insert>
+	
+	<!--编辑操作  -->
+	<update id="editWage" parameterType="WagePerformance">
+		update wagePerformance
+		<set>
+			<if test="wage_per_Month!=null">wage_per_month=#{wage_per_Month},</if>
+			<if test="wage_per_Name!=null">wage_per_name=#{wage_per_Name},</if>
+			<if test="wage_per_Department!=null">wage_per_department=#{wage_per_Department},</if>
+			<if test="wage_per_Position!=null">wage_per_position=#{wage_per_Position},</if>
+			<if test="wage_per_BaseWage!=null">wage_per_basewage=#{wage_per_BaseWage},</if>
+			<if test="wage_per_PositionWage!=null">wage_per_positionwage=#{wage_per_PositionWage},</if>
+			<if test="wage_per_AchievementBonus!=null">wage_per_achievementbonus=#{wage_per_AchievementBonus},</if>
+			<if test="wage_per_OverTimePay!=null">wage_per_overtimepay=#{wage_per_OverTimePay},</if>
+			<if test="wage_per_Sbjfjs!=null">wage_per_sbjfjs=#{wage_per_Sbjfjs},</if>
+			<if test="wage_per_Sbgrbf!=null">wage_per_sbgrbf=#{wage_per_Sbgrbf},</if>
+			<if test="wage_per_Sbdwbf!=null">wage_per_sbdwbf=#{wage_per_Sbdwbf},</if>
+			<if test="wage_per_Sbbt!=null">wage_per_sbbt=#{wage_per_Sbbt},</if>
+			<if test="wage_per_Qt!=null">wage_per_qt=#{wage_per_Qt},</if>
+			<if test="wage_per_Yfgz!=null">wage_per_yfgz=#{wage_per_Yfgz},</if>
+			<if test="wage_per_Wcqkk!=null">wage_per_wcqkk=#{wage_per_Wcqkk},</if>
+			<if test="wage_per_Qtkk!=null">wage_per_qtkk=#{wage_per_Qtkk},</if>
+			<if test="wage_per_Sbdk!=null">wage_per_sbdk=#{wage_per_Sbdk},</if>
+			<if test="wage_per_Gsdk!=null">wage_per_gsdk=#{wage_per_Gsdk},</if>
+			<if test="wage_per_Sfgz!=null">wage_per_sfgz=#{wage_per_Sfgz},</if>
+			<if test="wage_per_Yglx!=null">wage_per_yglx=#{wage_per_Yglx},</if>
+			<if test="wage_per_Bz!=null">wage_per_bz=#{wage_per_Bz},</if>
+			<if test="appr_Status!=null">appr_status=#{appr_Status},</if>
+			<if test="nextcz!=null">nextcz=#{nextcz},</if>
+			<if test="is_wcgztb!=null">is_wcgztb=#{is_wcgztb},</if>
+			<if test="is_ffdj!=null">is_ffdj=#{is_ffdj},</if>
+			<if test="db_Ms!=null">db_ms=#{db_Ms},</if>
+			<if test="wage_per_dhf!=null">wage_per_dhf=#{wage_per_dhf}</if>
+		</set>
+		<where>
+			wage_per_id=#{wage_per_Id}
+		</where>
+	</update>
+	
+	<!--根据id查询工资填报对象  -->
+	<select id="queryWageById" parameterType="Integer" resultType="WagePerformance">
+		select * from wagePerformance
+		<where>
+			wage_per_id=#{wage_per_Id}
+		</where>
+	</select>
+	
+	<!--根据id删除工资填报对象  -->
+	<delete id="deleteReimById" parameterType="Integer">
+		delete from wagePerformance
+		<where>
+			wage_per_id=#{wage_per_Id}
+		</where>
+	</delete>
+</mapper>
