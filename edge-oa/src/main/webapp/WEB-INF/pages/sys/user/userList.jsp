@@ -90,7 +90,7 @@ layui.use('table', function(){
     	layer.open({
      	  	type:2,
      	  	title:'编辑用户',
-     	  	area: ['50%','70%'],
+     	  	area: ['100%','100%'],
      	  	shadeClose: false,
       		resize:false,
       	    anim: 1,

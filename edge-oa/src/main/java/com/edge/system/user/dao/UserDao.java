@@ -34,4 +34,7 @@ public interface UserDao {
 	//根据id查询岗位
 	public User_DM_Posittion queryPosittionById(@Param("posittion_dm")Integer posittion_dm);
 	
+	//根据输入的登录名验证登录名是否可用
+	public User queryUserByLoginName(@Param("loginName")String loginName);
+	
 }

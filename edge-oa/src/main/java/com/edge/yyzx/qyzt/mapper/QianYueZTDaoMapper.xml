@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edge.yyzx.qyzt.dao.QianYueZTDao">
+	<!-- 定义缓存 一般是一级缓存，如果用同一个sqlsession 那么相同查询直接会从缓存中查找 <cache size="1024" flushInterval="60000" 
+		eviction="LRU" readOnly="false"></cache> -->
+	<!--分页显示签约主体列表 -->
+	<select id="queryQYZTS" parameterType="QYZT_QueryVo" resultType="QianYueZT">
+		select * from (select row_.*, rownum rownum_ from (select * from
+		qianyuezt order by qyztdm desc ) row_
+		<where>
+			rownum &lt;=#{size}
+			<if test="qyztdh!=null"> and qyztdh like '%${qyztdh}%'</if>
+			<if test="qyztjc!=null"> and qyztjc like '%${qyztjc}%'</if>
+			<if test="qyztmc!=null"> and qyztmc like '%${qyztmc}%'</if>
+			<if test="qyztms!=null"> and qyztms like '%${qyztms}%'</if>
+		</where>
+		)
+		<where>
+			rownum_ &gt;=#{page}
+		</where>
+	</select>
+
+	<!--分页显示签约主体列表数量 -->
+	<select id="queryQYZTSCount" parameterType="QYZT_QueryVo"
+		resultType="Integer">
+		select count(1) from qianyuezt
+		<where>
+			1=1
+			<if test="qyztdh!=null"> and qyztdh like '%${qyztdh}%'</if>
+			<if test="qyztjc!=null"> and qyztjc like '%${qyztjc}%'</if>
+			<if test="qyztmc!=null"> and qyztmc like '%${qyztmc}%'</if>
+			<if test="qyztms!=null"> and qyztms like '%${qyztms}%'</if>
+		</where>
+	</select>
+	
+	<!--新增签约主体  -->
+	<insert id="saveQYZT" parameterType="QianYueZT">
+		insert into qianyuezt(QYZTDM,QYZTDH,QYZTJC,QYZTMC,QYZTMS)
+		values(seq_qyzt_dm.nextval,#{qyztdh,jdbcType=VARCHAR},#{qyztjc,jdbcType=VARCHAR},#{qyztmc,jdbcType=VARCHAR},#{qyztms,jdbcType=VARCHAR})
+	</insert>
+	
+	<!--根据id查询对应的签约主体  -->
+	<select id="queryQYZTById" parameterType="Integer" resultType="QianYueZT">
+		select * from qianyuezt 
+		<where>
+			qyztdm=#{qyztdm}
+		</where>
+	</select>
+	
+	<!--编辑签约主体  -->
+	<update id="editQYZT" parameterType="QianYueZT">
+		update qianyuezt
+		<set>
+			<if test="qyztdh!=null">qyztdh=#{qyztdh},</if>
+			<if test="qyztjc!=null">qyztjc=#{qyztjc},</if>
+			<if test="qyztmc!=null">qyztmc=#{qyztmc},</if>
+			<if test="qyztms!=null">qyztms=#{qyztms}</if>
+		</set>
+		<where>
+			qyztdm=#{qyztdm}
+		</where>
+	</update>
+</mapper>

@@ -230,4 +230,21 @@ public class UserController {
 	public String queryAllPosittion() {
 		return userService.queryAllPosittion().toString();
 	}
+
+	// 验证输入的登录名
+	@RequestMapping(value = "/checkLoginName.do")
+	@ResponseBody
+	public String checkLoginName(@RequestParam String loginName) {
+		JSONObject jsonObject = new JSONObject();
+		// 验证用户名
+		User user = userService.queryUserByLoginName(loginName.trim());
+		if (user == null) {
+			// 说明可以使用
+			jsonObject.put("flag", true);
+		} else {
+			// 说明不可用
+			jsonObject.put("flag", false);
+		}
+		return jsonObject.toString();
+	}
 }

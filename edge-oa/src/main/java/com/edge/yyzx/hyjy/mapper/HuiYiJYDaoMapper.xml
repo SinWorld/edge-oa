@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edge.yyzx.hyjy.dao.HuiYiJYDao">
+	<!-- 定义缓存 一般是一级缓存，如果用同一个sqlsession 那么相同查询直接会从缓存中查找 <cache size="1024" flushInterval="60000" 
+		eviction="LRU" readOnly="false"></cache> -->
+	<!--分页显示会议纪要列表 -->
+	<select id="queryHYJYS" parameterType="HuiYiJY_QueryVo" resultType="HuiYiJY">
+		select * from (select row_.*, rownum rownum_ from (select * from
+		huiyijy order by hyjydm desc ) row_
+		<where>
+			rownum &lt;=#{size}
+		</where>
+		)
+		<where>
+			rownum_ &gt;=#{page}
+		</where>
+	</select>
+
+	<!--分页显示会议纪要列表数量 -->
+	<select id="queryHYJYSCount" parameterType="HuiYiJY_QueryVo"
+		resultType="Integer">
+		select count(1) from huiyijy
+	</select>
+	
+	<!--新增会议纪要 -->
+	<insert id="saveHyjy" parameterType="HuiYiJY">
+		insert into huiyijy(HYJYDM,HYJYDH,HYZT,KEHUDM,CYRY,BEGINTIME,ENDTIME,BZ)
+		values(seq_hyjy_dm.nextval,#{hyjydh,jdbcType=VARCHAR},#{hyzt,jdbcType=VARCHAR},
+		#{kehudm,jdbcType=NUMERIC},#{cyry,jdbcType=VARCHAR},#{beginTime,jdbcType=DATE},
+		#{endTime,jdbcType=DATE},#{bz,jdbcType=VARCHAR})
+	</insert>
+	
+	<!--根据id查询对应的会议纪要 -->
+	<select id="queryHYJYById" parameterType="Integer" resultType="HuiYiJY">
+		select * from huiyijy 
+		<where>
+			hyjydm=#{hyjydm}
+		</where>
+	</select>
+	
+	<!--编辑会议纪要-->
+	<update id="editHYJY" parameterType="HuiYiJY">
+		update huiyijy
+		<set>
+			<if test="hyjydh!=null">hyjydh=#{hyjydh},</if>
+			<if test="hyzt!=null">hyzt=#{hyzt},</if>
+			<if test="kehudm!=null">kehudm=#{kehudm},</if>
+			<if test="cyry!=null">cyry=#{cyry},</if>
+			<if test="beginTime!=null">beginTime=#{beginTime},</if>
+			<if test="endTime!=null">endTime=#{endTime},</if>
+			<if test="bz!=null">bz=#{bz}</if>
+		</set>
+		<where>
+			hyjydm=#{hyjydm}
+		</where>
+	</update>
+	
+	<!--根据id删除会议纪要  -->
+	<delete id="deleteHyjyById" parameterType="Integer">
+		delete from huiyijy
+		<where>
+			hyjydm=#{hyjydm}
+		</where>
+	</delete>
+</mapper>

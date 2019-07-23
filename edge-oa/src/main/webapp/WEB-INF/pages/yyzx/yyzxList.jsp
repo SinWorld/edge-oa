@@ -12,13 +12,34 @@
 </head>
 <body>
 	<input type="hidden" value='<c:url value="/"/>' id="url">
-	<fieldset class="layui-elem-field site-demo-button"
-		style="margin-top: 30px; border-width: 0px;">
+	
+	<fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px; border-width: 0px;">
+		<legend>需求管理</legend>
+		<div class="layui-form-item" style="margin-top: 10px;">
+			<div class="layui-inline" style="width: 20%; left: 10px;">
+				<button type="button"
+					class="layui-btn layui-btn-primary layui-btn-lg" id="xqd" style="width: 115px;">需求单</button>
+			</div>
+			<div class="layui-inline" style="width: 20%">
+				<button type="button"
+					class="layui-btn layui-btn-primary layui-btn-lg" id="xmxx">项目信息</button>
+			</div>
+			<div class="layui-inline" style="width: 20%">
+				<button type="button"
+					class="layui-btn layui-btn-primary layui-btn-lg" id="khxt">客户系统</button>
+			</div>
+			<div class="layui-inline" style="width: 20%">
+				<button type="button"
+					class="layui-btn layui-btn-primary layui-btn-lg" id="kh" style="width: 115px;">客户</button>
+			</div>
+		</div>
+	</fieldset>		
+	<fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px; border-width: 0px;">
 		<legend>文件管理</legend>
 		<div class="layui-form-item" style="margin-top: 10px;">
 			<div class="layui-inline" style="width: 20%; left: 10px;">
 				<button type="button"
-					class="layui-btn layui-btn-primary layui-btn-lg" id="hyjy'">会议纪要</button>
+					class="layui-btn layui-btn-primary layui-btn-lg" id="hyjy">会议纪要</button>
 			</div>
 			<div class="layui-inline" style="width: 20%">
 				<button type="button"
@@ -26,11 +47,25 @@
 			</div>
 			<div class="layui-inline" style="width: 20%">
 				<button type="button"
-					class="layui-btn layui-btn-primary layui-btn-lg" id="wjg">文件柜</button>
+					class="layui-btn layui-btn-primary layui-btn-lg" id="wjg" style="width: 115px;">文件柜</button>
 			</div>
 			<div class="layui-inline" style="width: 20%">
 				<button type="button"
 					class="layui-btn layui-btn-primary layui-btn-lg" id="zdwd">制度文档</button>
+			</div>
+		</div>
+	</fieldset>
+	
+	<fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px; border-width: 0px;">
+		<legend>字典维护</legend>
+		<div class="layui-form-item" style="margin-top: 10px;">
+			<div class="layui-inline" style="width: 20%; left: 10px;">
+				<button type="button"
+					class="layui-btn layui-btn-primary layui-btn-lg" id="qyzt">签约主体</button>
+			</div>
+			<div class="layui-inline" style="width: 20%">
+				<button type="button"
+					class="layui-btn layui-btn-primary layui-btn-lg" id="bqwh">标签维护</button>
 			</div>
 		</div>
 	</fieldset>
@@ -41,9 +76,41 @@
 			var form = layui.form;
 			var layer = layui.layer;
 			var url = $('#url').val();
-			var address="/yyzx/wjgList.do";
+			
+			//客户
+			$('#kh').click(function() {
+				var layer = layui.layer;
+   				layer.open({
+   					type : 2,
+   					title : '客户',
+   					area : [ '100%', '100%' ],
+   					shadeClose : false,
+   					resize : false,
+   					anim : 1,
+   					content : [ url + "yyzx/khList.do", 'yes' ]
+   				});
+			});
+			
+			
+
+			//会议纪要
+			$('#hyjy').click(function() {
+				var layer = layui.layer;
+   				layer.open({
+   					type : 2,
+   					title : '会议纪要',
+   					area : [ '100%', '100%' ],
+   					shadeClose : false,
+   					resize : false,
+   					anim : 1,
+   					content : [url + "yyzx/hyjyList.do", 'yes' ]
+   				});
+			});
+			
+			//文件柜
 			$('#wjg').click(function() {
 				var layer = layui.layer;
+				var address="/yyzx/wjgList.do";
 				$.ajax({
 		    		type : "post",
 		    		url : "<c:url value='/checkPower/checkPower.do'/>",
@@ -70,7 +137,20 @@
 		    		}
 		    	});
 			});
-
+			
+			//签约主体
+			$('#qyzt').click(function() {
+				var layer = layui.layer;
+   				layer.open({
+   					type : 2,
+   					title : '签约主体',
+   					area : [ '100%', '100%' ],
+   					shadeClose : false,
+   					resize : false,
+   					anim : 1,
+   					content : [ url + "yyzx/qyztList.do", 'yes' ]
+   				});
+			});
 		});
 	</script>
 </body>

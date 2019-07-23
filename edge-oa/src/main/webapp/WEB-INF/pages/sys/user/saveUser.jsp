@@ -11,15 +11,6 @@
 <title>添加用户</title>
 <link rel="stylesheet" href="../layui-v2.4.5/layui/css/layui.css">
 <script src="../jquery/jquery-3.3.1.js"></script>
-<style>
-.close {
-	float: right;
-	position: relative;
-	top: -28px;
-	right: 17%;
-	cursor: pointer;
-}
-</style>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
 <%@page isELIgnored="false" %>
 </head>
@@ -29,12 +20,11 @@
 		<form class="layui-form" action="<c:url value='/user/saveUser.do'/>"
 			method="post">
 			<input type="hidden" id="flag" value="${flag}">
-			<div class="layui-form-item" style="margin-bottom: 0px;">
+			<div class="layui-form-item" style="margin-bottom: 10px;">
 				<label class="layui-form-label" style="width: 15%">登录名</label>
 				<div class="layui-input-block">
 					<input type="text" name="user_login_name" lay-verify="user_login_name"
-						autocomplete="off" class="layui-input" style="width: 64.5%" id="user_login_name">
-					 <span id="clearUser_login_name" class="close"><i class="layui-icon layui-icon-close-fill"></i></span>
+						autocomplete="off" class="layui-input" style="width: 64.5%" id="user_login_name" onblur="checkLoginName()">
 				</div>
 			</div>
 			
@@ -43,19 +33,9 @@
 				<div class="layui-input-block">
 					<input type="text" name="user_name" lay-verify="user_name"
 						autocomplete="off" class="layui-input" style="width: 64.5%" id="user_name">
-					 <span id="clearUser_name" class="close"><i class="layui-icon layui-icon-close-fill"></i></span>
 				</div>
 			</div>
 
-		<!-- 	<div class="layui-form-item" style="margin-bottom: 0px;">
-				<label class="layui-form-label" style="width: 15%">用户密码</label>
-				<div class="layui-input-block">
-					<input type="password" name="user_password" lay-verify="user_password"
-						autocomplete="off" class="layui-input" style="width: 64.5%" id="user_password">
-					 <span id="clearUser_password" class="close"><i class="layui-icon layui-icon-close-fill"></i></span>
-				</div>
-			</div> -->
-			
 			<div class="layui-form-item" style="float: right;position: relative;right:52%; margin-bottom: 0px;width: 38%" >
 				<label class="layui-form-label" style="width: 15%">性别</label>
 				<div class="layui-input-block">
@@ -82,12 +62,11 @@
 				</div>
 			</div>
 
-			<div class="layui-form-item" style="margin-bottom: 0px;">
+			<div class="layui-form-item" style="margin-bottom: 10px;">
 				<label class="layui-form-label" style="width: 15%">联系方式</label>
 				<div class="layui-input-block">
 					<input type="text" name="user_phone" lay-verify="user_phone"
 						autocomplete="off" class="layui-input" style="width: 64.5%" id="user_phone">
-					 <span id="clearUser_phone" class="close"><i class="layui-icon layui-icon-close-fill"></i></span>
 				</div>
 			</div>
 			
@@ -96,7 +75,6 @@
 				<div class="layui-input-block">
 					<input type="text" name="user_email" lay-verify="user_email"
 						autocomplete="off" class="layui-input" style="width: 64.5%" id="user_email">
-					<span id="clearUser_email" class="close"><i class="layui-icon layui-icon-close-fill"></i></span>
 				</div>
 			</div>
 			
@@ -176,80 +154,78 @@ layui.use(['form', 'layedit', 'laydate'], function(){
    	queryAllPosittion(form);
 });
 
-//登录名清除
-	$('#clearUser_login_name').click(function(){
-		$('#user_login_name').val("");
-	});
-	
-//用户名清除
-	$('#clearUser_name').click(function(){
-		$('#user_name').val("");
-	});
-
-//用户密码清除
-	$('#clearUser_password').click(function(){
-		$('#user_password').val("");
-	});
-
-//联系方式清除
-	$('#clearUser_phone').click(function(){
-		$('#user_phone').val("");
-	});
-
-//邮箱清除
-	$('#clearUser_email').click(function(){
-		$('#user_email').val("");
-	});
-
-function refreshAndClose(){
-	var flag=$('#flag').val();
-	if(flag){
-		window.parent.location.reload();
-		window.close();
-	}
-}
-
-//ajax实现部门树初始化
-function initOrgTree(form) {
-	$.ajax({
-		type : "post",
-		url : "<c:url value='/department/orgDepartment.do'/>",
-		async : false,
-		dataType : 'json',
-		error : function() {
-			alert("出错");
-		},
-		success : function(msg) {
-			for (var i = 0; i < msg.length; i++) {
-				for(var j=0;j<msg[i].length;j++){
-					$("#provinces").append(
-					    "<option value='"+msg[i][j].dep_id+"'>"+ msg[i][j].dep_name +"</option>"); 
-				}
-			}
-			form.render('select');
+	function refreshAndClose(){
+		var flag=$('#flag').val();
+		if(flag){
+			window.parent.location.reload();
+			window.close();
 		}
-	});
-}
+	}
 
-//ajax加载所有的岗位
-function queryAllPosittion(form) {
-	$.ajax({
-		type : "post",
-		url : "<c:url value='/user/queryAllPosittion.do'/>",
-		async : false,
-		dataType : 'json',
-		error : function() {
-			alert("出错");
-		},
-		success : function(msg) {
-				for(var j=0;j<msg.length;j++){
-					$("#user_posittion").append(
-					    "<option value='"+msg[j].posittion_dm+"'>"+ msg[j].posittion_mc +"</option>"); 
+	//ajax实现部门树初始化
+	function initOrgTree(form) {
+		$.ajax({
+			type : "post",
+			url : "<c:url value='/department/orgDepartment.do'/>",
+			async : false,
+			dataType : 'json',
+			error : function() {
+				alert("出错");
+			},
+			success : function(msg) {
+				for (var i = 0; i < msg.length; i++) {
+					for(var j=0;j<msg[i].length;j++){
+						$("#provinces").append(
+						    "<option value='"+msg[i][j].dep_id+"'>"+ msg[i][j].dep_name +"</option>"); 
+					}
 				}
 				form.render('select');
 			}
-	});
-}
+		});
+	}
+
+	//ajax加载所有的岗位
+	function queryAllPosittion(form) {
+		$.ajax({
+			type : "post",
+			url : "<c:url value='/user/queryAllPosittion.do'/>",
+			async : false,
+			dataType : 'json',
+			error : function() {
+				alert("出错");
+			},
+			success : function(msg) {
+					for(var j=0;j<msg.length;j++){
+						$("#user_posittion").append(
+						    "<option value='"+msg[j].posittion_dm+"'>"+ msg[j].posittion_mc +"</option>"); 
+					}
+					form.render('select');
+				}
+		});
+	}
+
+	//ajax对用户名进行验证
+	function checkLoginName() {
+		var loginName=$('#user_login_name').val();
+		$.ajax({
+			type : "post",
+			url : "<c:url value='/user/checkLoginName.do'/>",
+			async : false,
+			dataType : 'json',
+			data :{"loginName":loginName},
+			error : function() {
+				alert("出错");
+			},
+			success : function(msg) {
+				if(msg.flag){
+					layer.alert("当前登录名可用",{icon:1});
+				}else{
+					layer.alert("当前登录名已存在,不可用",{icon:2});
+					$('#user_login_name').val("");
+				}
+			}
+		});
+	}
 </script>
 </body>
 </html>

@@ -58,4 +58,9 @@ public class UserServiceImpl implements UserService {
 		return userDao.queryPosittionById(posittion_dm);
 	}
 
+	// 根据输入的登录名验证登录名是否可用
+	public User queryUserByLoginName(String loginName) {
+		return userDao.queryUserByLoginName(loginName);
+	}
+
 }

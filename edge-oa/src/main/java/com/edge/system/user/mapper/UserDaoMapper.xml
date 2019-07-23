@@ -67,6 +67,9 @@
 			<if test="user_department_id!=null">
 				u.user_department_id=#{user_department_id},
 			</if>
+			<if test="user_posittion!=null">
+				u.user_posittion=#{user_posittion},
+			</if>
 			<if test="user_is_delete==true">
 				u.user_is_delete=1
 			</if>
@@ -99,6 +102,14 @@
 		select * from user_dm_posittion p
 		<where>
 			p.posittion_dm=#{posittion_dm}
+		</where>
+	</select>
+	
+	<!--根据输入的登录名验证登录名是否可用  -->
+	<select id="queryUserByLoginName" parameterType="String" resultType="User">
+		select * from cwgl_user u
+		<where>
+			u.user_login_name=#{loginName}
 		</where>
 	</select>
 </mapper>

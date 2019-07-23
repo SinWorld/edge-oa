@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edge.yyzx.kh.dao.KeHuDao">
+	<!-- 定义缓存 一般是一级缓存，如果用同一个sqlsession 那么相同查询直接会从缓存中查找 <cache size="1024" flushInterval="60000" 
+		eviction="LRU" readOnly="false"></cache> -->
+	<!--分页显示签约主体列表 -->
+	<select id="queryKHS" parameterType="KeHu_QueryVo" resultType="KeHu">
+		select * from (select row_.*, rownum rownum_ from (select * from
+		kehu order by khdm desc ) row_
+		<where>
+			rownum &lt;=#{size}
+			<if test="khdh!=null"> and khdh like '%${khdh}%'</if>
+			<if test="khjc!=null"> and khjc like '%${khjc}%'</if>
+			<if test="khmc!=null"> and khmc like '%${khmc}%'</if>
+			<if test="khms!=null"> and khms like '%${khms}%'</if>
+		</where>
+		)
+		<where>
+			rownum_ &gt;=#{page}
+		</where>
+	</select>
+
+	<!--分页显示签约主体列表数量 -->
+	<select id="queryKHSCount" parameterType="KeHu_QueryVo"
+		resultType="Integer">
+		select count(1) from kehu
+		<where>
+			1=1
+			<if test="khdh!=null"> and khdh like '%${khdh}%'</if>
+			<if test="khjc!=null"> and khjc like '%${khjc}%'</if>
+			<if test="khmc!=null"> and khmc like '%${khmc}%'</if>
+			<if test="khms!=null"> and khms like '%${khms}%'</if>
+		</where>
+	</select>
+	
+	<!--新增签约主体  -->
+	<insert id="saveKH" parameterType="KeHu">
+		insert into kehu(KHDM,KHDH,KHJC,KHMC,KHMS)
+		values(seq_kh_dm.nextval,#{khdh,jdbcType=VARCHAR},#{khjc,jdbcType=VARCHAR},#{khmc,jdbcType=VARCHAR},#{khms,jdbcType=VARCHAR})
+	</insert>
+	
+	<!--根据id查询对应的客户 -->
+	<select id="queryKHById" parameterType="Integer" resultType="KeHu">
+		select * from kehu 
+		<where>
+			khdm=#{khdm}
+		</where>
+	</select>
+	
+	<!--编辑客户 -->
+	<update id="editKH" parameterType="KeHu">
+		update kehu
+		<set>
+			<if test="khdh!=null">khdh=#{khdh},</if>
+			<if test="khjc!=null">khjc=#{khjc},</if>
+			<if test="khmc!=null">khmc=#{khmc},</if>
+			<if test="khms!=null">khms=#{khms}</if>
+		</set>
+		<where>
+			khdm=#{khdm}
+		</where>
+	</update>
+	
+	<!--根据id删除客户  -->
+	<delete id="deletKhById" parameterType="Integer">
+		delete from kehu
+		<where>
+			khdm=#{khdm}
+		</where>
+	</delete>
+	
+	<!--查询所有的客户  -->
+	<select id="queryAllKh" resultType="KeHu">
+		select * from kehu
+	</select>
+	
+</mapper>

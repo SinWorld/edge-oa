@@ -11,15 +11,6 @@
 <title>编辑用户</title>
 <link rel="stylesheet" href="../layui-v2.4.5/layui/css/layui.css">
 <script src="../jquery/jquery-3.3.1.js"></script>
-<style>
-.close {
-	float: right;
-	position: relative;
-	top: -28px;
-	right: 17%;
-	cursor: pointer;
-}
-</style>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
 <%@page isELIgnored="false" %>
 </head>
@@ -30,21 +21,20 @@
 			method="post">
 			<input type="hidden" id="flag" value="${flag}">
 			<input type="hidden" name="user_id" value="${user.user_id}">
-			<div class="layui-form-item" style="margin-bottom: 0px;">
+			<input type="hidden" value="${user.user_posittion}" id="posittion">
+			<div class="layui-form-item" style="margin-bottom: 10px;">
 				<label class="layui-form-label" style="width: 15%">登录名</label>
 				<div class="layui-input-block">
 					<input type="text" name="user_login_name" lay-verify="user_login_name"
-						autocomplete="off" class="layui-input" style="width: 64.5%" id="user_login_name" value="${user.user_login_name}">
-					 <span id="clearUser_login_name" class="close"><i class="layui-icon layui-icon-close-fill"></i></span>
+						autocomplete="off" class="layui-input" style="width: 64.5%" id="user_login_name" value="${user.user_login_name}" disabled="">
 				</div>
 			</div>
 			
-			<div class="layui-form-item" style="margin-bottom: 0px;">
+			<div class="layui-form-item" style="margin-bottom: 10px;">
 				<label class="layui-form-label" style="width: 15%">用户名</label>
 				<div class="layui-input-block">
 					<input type="text" name="user_name" lay-verify="user_name"
-						autocomplete="off" class="layui-input" style="width: 64.5%" id="user_name" value="${user.user_name}">
-					 <span id="clearUser_name" class="close"><i class="layui-icon layui-icon-close-fill"></i></span>
+						autocomplete="off" class="layui-input" style="width: 64.5%" id="user_name" value="${user.user_name}" >
 				</div>
 			</div>
 
@@ -52,8 +42,7 @@
 				<label class="layui-form-label" style="width: 15%">用户密码</label>
 				<div class="layui-input-block">
 					<input type="password" name="user_password" lay-verify="user_password"
-						autocomplete="off" class="layui-input" style="width: 64.5%" id="user_password" value="${user.user_password}">
-					 <span id="clearUser_password" class="close"><i class="layui-icon layui-icon-close-fill"></i></span>
+						autocomplete="off" class="layui-input" style="width: 64.5%" id="user_password" value="${user.user_password}" disabled="">
 				</div>
 			</div>
 			
@@ -74,13 +63,21 @@
 					</select>
 				</div>
 			</div>
+			
+			<div class="layui-form-item" style="margin-bottom: 10px;">
+				<label class="layui-form-label" style="width: 15%">所属岗位</label>
+				<div class="layui-input-inline">
+					<select name="user_posittion" id="user_posittion" lay-filter="user_posittion" lay-verify="user_posittion">
+						<option value="" selected="selected">请选择岗位</option>
+					</select>
+				</div>
+			</div>
 
-			<div class="layui-form-item" style="margin-bottom: 0px;">
+			<div class="layui-form-item" style="margin-bottom: 10px;">
 				<label class="layui-form-label" style="width: 15%">联系方式</label>
 				<div class="layui-input-block">
 					<input type="text" name="user_phone" lay-verify="user_phone"
 						autocomplete="off" class="layui-input" style="width: 64.5%" id="user_phone" value="${user.user_phone}">
-					 <span id="clearUser_phone" class="close"><i class="layui-icon layui-icon-close-fill"></i></span>
 				</div>
 			</div>
 			
@@ -89,7 +86,6 @@
 				<div class="layui-input-block">
 					<input type="text" name="user_email" lay-verify="user_email"
 						autocomplete="off" class="layui-input" style="width: 64.5%" id="user_email" value="${user.user_email}">
-					<span id="clearUser_email" class="close"><i class="layui-icon layui-icon-close-fill"></i></span>
 				</div>
 			</div>
 			
@@ -173,32 +169,9 @@ layui.use(['form', 'layedit', 'laydate'], function(){
 	     }
 	   }
 	}); 
+   	queryAllPosittion(form);
+   	queryMyPosittion(form);
 });
-
-//登录名清除
-	$('#clearUser_login_name').click(function(){
-		$('#user_login_name').val("");
-	});
-	
-//用户名清除
-	$('#clearUser_name').click(function(){
-		$('#user_name').val("");
-	});
-
-//用户密码清除
-	$('#clearUser_password').click(function(){
-		$('#user_password').val("");
-	});
-
-//联系方式清除
-	$('#clearUser_phone').click(function(){
-		$('#user_phone').val("");
-	});
-
-//邮箱清除
-	$('#clearUser_email').click(function(){
-		$('#user_email').val("");
-	});
 
 function refreshAndClose(){
 	var flag=$('#flag').val();
@@ -243,6 +216,41 @@ function setSex(form){
 		form.render()
 	}
 }
+
+//ajax加载所有的岗位
+function queryAllPosittion(form) {
+	$.ajax({
+		type : "post",
+		url : "<c:url value='/user/queryAllPosittion.do'/>",
+		async : false,
+		dataType : 'json',
+		error : function() {
+			alert("出错");
+		},
+		success : function(msg) {
+				for(var j=0;j<msg.length;j++){
+					$("#user_posittion").append(
+					    "<option value='"+msg[j].posittion_dm+"'>"+ msg[j].posittion_mc +"</option>"); 
+				}
+				form.render('select');
+			}
+	});
+}
+
+	//查询对应的所属岗位
+	function queryMyPosittion(form){
+		//查询当前用户所属的岗位
+		var user_posittion=$('#posittion').val();
+		//获取岗位集合
+		var posittions=$('#user_posittion').find('option');
+		for(var i=0;i<posittions.length;i++){
+			if(user_posittion==posittions[i].value){
+				posittions[i].setAttribute("selected",'true');
+				break;
+			}
+		}
+		form.render('select');
+	}
 </script>
 </body>
 </html>
