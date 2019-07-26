@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edge.yyzx.bqwh.dao.BiaoQianWHDao">
+	<!-- 定义缓存 一般是一级缓存，如果用同一个sqlsession 那么相同查询直接会从缓存中查找 <cache size="1024" flushInterval="60000" 
+		eviction="LRU" readOnly="false"></cache> -->
+	<!--分页显示会议纪要列表 -->
+	<select id="queryBQWHS" parameterType="BQWH_QueryVo" resultType="BiaoQianWH">
+		select * from (select row_.*, rownum rownum_ from (select * from
+		biaoqianwh order by bqwhdm desc ) row_
+		<where>
+			rownum &lt;=#{size}
+			<if test="bqwhbh!=null"> and bqwhbh like '%${bqwhbh}%'</if>
+			<if test="bqwhdh!=null">and bqwhdh like '%${bqwhdh}%'</if>
+			<if test="bqwhmc!=null">and bqwhmc like '%${bqwhmc}%'</if>
+		</where>
+		)
+		<where>
+			rownum_ &gt;=#{page}
+		</where>
+	</select>
+
+	<!--分页显示会议纪要列表数量 -->
+	<select id="queryBQWHSCount" parameterType="BQWH_QueryVo"
+		resultType="Integer">
+		select count(1) from biaoqianwh
+		<where>
+			1=1
+			<if test="bqwhbh!=null"> and bqwhbh like '%${bqwhbh}%'</if>
+			<if test="bqwhdh!=null">and bqwhdh like '%${bqwhdh}%'</if>
+			<if test="bqwhmc!=null">and bqwhmc like '%${bqwhmc}%'</if>
+		</where>
+	</select>
+	
+	<!--新增标签维护 -->
+	<insert id="saveBqwh" parameterType="BiaoQianWH">
+		insert into biaoqianwh(BQWHDM,BQWHBH,BQWHDH,BQWHMC)
+		values(seq_bqwh_dm.nextval,#{bqwhbh,jdbcType=VARCHAR},#{bqwhdh,jdbcType=VARCHAR},#{bqwhmc,jdbcType=VARCHAR})
+	</insert>
+	
+	<!--根据id查询对应的标签维护 -->
+	<select id="queryBqwhById" parameterType="Integer" resultType="BiaoQianWH">
+		select * from biaoqianwh 
+		<where>
+			bqwhdm=#{bqwhdm}
+		</where>
+	</select>
+	
+	<!--编辑标签维护-->
+	<update id="editBqwh" parameterType="BiaoQianWH">
+		update biaoqianwh
+		<set>
+			<if test="bqwhbh!=null">bqwhbh=#{bqwhbh},</if>
+			<if test="bqwhdh!=null">bqwhdh=#{bqwhdh},</if>
+			<if test="bqwhmc!=null">bqwhmc=#{bqwhmc}</if>
+		</set>
+		<where>
+			bqwhdm=#{bqwhdm}
+		</where>
+	</update>
+	
+	<!--根据id删除标签维护  -->
+	<delete id="deleteBqwhById" parameterType="Integer">
+		delete from biaoqianwh
+		<where>
+			bqwhdm=#{bqwhdm}
+		</where>
+	</delete>
+	
+</mapper>

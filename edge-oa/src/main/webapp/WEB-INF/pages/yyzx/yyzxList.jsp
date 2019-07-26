@@ -91,7 +91,19 @@
    				});
 			});
 			
-			
+			//上线文档
+			$('#sxwd').click(function() {
+				var layer = layui.layer;
+   				layer.open({
+   					type : 2,
+   					title : '上线文档',
+   					area : [ '100%', '100%' ],
+   					shadeClose : false,
+   					resize : false,
+   					anim : 1,
+   					content : [url + "yyzx/sxwdList.do", 'yes' ]
+   				});
+			});
 
 			//会议纪要
 			$('#hyjy').click(function() {
@@ -149,6 +161,34 @@
    					resize : false,
    					anim : 1,
    					content : [ url + "yyzx/qyztList.do", 'yes' ]
+   				});
+			});
+			
+			//标签维护
+			$('#bqwh').click(function() {
+				var layer = layui.layer;
+   				layer.open({
+   					type : 2,
+   					title : '标签维护',
+   					area : [ '100%', '100%' ],
+   					shadeClose : false,
+   					resize : false,
+   					anim : 1,
+   					content : [ url + "yyzx/bqwhList.do", 'yes' ]
+   				});
+			});
+			
+			//客户系统
+			$('#khxt').click(function() {
+				var layer = layui.layer;
+   				layer.open({
+   					type : 2,
+   					title : '客户系统',
+   					area : [ '100%', '100%' ],
+   					shadeClose : false,
+   					resize : false,
+   					anim : 1,
+   					content : [ url + "yyzx/khxtList.do", 'yes' ]
    				});
 			});
 		});

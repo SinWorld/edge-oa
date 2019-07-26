@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSONArray;
 import com.edge.yyzx.hyjy.dao.HuiYiJYDao;
 import com.edge.yyzx.hyjy.entity.HuiYiJY;
 import com.edge.yyzx.hyjy.entity.HuiYiJY_QueryVo;
@@ -51,4 +52,6 @@ public class HuiYiJYServiceImpl implements HuiYiJYService {
 	public void deleteHyjyById(Integer hyjydm) {
 		huiYiJYDao.deleteHyjyById(hyjydm);
 	}
+
+	
 }

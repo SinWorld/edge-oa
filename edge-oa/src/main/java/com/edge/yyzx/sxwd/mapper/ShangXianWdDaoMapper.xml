@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edge.yyzx.sxwd.dao.ShangXianWdDao">
+	<!-- 定义缓存 一般是一级缓存，如果用同一个sqlsession 那么相同查询直接会从缓存中查找 <cache size="1024" flushInterval="60000" 
+		eviction="LRU" readOnly="false"></cache> -->
+	<!--分页显示会议纪要列表 -->
+	<select id="querySXWDS" parameterType="ShangXianWD_QueryVo" resultType="ShangXianWD">
+		select * from (select row_.*, rownum rownum_ from (select * from
+		shangxianwd order by sxwd_dm desc ) row_
+		<where>
+			rownum &lt;=#{size}
+			<if test="sxwd_bh!=null"> and sxwd_bh like '%${sxwd_bh}%'</if>
+			<if test="sxwd_wtlx!=null"> and sxwd_wtlx = #{sxwd_wtlx}</if>
+			<if test="sxwd_bcgxnr!=null"> and sxwd_bcgxnr like '%${sxwd_bcgxnr}%'</if>
+			<if test="sxwd_xt!=null"> and sxwd_xt like '%${sxwd_xt}%'</if>
+			<if test="sxwd_fz!=null"> and sxwd_fz like '%${sxwd_fz}%'</if>
+			<if test="sxwd_git!=null"> and sxwd_git like '%${sxwd_git}%'</if>
+			<if test="sxwd_kfry!=null"> and sxwd_kfry = #{sxwd_kfry}</if>
+			<if test="sxwd_kfry!=null"> and sxwd_kfry = #{sxwd_kfry}</if>
+			<if test="sxwd_kfysry!=null"> and sxwd_kfysry = #{sxwd_kfysry}</if>
+			<if test="beginTime1 != null">AND
+				sxwd_jhsxsj <![CDATA[>=]]>#{beginTime1}
+			</if>
+			<if test="beginTime2 != null">AND
+				sxwd_jhsxsj <![CDATA[<=]]>#{beginTime2}
+			</if>
+		</where>
+		)
+		<where>
+			rownum_ &gt;=#{page}
+		</where>
+	</select>
+
+	<!--分页显示会议纪要列表数量 -->
+	<select id="querySXWDSCount" parameterType="ShangXianWD_QueryVo" resultType="Integer">
+		select count(1) from shangxianwd
+		<where>
+			1=1
+			<if test="sxwd_bh!=null"> and sxwd_bh like '%${sxwd_bh}%'</if>
+			<if test="sxwd_wtlx!=null"> and sxwd_wtlx = #{sxwd_wtlx}</if>
+			<if test="sxwd_bcgxnr!=null"> and sxwd_bcgxnr like '%${sxwd_bcgxnr}%'</if>
+			<if test="sxwd_xt!=null"> and sxwd_xt like '%${sxwd_xt}%'</if>
+			<if test="sxwd_fz!=null"> and sxwd_fz like '%${sxwd_fz}%'</if>
+			<if test="sxwd_git!=null"> and sxwd_git like '%${sxwd_git}%'</if>
+			<if test="sxwd_kfry!=null"> and sxwd_kfry = #{sxwd_kfry}</if>
+			<if test="sxwd_kfry!=null"> and sxwd_kfry = #{sxwd_kfry}</if>
+			<if test="sxwd_kfysry!=null"> and sxwd_kfysry = #{sxwd_kfysry}</if>
+			<if test="beginTime1 != null">AND
+				sxwd_jhsxsj <![CDATA[>=]]>#{beginTime1}
+			</if>
+			<if test="beginTime2 != null">AND
+				sxwd_jhsxsj <![CDATA[<=]]>#{beginTime2}
+			</if>
+		</where>
+	</select>
+	
+	<!--查询所有的问题类型  -->
+	<select id="queryAllWTLX" resultType="Sxwd_DM_WTLX">
+		select * from sxwd_dm_wtlx
+	</select>
+	
+	<!--根据id'查询对应的问题类型  -->
+	<select id="queryWtlxById" parameterType="Integer" resultType="Sxwd_DM_WTLX">
+		select * from sxwd_dm_wtlx
+		<where>
+			wtlx_dm=#{wtlx_dm}
+		</where>
+	</select>
+	
+	<!--新增上线文档 -->
+	<insert id="saveSxwd" parameterType="ShangXianWD">
+		insert into shangxianwd(SXWD_DM,SXWD_MC,SXWD_BH,SXWD_XT,SXWD_KH,SXWD_FZ,SXWD_GIT,
+		SXWD_WTLX,SXWD_KFYSRY,SXWD_KFRY,SXWD_JHSXSJ,SXWD_ZXCXM,SXWD_SFXYZXCX,SXWD_SFTGYFZXYS,
+		SXWD_SFTGXQYS,SXWD_SFYBB,SXWD_SFXYSQ,SXWD_BCGXNR,SXWD_BBWJFZWZ,SXWD_SQSM,SXWD_QTQK)
+		values(seq_sxwd_dm.nextval,#{sxwd_mc,jdbcType=VARCHAR},#{sxwd_bh,jdbcType=VARCHAR},#{sxwd_xt,jdbcType=VARCHAR},
+		#{sxwd_kh,jdbcType=NUMERIC},#{sxwd_fz,jdbcType=VARCHAR},#{sxwd_git,jdbcType=VARCHAR},#{sxwd_wtlx,jdbcType=NUMERIC},
+		#{sxwd_kfysry,jdbcType=NUMERIC},#{sxwd_kfry,jdbcType=NUMERIC},#{sxwd_jhsxsj,jdbcType=DATE},#{sxwd_zxcxm,jdbcType=VARCHAR},
+		#{sxwd_sfxyzxcx,jdbcType=NUMERIC},#{sxwd_sftgyfzxys,jdbcType=NUMERIC},#{sxwd_sftgxqys,jdbcType=NUMERIC},#{sxwd_sfybb,jdbcType=NUMERIC},
+		#{sxwd_sfxysq,jdbcType=NUMERIC},#{sxwd_bcgxnr,jdbcType=VARCHAR},#{sxwd_bbwjfzwz,jdbcType=VARCHAR},#{sxwd_sqsm,jdbcType=VARCHAR},
+		#{sxwd_qtqk,jdbcType=VARCHAR})
+	</insert>
+	
+	<!--根据id查询对应的上线文档 -->
+	<select id="querySXWDById" parameterType="Integer" resultType="ShangXianWD">
+		select * from shangxianwd
+		<where>
+			sxwd_dm=#{sxwd_dm}
+		</where>
+	</select>
+	
+	<!--编辑会议纪要-->
+	<update id="editHYJY" parameterType="HuiYiJY">
+		update huiyijy
+		<set>
+			<if test="hyjydh!=null">hyjydh=#{hyjydh},</if>
+			<if test="hyzt!=null">hyzt=#{hyzt},</if>
+			<if test="kehudm!=null">kehudm=#{kehudm},</if>
+			<if test="cyry!=null">cyry=#{cyry},</if>
+			<if test="beginTime!=null">beginTime=#{beginTime},</if>
+			<if test="endTime!=null">endTime=#{endTime},</if>
+			<if test="bz!=null">bz=#{bz}</if>
+		</set>
+		<where>
+			hyjydm=#{hyjydm}
+		</where>
+	</update>
+	
+	<!--根据id删除会议纪要  -->
+	<delete id="deleteHyjyById" parameterType="Integer">
+		delete from huiyijy
+		<where>
+			hyjydm=#{hyjydm}
+		</where>
+	</delete>
+	
+</mapper>

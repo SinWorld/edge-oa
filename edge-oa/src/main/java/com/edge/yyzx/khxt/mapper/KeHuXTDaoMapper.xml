@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edge.yyzx.khxt.dao.KeHuXTDao">
+	<!-- 定义缓存 一般是一级缓存，如果用同一个sqlsession 那么相同查询直接会从缓存中查找 <cache size="1024" flushInterval="60000" 
+		eviction="LRU" readOnly="false"></cache> -->
+	<!--分页显示签约主体列表 -->
+	<select id="queryKHXTS" parameterType="KeHuXT_QueryVo" resultType="KeHuXT">
+		select * from (select row_.*, rownum rownum_ from (select * from
+		kehuxt order by khxt_dm desc ) row_
+		<where>
+			rownum &lt;=#{size}
+			<if test="khxt_dh!=null"> and khxt_dh like '%${khxt_dh}%'</if>
+			<if test="khxt_mc!=null">and khxt_mc like '%${khxt_mc}%'</if>
+			<if test="khxt_khdm!=null">and khxt_khdm =#{khxt_khdm}</if>
+			<if test="khxt_khbm!=null">and khxt_khbm like '%${khxt_khbm}%'</if>
+			<if test="khxt_khfzr!=null">and khxt_khfzr like '%${khxt_khfzr}%'</if>
+			<if test="beginTime1 != null">AND
+				khxt_sxrq <![CDATA[>=]]>#{beginTime1}
+			</if>
+			<if test="beginTime2 != null">AND
+				khxt_sxrq <![CDATA[<=]]>#{beginTime2}
+			</if>
+		</where>
+		)
+		<where>
+			rownum_ &gt;=#{page}
+		</where>
+	</select>
+
+	<!--分页显示签约主体列表数量 -->
+	<select id="queryKHXTSCount" parameterType="KeHuXT_QueryVo" resultType="Integer">
+		select count(1) from kehuxt
+		<where>
+			1=1
+			<if test="khxt_dh!=null"> and khxt_dh like '%${khxt_dh}%'</if>
+			<if test="khxt_mc!=null">and khxt_mc like '%${khxt_mc}%'</if>
+			<if test="khxt_khdm!=null">and khxt_khdm =#{khxt_khdm}</if>
+			<if test="khxt_khbm!=null">and khxt_khbm like '%${khxt_khbm}%'</if>
+			<if test="khxt_khfzr!=null">and khxt_khfzr like '%${khxt_khfzr}%'</if>
+			<if test="beginTime1 != null">AND
+				khxt_sxrq <![CDATA[>=]]>#{beginTime1}
+			</if>
+			<if test="beginTime2 != null">AND
+				khxt_sxrq <![CDATA[<=]]>#{beginTime2}
+			</if>
+		</where>
+	</select>
+	
+	<!--新增客户系统  -->
+	<insert id="saveKHXT" parameterType="KeHuXT">
+		insert into kehuxt(KHXT_DM,KHXT_DH,KHXT_MC,KHXT_KHDM,KHXT_KHBM,KHXT_KHFZR,KHXT_SXRQ,KHXT_BZ)
+		values(seq_khxt_dm.nextval,#{khxt_dh,jdbcType=VARCHAR},#{khxt_mc,jdbcType=VARCHAR},#{khxt_khdm,jdbcType=NUMERIC},
+		#{khxt_khbm,jdbcType=VARCHAR},#{khxt_khfzr,jdbcType=VARCHAR},#{khxt_sxrq,jdbcType=DATE},#{khxt_bz,jdbcType=VARCHAR})
+	</insert>
+	
+	<!--根据id查询对应的客户系统 -->
+	<select id="queryKHXTById" parameterType="Integer" resultType="KeHuXT">
+		select * from kehuxt 
+		<where>
+			khxt_dm=#{khxt_dm}
+		</where>
+	</select>
+	
+	<!--编辑客户系统 -->
+	<update id="editKHXT" parameterType="KeHuXT">
+		update kehuxt
+		<set>
+			<if test="khxt_dh!=null">khxt_dh=#{khxt_dh},</if>
+			<if test="khxt_mc!=null">khxt_mc=#{khxt_mc},</if>
+			<if test="khxt_khdm!=null">khxt_khdm=#{khxt_khdm},</if>
+			<if test="khxt_khbm!=null">khxt_khbm=#{khxt_khbm},</if>
+			<if test="khxt_khfzr!=null">khxt_khfzr=#{khxt_khfzr},</if>
+			<if test="khxt_sxrq!=null">khxt_sxrq=#{khxt_sxrq},</if>
+			<if test="khxt_bz!=null">khxt_bz=#{khxt_bz}</if>
+		</set>
+		<where>
+			khxt_dm=#{khxt_dm}
+		</where>
+	</update>
+	
+	<!--根据id删除客户系统  -->
+	<delete id="deleteKHXTById" parameterType="Integer">
+		delete from kehuxt
+		<where>
+			khxt_dm=#{khxt_dm}
+		</where>
+	</delete>
+	
+	
+</mapper>

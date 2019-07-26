@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.alibaba.fastjson.JSONArray;
 import com.edge.yyzx.hyjy.entity.HuiYiJY;
 import com.edge.yyzx.hyjy.entity.HuiYiJY_QueryVo;
 
@@ -25,4 +26,6 @@ public interface HuiYiJYService {
 
 	// 根据id删除会议纪要
 	public void deleteHyjyById(@Param("hyjydm") Integer hyjydm);
+
+	
 }

@@ -1,5 +1,6 @@
 package com.edge.yyzx.hyjy.controller;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -40,9 +41,11 @@ public class HuiYiJYController {
 	// 分页查询会议纪要
 	@RequestMapping(value = "/hyjyList.do")
 	@ResponseBody
-	public String hyjyList(Integer page, HuiYiJY_QueryVo hyjy_QueryVo) {
+	public String hyjyList(Integer page, HuiYiJY_QueryVo hyjy_QueryVo, String startTime1, String startTime2,
+			String overTime1, String overTime2) {
 		// new出QueryVo查询对象
 		HuiYiJY_QueryVo vo = new HuiYiJY_QueryVo();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");// 设置日期格式
 		// 获得Page对象
 		Page<HuiYiJY> pages = new Page<HuiYiJY>();
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
@@ -52,6 +55,50 @@ public class HuiYiJYController {
 			vo.setPage((page - 1) * vo.getSize() + 1);
 			vo.setStartRow((pages.getPage()));
 			vo.setSize(page * 10);
+			if (hyjy_QueryVo.getHyjydh() != null && hyjy_QueryVo.getHyjydh() != "") {
+				vo.setHyjydh(hyjy_QueryVo.getHyjydh().trim());
+			}
+			if (hyjy_QueryVo.getHyzt() != null && hyjy_QueryVo.getHyzt() != "") {
+				vo.setHyzt(hyjy_QueryVo.getHyzt().trim());
+			}
+			if (hyjy_QueryVo.getKehudm() != null) {
+				vo.setKehudm(hyjy_QueryVo.getKehudm());
+			}
+			if (hyjy_QueryVo.getCyry() != null && hyjy_QueryVo.getCyry() != "") {
+				vo.setCyry(hyjy_QueryVo.getCyry().trim());
+			}
+			if (startTime1 != null && startTime1 != "") {
+				// 将String类型转换为Date类型
+				try {
+					vo.setBeginTime1(sdf.parse(startTime1));
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+			}
+			if (startTime2 != null && startTime2 != "") {
+				// 将String类型转换为Date类型
+				try {
+					vo.setBeginTime2(sdf.parse(startTime2));
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+			}
+			if (overTime1 != null && overTime1 != "") {
+				// 将String类型转换为Date类型
+				try {
+					vo.setEndTime1(sdf.parse(overTime1));
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+			}
+			if (overTime2 != null && overTime2 != "") {
+				// 将String类型转换为Date类型
+				try {
+					vo.setEndTime2(sdf.parse(overTime2));
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 		// 总页数
 		pages.setTotal(huiYiJYService.queryHYJYSCount(vo));
@@ -147,4 +194,6 @@ public class HuiYiJYController {
 		jsonObject.put("flag", true);
 		return jsonObject.toString();
 	}
+
+	
 }

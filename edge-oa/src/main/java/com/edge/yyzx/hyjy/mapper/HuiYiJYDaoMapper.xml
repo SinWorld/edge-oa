@@ -11,6 +11,22 @@
 		huiyijy order by hyjydm desc ) row_
 		<where>
 			rownum &lt;=#{size}
+			<if test="hyjydh!=null"> and hyjydh like '%${hyjydh}%'</if>
+			<if test="hyzt!=null">and hyzt like '%${hyzt}%'</if>
+			<if test="kehudm!=null">and kehudm =#{kehudm}</if>
+			<if test="cyry!=null">and cyry like '%${cyry}%'</if>
+			<if test="beginTime1 != null">AND
+				beginTime <![CDATA[>=]]>#{beginTime1}
+			</if>
+			<if test="beginTime2 != null">AND
+				beginTime <![CDATA[<=]]>#{beginTime2}
+			</if>
+			<if test="endTime1 != null">AND
+				endTime <![CDATA[>=]]>#{endTime1}
+			</if>
+			<if test="endTime2 != null">AND
+				endTime <![CDATA[<=]]>#{endTime2}
+			</if>
 		</where>
 		)
 		<where>
@@ -22,6 +38,25 @@
 	<select id="queryHYJYSCount" parameterType="HuiYiJY_QueryVo"
 		resultType="Integer">
 		select count(1) from huiyijy
+		<where>
+			1=1
+			<if test="hyjydh!=null"> and hyjydh like '%${hyjydh}%'</if>
+			<if test="hyzt!=null">and hyzt like '%${hyzt}%'</if>
+			<if test="kehudm!=null">and kehudm =#{kehudm}</if>
+			<if test="cyry!=null">and cyry like '%${cyry}%'</if>
+			<if test="beginTime1 != null">AND
+				beginTime <![CDATA[>=]]>#{beginTime1}
+			</if>
+			<if test="beginTime2 != null">AND
+				beginTime <![CDATA[<=]]>#{beginTime2}
+			</if>
+			<if test="endTime1 != null">AND
+				endTime <![CDATA[>=]]>#{endTime1}
+			</if>
+			<if test="endTime2 != null">AND
+				endTime <![CDATA[<=]]>#{endTime2}
+			</if>
+		</where>
 	</select>
 	
 	<!--新增会议纪要 -->
@@ -64,4 +99,5 @@
 			hyjydm=#{hyjydm}
 		</where>
 	</delete>
+	
 </mapper>

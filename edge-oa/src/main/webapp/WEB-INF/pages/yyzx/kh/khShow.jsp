@@ -26,6 +26,12 @@
 				      </div>
 			    </div>
 			    
+			     <div class="layui-inline" style="left:30px;">
+				      <label class="layui-form-label" style="width: 120px;">客户简称</label>
+				      <div class="layui-input-inline">
+				        <input type="text" name="khjc" lay-verify="khjc" autocomplete="off" class="layui-input bj" id="khjc" value="${kh.khjc}"  disabled="">
+				      </div>
+			    </div>
 				
 				 
 			  <div class="layui-inline" style="left:30px;">

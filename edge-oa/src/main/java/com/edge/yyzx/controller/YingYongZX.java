@@ -41,4 +41,22 @@ public class YingYongZX {
 	public String qyztList() {
 		return "yyzx/qyzt/qyztList";
 	}
+
+	// 跳转至标签维护列表页面
+	@RequestMapping(value = "/bqwhList.do")
+	public String bqwhList() {
+		return "yyzx/bqwh/bqwhList";
+	}
+
+	// 跳转至上线文档列表页面
+	@RequestMapping(value = "/sxwdList.do")
+	public String sxwdList() {
+		return "yyzx/sxwd/sxwdList";
+	}
+
+	// 跳转至客户系统列表页面
+	@RequestMapping(value = "/khxtList.do")
+	public String khxtList() {
+		return "yyzx/khxt/khxtList";
+	}
 }
