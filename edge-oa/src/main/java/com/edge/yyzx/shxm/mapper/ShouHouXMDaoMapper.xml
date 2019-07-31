@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edge.yyzx.shxm.dao.ShouHouXMDao">
+	<!-- 定义缓存 一般是一级缓存，如果用同一个sqlsession 那么相同查询直接会从缓存中查找 <cache size="1024" flushInterval="60000" 
+		eviction="LRU" readOnly="false"></cache> -->
+	<!--分页显示售后项目列表 -->
+	<select id="querySHXMS" parameterType="ShouHouXM_QueryVo" resultType="ShouHouXM">
+		select * from (select row_.*, rownum rownum_ from (select * from
+		shouhouxm order by shxm_dm desc ) row_
+		<where>
+			rownum &lt;=#{size}
+			<if test="shxm_dh!=null"> and shxm_dh like '%${shxm_dh}%'</if>
+			<if test="shxm_mc!=null">and shxm_mc like '%${shxm_mc}%'</if>
+			<if test="shxm_kh!=null">and shxm_kh =#{shxm_kh}</if>
+			<if test="shxm_qyzt!=null">and shxm_qyzt =#{shxm_qyzt}</if>
+			<if test="shxm_ms!=null">and shxm_ms like '%${shxm_ms}%'</if>
+		</where>
+		)
+		<where>
+			rownum_ &gt;=#{page}
+		</where>
+	</select>
+	
+	<!--分页显示售后项目列表数量  -->
+	<select id="querySHXMSCount" parameterType="ShouHouXM_QueryVo" resultType="Integer">
+		select count(1) from shouhouxm
+		<where>
+			1=1
+			<if test="shxm_dh!=null"> and shxm_dh like '%${shxm_dh}%'</if>
+			<if test="shxm_mc!=null">and shxm_mc like '%${shxm_mc}%'</if>
+			<if test="shxm_kh!=null">and shxm_kh =#{shxm_kh}</if>
+			<if test="shxm_qyzt!=null">and shxm_qyzt =#{shxm_qyzt}</if>
+			<if test="shxm_ms!=null">and shxm_ms like '%${shxm_ms}%'</if>
+		</where>
+	</select>
+
+	<!--新增售后项目 -->
+	<insert id="saveSHXM" parameterType="ShouHouXM">
+		insert into shouhouxm(SHXM_DM,SHXM_DH,SHXM_MC,SHXM_KH,SHXM_QYZT,SHXM_MS)
+		values(seq_shxm_dm.nextval,#{shxm_dh,jdbcType=VARCHAR},#{shxm_mc,jdbcType=VARCHAR},
+		#{shxm_kh,jdbcType=NUMERIC},#{shxm_qyzt,jdbcType=NUMERIC},#{shxm_ms,jdbcType=VARCHAR})
+	</insert>
+	
+	<!--根据id查询对应的售后项目 -->
+	<select id="querySHXMById" parameterType="Integer" resultType="ShouHouXM">
+		select * from shouhouxm
+		<where>
+			shxm_dm=#{shxm_dm}
+		</where>
+	</select>
+	
+	<!--编辑售后项目-->
+	<update id="editSHXM" parameterType="ShouHouXM">
+		update shouhouxm
+		<set>
+			<if test="shxm_dh!=null">shxm_dh=#{shxm_dh},</if>
+			<if test="shxm_mc!=null">shxm_mc=#{shxm_mc},</if>
+			<if test="shxm_kh!=null">shxm_kh=#{shxm_kh},</if>
+			<if test="shxm_qyzt!=null">shxm_qyzt=#{shxm_qyzt},</if>
+			<if test="shxm_ms!=null">shxm_ms=#{shxm_ms}</if>
+		</set>
+		<where>
+			shxm_dm=#{shxm_dm}
+		</where>
+	</update>
+	
+	<!--根据id删除售后项目  -->
+	<delete id="deleteSHXMById" parameterType="Integer">
+		delete from shouhouxm
+		<where>
+			shxm_dm=#{shxm_dm}
+		</where>
+	</delete>
+	
+</mapper>

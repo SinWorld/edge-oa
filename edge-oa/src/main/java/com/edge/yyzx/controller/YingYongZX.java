@@ -59,4 +59,22 @@ public class YingYongZX {
 	public String khxtList() {
 		return "yyzx/khxt/khxtList";
 	}
+
+	// 跳转至项目信息列表页面
+	@RequestMapping(value = "/xmxxList.do")
+	public String xmxxList() {
+		return "yyzx/xmxx/xmxxList";
+	}
+
+	// 跳转至开发项目列表页面
+	@RequestMapping(value = "/kfxmList.do")
+	public String kfxmList() {
+		return "yyzx/kfxm/kfxmList";
+	}
+
+	// 跳转至售后项目列表页面
+	@RequestMapping(value = "/shxmList.do")
+	public String shxmList() {
+		return "yyzx/shxm/shxmList";
+	}
 }

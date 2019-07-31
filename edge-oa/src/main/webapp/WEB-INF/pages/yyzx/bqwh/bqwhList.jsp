@@ -149,7 +149,7 @@ layui.use(['form','table','laydate'], function(){
 			  });
 	    });
 	}else if(obj.event==='detail'){
-	   	 layer.open({
+	   	 parent.layer.open({
 	  	  	type:2,
 	  	  	title:'查看',
 	  	  	area: ['100%','100%'],

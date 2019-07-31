@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edge.yyzx.kfxm.dao.KaiFaXMDao">
+	<!-- 定义缓存 一般是一级缓存，如果用同一个sqlsession 那么相同查询直接会从缓存中查找 <cache size="1024" flushInterval="60000" 
+		eviction="LRU" readOnly="false"></cache> -->
+	<!--分页显示项目信息列表 -->
+	<select id="queryAllkaiFaXM" parameterType="KaiFaXM_QueryVo" resultType="KaiFaXM">
+		select * from (select row_.*, rownum rownum_ from (select * from
+		kaifaxm order by  kfxm_dm desc ) row_
+		<where>
+			rownum &lt;=#{size}
+			<if test="kfxm_dh!=null"> and kfxm_dh like '%${kfxm_dh}%'</if>
+			<if test="kfxm_mc!=null">and kfxm_mc like '%${kfxm_mc}%'</if>
+			<if test="kfxm_xmjd!=null">and kfxm_xmjd =#{kfxm_xmjd}</if>
+			<if test="kfxm_xmzt!=null">and kfxm_xmzt =#{kfxm_xmzt}</if>
+			<if test="kfxm_kh!=null">and kfxm_kh =#{kfxm_kh}</if>
+			<if test="kfxm_qyzt!=null">and kfxm_qyzt =#{kfxm_qyzt}</if>
+			<if test="kfxm_xmms!=null">and kfxm_xmms like '%${kfxm_xmms}%'</if>
+		</where>
+		)
+		<where>
+			rownum_ &gt;=#{page}
+		</where>
+	</select>
+
+	<!--分页显示项目信息列表数量 -->
+	<select id="queryAllkaiFaXMCount" parameterType="KaiFaXM_QueryVo" resultType="Integer">
+		select count(1) from kaifaxm
+		<where>
+			1=1
+			<if test="kfxm_dh!=null"> and kfxm_dh like '%${kfxm_dh}%'</if>
+			<if test="kfxm_mc!=null">and kfxm_mc like '%${kfxm_mc}%'</if>
+			<if test="kfxm_xmjd!=null">and kfxm_xmjd =#{kfxm_xmjd}</if>
+			<if test="kfxm_xmzt!=null">and kfxm_xmzt =#{kfxm_xmzt}</if>
+			<if test="kfxm_kh!=null">and kfxm_kh =#{kfxm_kh}</if>
+			<if test="kfxm_qyzt!=null">and kfxm_qyzt =#{kfxm_qyzt}</if>
+			<if test="kfxm_xmms!=null">and kfxm_xmms like '%${kfxm_xmms}%'</if>
+		</where>
+	</select>
+	
+	<!--ajax 查询所有的项目阶段  -->
+	<select id="queryAllXMJD" resultType="XMJD_DM">
+		select * from xmjd_dm order by xmjd_dm asc
+	</select>
+	
+	<!--ajax查询所有的项目状态  -->
+	<select id="queryAllXMZT" resultType="XMZT_DM">
+		select * from xmzt_dm order by xmzt_dm asc
+	</select>
+	
+	<!--ajax查询所有的签约主体  -->
+	<select id="queryAllQYZT" resultType="QianYueZT">
+		select * from qianyuezt order by qyztdm asc
+	</select>
+	
+	<!--新增开发项目  -->
+	<insert id="saveKFXM" parameterType="KaiFaXM">
+		insert into kaifaxm(KFXM_DM,KFXM_DH,KFXM_MC,KFXM_KH,KFXM_QYZT,
+			KFXM_SFYBZCSBG,KFXM_SFYQDHT,KFXM_SFYQDSJFA,KFXM_SFYQDYHSYSC,
+			KFXM_SFYQDYSD,KFXM_XMJD,KFXM_XMZT,KFXM_XMMS)
+		values(seq_kfxm_dm.nextval,#{kfxm_dh,jdbcType=VARCHAR},#{kfxm_mc,jdbcType=VARCHAR},#{kfxm_kh,jdbcType=NUMERIC},#{kfxm_qyzt,jdbcType=NUMERIC},
+		#{kfxm_sfybzcsbg,jdbcType=NUMERIC},#{kfxm_sfyqdht,jdbcType=NUMERIC},#{kfxm_sfyqdsjfa,jdbcType=NUMERIC},#{kfxm_sfyqdyhsysc,jdbcType=NUMERIC},
+		#{kfxm_sfyqdysd,jdbcType=NUMERIC},#{kfxm_xmjd,jdbcType=NUMERIC},#{kfxm_xmzt,jdbcType=NUMERIC},#{kfxm_xmms,jdbcType=VARCHAR})
+	</insert>
+	
+	<!--根据id查询对应的项目阶段  -->
+	<select id="queryXMJDById" parameterType="Integer" resultType="XMJD_DM">
+		select * from xmjd_dm
+		<where>
+			xmjd_dm=#{xmjd_dm}
+		</where>
+	</select>
+	
+	<!--根据id查询对应的项目状态  -->
+	<select id="queryXMZTById" parameterType="Integer" resultType="XMZT_DM">
+		select * from xmzt_dm
+		<where>
+			xmzt_dm=#{xmzt_dm}
+		</where>
+	</select>
+	
+	<!--根据id查询对应的开发项目  -->
+	<select id="queryKFXMById" parameterType="Integer" resultType="KaiFaXM">
+		select * from kaifaxm
+		<where>
+			kfxm_dm=#{kfxm_dm}
+		</where>
+	</select>
+
+	<!--编辑开发项目  -->
+	<update id="editKFXM" parameterType="KaiFaXM">
+		update kaifaxm
+		<set>
+			<if test="kfxm_dh!= null">kfxm_dh=#{kfxm_dh},</if>
+			<if test="kfxm_mc!= null">kfxm_mc=#{kfxm_mc},</if>
+			<if test="kfxm_kh!= null">kfxm_kh=#{kfxm_kh},</if>
+			<if test="kfxm_qyzt!= null">kfxm_qyzt=#{kfxm_qyzt},</if>
+			<if test="kfxm_sfybzcsbg!= null">kfxm_sfybzcsbg=#{kfxm_sfybzcsbg},</if>
+			<if test="kfxm_sfyqdht!= null">kfxm_sfyqdht=#{kfxm_sfyqdht},</if>
+			<if test="kfxm_sfyqdsjfa!= null">kfxm_sfyqdsjfa=#{kfxm_sfyqdsjfa},</if>
+			<if test="kfxm_sfyqdyhsysc!= null">kfxm_sfyqdyhsysc=#{kfxm_sfyqdyhsysc},</if>
+			<if test="kfxm_sfyqdysd!=null">kfxm_sfyqdysd=#{kfxm_sfyqdysd},</if>
+			<if test="kfxm_xmjd!= null">kfxm_xmjd=#{kfxm_xmjd},</if>
+			<if test="kfxm_xmzt!= null">kfxm_xmzt=#{kfxm_xmzt},</if>
+			<if test="kfxm_xmms!= null">kfxm_xmms=#{kfxm_xmms}</if>
+		</set>
+		<where>
+			kfxm_dm=#{kfxm_dm}
+		</where>
+	</update>
+	
+	<!--根据id删除开发项目  -->
+	<delete id="deleteKFXMById" parameterType="Integer">
+		delete from kaifaxm
+		<where>
+			kfxm_dm=#{kfxm_dm}
+		</where>
+	</delete>
+</mapper>

@@ -134,7 +134,7 @@ layui.use(['form','table'], function(){
         	  	content:[url+"qyzt/queryQYZTById.do?qyztdm="+qyztdm,'yes']
       	  	});
     }else if(obj.event==='detail'){
-	   	 layer.open({
+	   	 parent.layer.open({
 	  	  	type:2,
 	  	  	title:'查看',
 	  	  	area: ['100%','100%'],

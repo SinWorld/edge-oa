@@ -57,6 +57,18 @@
 	</fieldset>
 	
 	<fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px; border-width: 0px;">
+		<legend>项目管理</legend>
+		<div class="layui-form-item" style="margin-top: 10px;">
+			<div class="layui-inline" style="width: 20%; left: 10px;">
+				<button type="button" class="layui-btn layui-btn-primary layui-btn-lg" id="kfxm">开发项目</button>
+			</div>
+			<div class="layui-inline" style="width: 20%">
+				<button type="button" class="layui-btn layui-btn-primary layui-btn-lg" id="shxm">售后项目</button>
+			</div>
+		</div>
+	</fieldset>
+	
+	<fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px; border-width: 0px;">
 		<legend>字典维护</legend>
 		<div class="layui-form-item" style="margin-top: 10px;">
 			<div class="layui-inline" style="width: 20%; left: 10px;">
@@ -189,6 +201,48 @@
    					resize : false,
    					anim : 1,
    					content : [ url + "yyzx/khxtList.do", 'yes' ]
+   				});
+			});
+			
+			//项目信息
+			$('#xmxx').click(function() {
+				var layer = layui.layer;
+   				layer.open({
+   					type : 2,
+   					title : '项目信息',
+   					area : [ '100%', '100%' ],
+   					shadeClose : false,
+   					resize : false,
+   					anim : 1,
+   					content : [ url + "yyzx/xmxxList.do", 'yes' ]
+   				});
+			});
+			
+			//开发项目
+			$('#kfxm').click(function() {
+				var layer = layui.layer;
+   				layer.open({
+   					type : 2,
+   					title : '开发项目',
+   					area : [ '100%', '100%' ],
+   					shadeClose : false,
+   					resize : false,
+   					anim : 1,
+   					content : [ url + "yyzx/kfxmList.do", 'yes' ]
+   				});
+			});
+			
+			//售后项目
+			$('#shxm').click(function() {
+				var layer = layui.layer;
+   				layer.open({
+   					type : 2,
+   					title : '售后项目',
+   					area : [ '100%', '100%' ],
+   					shadeClose : false,
+   					resize : false,
+   					anim : 1,
+   					content : [ url + "yyzx/shxmList.do", 'yes' ]
    				});
 			});
 		});

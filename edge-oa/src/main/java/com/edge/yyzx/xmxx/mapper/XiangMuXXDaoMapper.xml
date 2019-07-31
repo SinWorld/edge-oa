@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edge.yyzx.xmxx.dao.XiangMuXXDao">
+	<!-- 定义缓存 一般是一级缓存，如果用同一个sqlsession 那么相同查询直接会从缓存中查找 <cache size="1024" flushInterval="60000" 
+		eviction="LRU" readOnly="false"></cache> -->
+	<!--分页显示项目信息列表 -->
+	<select id="queryAllxiangMuXX" parameterType="XiangMuXX_QueryVo" resultType="XiangMuXX">
+		select * from (select row_.*, rownum rownum_ from (select * from
+		xiangMuXX order by  xmxx_dm desc ) row_
+		<where>
+			rownum &lt;=#{size}
+			<if test="xmxx_ysbh!=null"> and xmxx_ysbh like '%${xmxx_ysbh}%'</if>
+			<if test="xmxx_dh!=null"> and xmxx_dh like '%${xmxx_dh}%'</if>
+			<if test="xmxx_mc!=null"> and xmxx_mc like '%${xmxx_mc}%'</if>
+			<if test="xmxx_kh!=null"> and xmxx_kh = #{xmxx_kh}</if>
+			<if test="xmxx_khbm!=null"> and xmxx_khbm like '%${xmxx_khbm}%'</if>
+			<if test="xmje1 != null">AND
+				xmxx_xmje <![CDATA[>=]]>#{xmje1}
+			</if>
+			<if test="xmje2 != null">AND
+				xmxx_xmje <![CDATA[<=]]>#{xmje2}
+			</if>
+			<if test="tcrq1 != null">AND
+				xmxx_tcrq <![CDATA[>=]]>#{tcrq1}
+			</if>
+			<if test="tcrq2 != null">AND
+				xmxx_tcrq <![CDATA[<=]]>#{tcrq2}
+			</if>
+			<if test="xmxx_fzr!=null"> and xmxx_fzr =#{xmxx_fzr}</if>
+		</where>
+		)
+		<where>
+			rownum_ &gt;=#{page}
+		</where>
+	</select>
+
+	<!--分页显示项目信息列表数量 -->
+	<select id="queryAllxiangMuXXCount" parameterType="XiangMuXX_QueryVo" resultType="Integer">
+		select count(1) from xiangMuXX
+		<where>
+			1=1
+			<if test="xmxx_ysbh!=null"> and xmxx_ysbh like '%${xmxx_ysbh}%'</if>
+			<if test="xmxx_dh!=null"> and xmxx_dh like '%${xmxx_dh}%'</if>
+			<if test="xmxx_mc!=null"> and xmxx_mc like '%${xmxx_mc}%'</if>
+			<if test="xmxx_kh!=null"> and xmxx_kh = #{xmxx_kh}</if>
+			<if test="xmxx_khbm!=null"> and xmxx_khbm like '%${xmxx_khbm}%'</if>
+			<if test="xmje1 != null">AND
+				xmxx_xmje <![CDATA[>=]]>#{xmje1}
+			</if>
+			<if test="xmje2 != null">AND
+				xmxx_xmje <![CDATA[<=]]>#{xmje2}
+			</if>
+			<if test="tcrq1 != null">AND
+				xmxx_tcrq <![CDATA[>=]]>#{tcrq1}
+			</if>
+			<if test="tcrq2 != null">AND
+				xmxx_tcrq <![CDATA[<=]]>#{tcrq2}
+			</if>
+			<if test="xmxx_fzr!=null"> and xmxx_fzr =#{xmxx_fzr}</if>
+		</where>
+	</select>
+	
+	
+	<!--新增项目信息 -->
+	<insert id="saveXiangMuXX" parameterType="XiangMuXX">
+		insert into xiangMuXX(XMXX_DM,XMXX_YSBH,XMXX_DH,XMXX_MC,XMXX_FZR,XMXX_JHKSSJ,XMXX_JHJSSJ,XMXX_KH,
+		XMXX_KHBM,XMXX_KHFZR,XMXX_TCRQ,XMXX_XMJE,XMXX_YJGZL,XMXX_BZ)
+		values(seq_xmxx_dm.nextval,#{xmxx_ysbh,jdbcType=VARCHAR},#{xmxx_dh,jdbcType=VARCHAR},#{xmxx_mc,jdbcType=VARCHAR},
+		#{xmxx_fzr,jdbcType=NUMERIC},#{xmxx_jhkssj,jdbcType=DATE},#{xmxx_jhjssj,jdbcType=DATE},#{xmxx_kh,jdbcType=NUMERIC},
+		#{xmxx_khbm,jdbcType=VARCHAR},#{xmxx_khfzr,jdbcType=VARCHAR},#{xmxx_tcrq,jdbcType=DATE},#{xmxx_xmje,jdbcType=NUMERIC},
+		#{xmxx_yjgzl,jdbcType=NUMERIC},#{xmxx_bz,jdbcType=VARCHAR})
+	</insert>
+	
+	<!--根据id查询对应的项目信息 -->
+	<select id="queryXMXXById" parameterType="Integer" resultType="XiangMuXX">
+		select * from xiangMuXX
+		<where>
+			xmxx_dm=#{xmxx_dm}
+		</where>
+	</select>
+	
+	<!--编辑项目信息-->
+	<update id="editXiangMuXX" parameterType="XiangMuXX">
+		update xiangMuXX
+		<set>
+			<if test="xmxx_ysbh!=null">xmxx_ysbh=#{xmxx_ysbh},</if>
+			<if test="xmxx_dh!=null">xmxx_dh=#{xmxx_dh},</if>
+			<if test="xmxx_mc!=null">xmxx_mc=#{xmxx_mc},</if>
+			<if test="xmxx_fzr!=null">xmxx_fzr=#{xmxx_fzr},</if>
+			<if test="xmxx_jhkssj!=null">xmxx_jhkssj=#{xmxx_jhkssj},</if>
+			<if test="xmxx_jhjssj!=null">xmxx_jhjssj=#{xmxx_jhjssj},</if>
+			<if test="xmxx_kh!=null">xmxx_kh=#{xmxx_kh},</if>
+			<if test="xmxx_khbm!=null">xmxx_khbm=#{xmxx_khbm},</if>
+			<if test="xmxx_khfzr!=null">xmxx_khfzr=#{xmxx_khfzr},</if>
+			<if test="xmxx_tcrq!=null">xmxx_tcrq=#{xmxx_tcrq},</if>
+			<if test="xmxx_xmje!=null">xmxx_xmje=#{xmxx_xmje},</if>
+			<if test="xmxx_yjgzl!=null">xmxx_yjgzl=#{xmxx_yjgzl},</if>
+			<if test="xmxx_bz!=null">xmxx_bz=#{xmxx_bz}</if>
+		</set>
+		<where>
+			xmxx_dm=#{xmxx_dm}
+		</where>
+	</update>
+	
+	<!--根据id删除项目信息 -->
+	<delete id="deleteXiangMuXXById" parameterType="Integer">
+		delete from xiangMuXX
+		<where>
+			xmxx_dm=#{xmxx_dm}
+		</where>
+	</delete>
+	
+</mapper>
