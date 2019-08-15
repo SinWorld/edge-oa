@@ -59,11 +59,11 @@
 					  <div class="layui-inline" style="left:111px;width: 512px;">
 					      <label class="layui-form-label" style="width: 71px;">项目金额</label>
 					      <div class="layui-input-inline">
-						     <input type="text" name="jinE1" lay-verify="jinE1"autocomplete="off" class="layui-input" style="width: 85px;"id="jinE1" onchange="xmje1Change()">
+						     <input type="text" name="jinE1" lay-verify="jinE1"autocomplete="off" placeholder="￥" class="layui-input" style="width: 85px;"id="jinE1" onchange="xmje1Change()">
 						  </div>
 				       	  <i class="u-date_line" style="margin-left: -312px;line-height: 35px;">—</i>
 						      <div class="layui-input-inline" style="left: -85px;">
-						     <input type="text" name="jinE2" lay-verify="jinE2"autocomplete="off" class="layui-input" style="width: 85px;"id="jinE2" onchange="xmje2Change()">
+						     <input type="text" name="jinE2" lay-verify="jinE2"autocomplete="off" placeholder="￥" class="layui-input" style="width: 85px;"id="jinE2" onchange="xmje2Change()">
 					      </div>
 					 </div>
 				 

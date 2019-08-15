@@ -358,7 +358,9 @@
 					<version>2.8.2</version>
 				</plugin>
 			</plugins>
+			
 		</pluginManagement>
 		<defaultGoal>compile</defaultGoal>
+		
 	</build>
 </project>

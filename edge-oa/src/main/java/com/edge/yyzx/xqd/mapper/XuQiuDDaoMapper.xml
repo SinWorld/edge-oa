@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edge.yyzx.xqd.dao.XuQiuDDao">
+	<!-- 定义缓存 一般是一级缓存，如果用同一个sqlsession 那么相同查询直接会从缓存中查找 <cache size="1024" flushInterval="60000" 
+		eviction="LRU" readOnly="false"></cache> -->
+	<!--分页显示需求单纪要列表 -->
+	<select id="queryXQDS" parameterType="XuQiuD_QueryVo" resultType="XuQiuD">
+		select * from (select row_.*, rownum rownum_ from (select * from
+		xuqiudan order by xqd_dm desc ) row_
+		<where>
+			rownum &lt;=#{size}
+			<if test="xqd_dh!=null"> and xqd_dh like '%${xqd_dh}%'</if>
+			<if test="xqd_mc!=null">and xqd_mc like '%${xqd_mc}%'</if>
+			<if test="xqd_xmxx!=null">and xqd_xmxx =#{xqd_xmxx}</if>
+			<if test="xqd_ssxt!=null">and xqd_ssxt =#{xqd_ssxt}</if>
+			<if test="xqd_xqlx!=null">and xqd_xqlx =#{xqd_xqlx}</if>
+			<if test="xqd_fzr!=null">and xqd_fzr =#{xqd_fzr}</if>
+			<if test="xqd_kh!=null">and xqd_kh =#{xqd_kh}</if>
+			<if test="xqd_xqjd!=null">and xqd_xqjd =#{xqd_xqjd}</if>
+			<if test="xqd_xqzt!=null">and xqd_xqzt =#{xqd_xqzt}</if>
+			<if test="beginTime1 != null">AND
+				xqd_tcrq <![CDATA[>=]]>#{beginTime1}
+			</if>
+			<if test="beginTime2 != null">AND
+				xqd_tcrq <![CDATA[<=]]>#{beginTime2}
+			</if>
+		</where>
+		)
+		<where>
+			rownum_ &gt;=#{page}
+		</where>
+	</select>
+
+	<!--分页显示需求单列表数量 -->
+	<select id="queryXQDSCount" parameterType="XuQiuD_QueryVo" resultType="Integer">
+		select count(1) from xuqiudan
+		<where>
+			1=1
+			<if test="xqd_dh!=null"> and xqd_dh like '%${xqd_dh}%'</if>
+			<if test="xqd_mc!=null">and xqd_mc like '%${xqd_mc}%'</if>
+			<if test="xqd_xmxx!=null">and xqd_xmxx =#{xqd_xmxx}</if>
+			<if test="xqd_ssxt!=null">and xqd_ssxt =#{xqd_ssxt}</if>
+			<if test="xqd_xqlx!=null">and xqd_xqlx =#{xqd_xqlx}</if>
+			<if test="xqd_fzr!=null">and xqd_fzr =#{xqd_fzr}</if>
+			<if test="xqd_kh!=null">and xqd_kh =#{xqd_kh}</if>
+			<if test="xqd_xqjd!=null">and xqd_xqjd =#{xqd_xqjd}</if>
+			<if test="xqd_xqzt!=null">and xqd_xqzt =#{xqd_xqzt}</if>
+			<if test="beginTime1 != null">AND
+				xqd_tcrq <![CDATA[>=]]>#{beginTime1}
+			</if>
+			<if test="beginTime2 != null">AND
+				xqd_tcrq <![CDATA[<=]]>#{beginTime2}
+			</if>
+		</where>
+	</select>
+	
+	<!--查询所有的项目信息 -->
+	<select id="queryAllXMXX" resultType="XiangMuXX">
+		select * from xiangMuXX
+	</select>
+	
+	<!--查询所有的客户系统  -->
+	<select id="queryAllKHXT" resultType="KeHuXT">
+		select * from kehuxt
+	</select>
+	
+	<!--查询所有的问题类型  -->
+	<select id="queryAllWTLX" resultType="Sxwd_DM_WTLX">
+		select * from sxwd_dm_wtlx
+	</select>
+	
+	<!--新增需求单-->
+	<insert id="savexqd" parameterType="XuQiuD">
+		insert into xuqiudan(XQD_DM,XQD_DH,XQD_MC,XQD_XMXX,XQD_SSXT,XQD_XQLX,XQD_FZR,
+				XQD_KH,XQD_KHXT,XQD_KHFZR,XQD_TCRQ,XQD_JHKSRQ,XQD_JHJSRQ,XQD_GZL,XQD_XQQD,
+				XQD_GZLQD,XQD_KFKS,XQD_KFJS,XQD_CSKS,XQD_CSJS,XQD_SSRQ,XQD_YSRQ,XQD_XQJD,
+				XQD_XQZT,XQD_BZ)
+		values(seq_xqd_dm.nextval,#{xqd_dh,jdbcType=VARCHAR},#{xqd_mc,jdbcType=VARCHAR},#{xqd_xmxx,jdbcType=NUMERIC},
+		  		#{xqd_ssxt,jdbcType=NUMERIC},#{xqd_xqlx,jdbcType=NUMERIC},#{xqd_fzr,jdbcType=NUMERIC},#{xqd_kh,jdbcType=NUMERIC},
+		  		#{xqd_khxt,jdbcType=VARCHAR},#{xqd_khfzr,jdbcType=VARCHAR},#{xqd_tcrq,jdbcType=DATE},#{xqd_jhksrq,jdbcType=DATE},
+		  		#{xqd_jhjsrq,jdbcType=DATE},#{xqd_gzl,jdbcType=NUMERIC},#{xqd_xqqd,jdbcType=NUMERIC},#{xqd_gzlqd,jdbcType=NUMERIC},
+		  		#{xqd_kfks,jdbcType=NUMERIC},#{xqd_kfjs,jdbcType=NUMERIC},#{xqd_csks,jdbcType=NUMERIC},#{xqd_csjs,jdbcType=NUMERIC},
+		  		#{xqd_ssrq,jdbcType=DATE},#{xqd_ysrq,jdbcType=DATE},#{xqd_xqjd,jdbcType=NUMERIC},#{xqd_xqzt,jdbcType=NUMERIC},
+				#{xqd_bz,jdbcType=VARCHAR})
+	</insert>
+	
+	<!--根据id查询对应的需求单 -->
+	<select id="queryXQdById" parameterType="Integer" resultType="XuQiuD">
+		select * from xuqiudan
+		<where>
+			xqd_dm=#{xqd_dm}
+		</where>
+	</select>
+	
+	<!--编辑需求单-->
+	<update id="editxqd" parameterType="XuQiuD">
+		update xuqiudan
+		<set>
+			<if test="xqd_dh!=null">xqd_dh=#{xqd_dh},</if>
+			<if test="xqd_mc!=null">xqd_mc=#{xqd_mc},</if>
+			<if test="xqd_xmxx!=null">xqd_xmxx=#{xqd_xmxx},</if>
+			<if test="xqd_ssxt!=null">xqd_ssxt=#{xqd_ssxt},</if>
+			<if test="xqd_xqlx!=null">xqd_xqlx=#{xqd_xqlx},</if>
+			<if test="xqd_fzr!=null">xqd_fzr=#{xqd_fzr},</if>
+			<if test="xqd_kh!=null">xqd_kh=#{xqd_kh},</if>
+			<if test="xqd_khxt!=null">xqd_khxt=#{xqd_khxt},</if>
+			<if test="xqd_khfzr!=null">xqd_khfzr=#{xqd_khfzr},</if>
+			<if test="xqd_tcrq!=null">xqd_tcrq=#{xqd_tcrq},</if>
+			<if test="xqd_jhksrq!=null">xqd_jhksrq=#{xqd_jhksrq},</if>
+			<if test="xqd_jhjsrq!=null">xqd_jhjsrq=#{xqd_jhjsrq},</if>
+			<if test="xqd_gzl!=null">xqd_gzl=#{xqd_gzl},</if>
+			<if test="xqd_xqqd!=null">xqd_xqqd=#{xqd_xqqd},</if>
+			<if test="xqd_gzlqd!=null">xqd_gzlqd=#{xqd_gzlqd},</if>
+			<if test="xqd_kfks!=null">xqd_kfks=#{xqd_kfks},</if>
+			<if test="xqd_kfjs!=null">xqd_kfjs=#{xqd_kfjs},</if>
+			<if test="xqd_csks!=null">xqd_csks=#{xqd_csks},</if>
+			<if test="xqd_csjs!=null">xqd_csjs=#{xqd_csjs},</if>
+			<if test="xqd_ssrq!=null">xqd_ssrq=#{xqd_ssrq},</if>
+			<if test="xqd_ysrq!=null">xqd_ysrq=#{xqd_ysrq},</if>
+			<if test="xqd_xqjd!=null">xqd_xqjd=#{xqd_xqjd},</if>
+			<if test="xqd_xqzt!=null">xqd_xqzt=#{xqd_xqzt},</if>
+			<if test="xqd_bz!=null">xqd_bz=#{xqd_bz}</if>
+		</set>
+		<where>
+			xqd_dm=#{xqd_dm}
+		</where>
+	</update>
+	
+	<!--根据id删除需求单  -->
+	<delete id="deletexqdById" parameterType="Integer">
+		delete from xuqiudan
+		<where>
+			xqd_dm=#{xqd_dm}
+		</where>
+	</delete>
+	
+</mapper>

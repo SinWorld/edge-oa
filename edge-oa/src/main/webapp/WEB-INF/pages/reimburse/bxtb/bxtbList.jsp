@@ -44,11 +44,11 @@
 				 <div class="layui-inline" style="left: 29px;">
 				      <label class="layui-form-label" style="width: 71px;">报销金额</label>
 				      <div class="layui-input-inline">
-					     <input type="text" name="jinE1" lay-verify="jinE1"autocomplete="off" class="layui-input" style="width: 85px;"id="jinE1" onchange="formatJE1()">
+					     <input type="text" name="jinE1" lay-verify="jinE1"autocomplete="off" placeholder="￥" class="layui-input" style="width: 85px;"id="jinE1" onchange="formatJE1()">
 					  </div>
 			       	  <i class="u-date_line" style="margin-left: -115px;line-height: 35px;">—</i>
 					      <div class="layui-input-inline" style="left: -85px;">
-					     <input type="text" name="jinE2" lay-verify="jinE2"autocomplete="off" class="layui-input" style="width: 85px;"id="jinE2" onchange="formatJE2()">
+					     <input type="text" name="jinE2" lay-verify="jinE2"autocomplete="off" placeholder="￥" class="layui-input" style="width: 85px;"id="jinE2" onchange="formatJE2()">
 				      </div>
 				 </div>
 				 <div class="layui-inline" style="width: 25.7%;left: -172px;">

@@ -33,6 +33,7 @@
 		  <input type="hidden" id="flag">
 		  <input type="hidden" id="url" value='<c:url value="/"/>'>
 		  <input type="hidden" id="tc" value="${flag}">
+		  
 		  <div class="layui-form-item">
 		    <label class="layui-form-label" style="width: 116px;">新密码</label>
 		    <div class="layui-input-block">

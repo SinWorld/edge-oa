@@ -110,6 +110,20 @@ function initSecuritySetting (){
 	 });
 }
 
+//跳转至基本资料页面
+function userShow(){
+	var url=$('#url').val();
+	layer.open({
+  	  	type:2,
+  	  	title:'基本资料',
+  	  	area: ['50%','50%'],
+  		shadeClose: false,
+  		resize:false,
+  	    anim: 1,
+  	  	content:[url+"user/baseZL.do",'yes']
+	 });
+}
+
 //退出系统
 function exit(){
 	 layer.confirm('您确定要退出系统么？', {

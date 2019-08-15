@@ -1,5 +1,6 @@
 package com.edge.projman.xshtdj.service.impl;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
@@ -170,6 +171,9 @@ public class XiaoShouHtDJServiceImpl implements XiaoShouHTDJService {
 			xmxx = approveprojService.queryXiangMuXXById(xsht.getProj_Id());
 			// 查询我方负责人
 			user = userService.queryUserById(xsht.getUser_Id());
+			//设置金额
+			Double je =Double.valueOf(new DecimalFormat("#").format(xsht.getCont_Amount()));
+			System.out.println(je);
 		}
 		// 获取对象的名称
 		String objectName = xsht.getClass().getSimpleName();

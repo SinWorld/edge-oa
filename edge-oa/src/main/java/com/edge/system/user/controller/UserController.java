@@ -22,12 +22,14 @@ import com.edge.login.service.inter.LoginService;
 import com.edge.system.department.entity.Department;
 import com.edge.system.department.service.inter.DepartmentService;
 import com.edge.system.user.entity.User;
+import com.edge.system.user.entity.User_DM_Posittion;
 import com.edge.system.user.service.inter.UserRoleService;
 import com.edge.system.user.service.inter.UserService;
 import com.edge.utils.EmailUtil;
 import com.edge.utils.Page;
 import com.edge.utils.QueryVo;
 import com.google.gson.Gson;
+import com.sun.java.swing.plaf.motif.resources.motif;
 
 /**
  * 用户控制层
@@ -246,5 +248,27 @@ public class UserController {
 			jsonObject.put("flag", false);
 		}
 		return jsonObject.toString();
+	}
+
+	// 跳转至基本资料
+	@RequestMapping(value = "/baseZL.do")
+	public String baseZL(HttpServletRequest request, Model model) {
+		HttpSession session = request.getSession();
+		Integer userId = (Integer) session.getAttribute("userId");
+		// 根据id查询当前用户
+		User user = userService.queryUserById(userId);
+		// 设置属性
+		if (user != null) {
+			Department department = departmentService.queryDepartmentById(user.getUser_department_id());
+			if (department != null) {
+				user.setUser_department_name(department.getDep_name());
+			}
+			User_DM_Posittion posittion = userService.queryPosittionById(user.getUser_posittion());
+			if (posittion != null) {
+				user.setUser_posittion_name(posittion.getPosittion_mc());
+			}
+		}
+		model.addAttribute("user", user);
+		return "sys/user/userShow";
 	}
 }

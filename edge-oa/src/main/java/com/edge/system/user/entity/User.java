@@ -23,6 +23,8 @@ public class User {
 	private String user_department_name;
 	// 辅助属性 显示角色名
 	private String userRoleName;
+	// 岗位名称
+	private String user_posittion_name;
 
 	public String getUserRoleName() {
 		return userRoleName;
@@ -128,13 +130,22 @@ public class User {
 		this.user_posittion = user_posittion;
 	}
 
+	public String getUser_posittion_name() {
+		return user_posittion_name;
+	}
+
+	public void setUser_posittion_name(String user_posittion_name) {
+		this.user_posittion_name = user_posittion_name;
+	}
+
 	@Override
 	public String toString() {
 		return "User [user_id=" + user_id + ", user_login_name=" + user_login_name + ", user_name=" + user_name
 				+ ", user_password=" + user_password + ", user_phone=" + user_phone + ", user_email=" + user_email
 				+ ", user_gender=" + user_gender + ", user_department_id=" + user_department_id + ", user_is_delete="
 				+ user_is_delete + ", user_leader=" + user_leader + ", user_posittion=" + user_posittion
-				+ ", user_department_name=" + user_department_name + ", userRoleName=" + userRoleName + "]";
+				+ ", user_department_name=" + user_department_name + ", userRoleName=" + userRoleName
+				+ ", user_posittion_name=" + user_posittion_name + "]";
 	}
 
 }

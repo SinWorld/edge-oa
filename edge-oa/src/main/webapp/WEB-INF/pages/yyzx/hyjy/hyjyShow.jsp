@@ -14,13 +14,9 @@
   .bj{background-color: #F0F0F0}
  </style>
 </head>
-<body onload="refreshAndClose()" style="width:100%;padding:0px; margin:0px;">
+<body  style="width:100%;padding:0px; margin:0px;">
 	<div style="width:1280px;height:auto;padding:0px; margin:0 auto;" id="main">
 		<form class="layui-form" action='<c:url value="/hyjy/editHyjy.do"/>' method="post" id="myForm" style="margin-top:30px;">
-			<input type="hidden" id="url" value='<c:url value="/"/>'>
-			<input type="hidden" id="flag" value="${flag}">
-			<input type="hidden" id="khdm" value="${hyjy.kehudm}"> 
-			<input type="hidden" name="hyjydm" value="${hyjy.hyjydm}">
 			
 			<div class="layui-form-item">
 			 	<div class="layui-inline" style="left:10px;">
@@ -77,11 +73,6 @@
 			    </div>
 			</div>
 			
-			<div class="layui-form-item" style="text-align: center;margin-left: -125px;">
-			    <div class="layui-input-block">
-			      <button class="layui-btn" lay-submit="" lay-filter="demo1" style="width:35%;margin-top:10px;">立即提交</button>
-			    </div>
-			</div>
 	</form>
  </div>
 <script src="../layui-v2.4.5/layui/layui.js" charset="utf-8"></script>
@@ -94,70 +85,12 @@ layui.use(['form', 'layedit', 'laydate'], function(){
   ,laydate = layui.laydate;
   var url=$('#url').val();
   form.render();
-  //日期
-  laydate.render({
-    elem: '#beginTime'
-  });
-  laydate.render({
-	    elem: '#endTime'
-  });
 
   //创建一个编辑器
   var editIndex = layedit.build('LAY_demo_editor');
   
-  //监听提交
-  form.on('submit(demo1)', function(data){
-    layer.alert(JSON.stringify(data.field), {
-      title: '最终的提交信息'
-    })
-    return true;
-  });
-  
-  reloadKh(form);
-  pageReloadKh(form);
 });
-  function refreshAndClose(){
-	var flag=$('#flag').val();
-	if(flag){
-		window.parent.location.reload();
-		window.close();
-	} 
- }
   
-  //ajax加载所有的客户
-  function reloadKh(form){
-		$.ajax({
-			type : "post",
-			url : "<c:url value='/hyjy/queryAllKh.do'/>",
-			async : false,
-			dataType : 'json',
-			error : function() {
-				alert("出错");
-			},
-			success : function(msg) {
-				for (var i = 0; i < msg.length; i++) {
-					$("#kehudm").append(
-							"<option value='"+msg[i].khdm+"'>"+ msg[i].khmc +"</option>");
-				}
-				form.render('select');
-			}
-		});
-  }
-  
-  //加载已选客户
-  function pageReloadKh(form){
-	  //获得客户下拉选
-	  var khs=$('#kehudm').find('option');
-	  //获得已选客户下拉选主键
-	  var khdm=$('#khdm').val();
-	  for(var i=0;i<khs.length;i++){
-		  if(khs[i].value==khdm){
-			  khs[i].setAttribute("selected",'true');
-			  break;
-		  }
-	  }
-		form.render('select');
-  }
 </script>
 </body>
 </html>

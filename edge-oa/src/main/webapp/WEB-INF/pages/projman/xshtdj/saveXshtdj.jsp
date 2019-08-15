@@ -15,6 +15,9 @@
 <script src="../jquery/jquery-3.3.1.js"></script>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
 <%@page isELIgnored="false" %>
+<style>
+  .bj{background-color: #F0F0F0}
+ </style>
 </head>
 <body onload="refreshAndClose()" style="width:100%;padding:0px; margin:0px;text-align: center;">
 	<div style="width:1280px;height:auto;padding:0px; margin:0 auto;" id="main">
@@ -148,18 +151,18 @@
 			    </div>
 		    </div>
 		   <div class="layui-inline" style="width: 24.5%;left: -6px;">
-		  	<label class="layui-form-label">负责人</label>
-			<div class="layui-input-inline" style="text-align: left;">
-				<select name="user_Id" id="user_Id" lay-filter="user_Id" id="user_Id" lay-verify="user_Id">
-					<option value="" selected="selected">请选择负责人</option>
-				</select>
-			</div>
+			  	<label class="layui-form-label">负责人</label>
+				<div class="layui-input-inline" style="text-align: left;">
+					<select name="user_Id" id="user_Id" lay-filter="user_Id" id="user_Id" lay-verify="user_Id">
+						<option value="" selected="selected">请选择负责人</option>
+					</select>
+				</div>
 		 	</div>
 			 <div class="layui-inline" style="width: 19%">
-				    <label class="layui-form-label">提交人</label>
-				    <div class="layui-input-block">
-				      <input type="text" name="subm_Name" lay-verify="subm_Name" id="subm_Name" autocomplete="off"  class="layui-input" style="width:52%" value="${userName}" readonly="readonly">
-				    </div>
+			    <label class="layui-form-label">提交人</label>
+			    <div class="layui-input-block">
+			      <input type="text" name="subm_Name" lay-verify="subm_Name" id="subm_Name" autocomplete="off"  class="layui-input bj" style="width:52%" value="${userName}" readonly="readonly">
+			    </div>
 			 </div>
   		</div>	
 			
@@ -303,7 +306,8 @@ layui.use(['form', 'layedit', 'laydate','upload'], function(){
 				$('#user_Id').siblings("div.layui-form-select").find('dl').find(wffzr).click();
 			}
 		});
-});
+	});
+	
 	//是否立项数据改变监听
 	form.on('radio(is_LX)', function (data) {
 		if(data.value==1){//已立项
@@ -342,298 +346,293 @@ layui.use(['form', 'layedit', 'laydate','upload'], function(){
     });
 
   
-//多文件列表示例
- var fjsx=$('#fjsx').val();
-  var demoListView = $('#demoList')
-  ,uploadListIns = upload.render({
-    elem: '#testList'
-    ,url: '<c:url value="/xshtdj/upload.do"/>'
-    ,accept: 'file'
-    ,multiple: true
-    ,auto: false
-    ,bindAction: '#testListAction'
-    ,choose: function(obj){   
-      var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
-      //读取本地文件
-      obj.preview(function(index, file, result){
-        var tr = $(['<tr id="upload-'+ index +'">'
-          ,'<td>'+ file.name +'</td>'
-          ,'<td>'+ (file.size/1014).toFixed(1) +'kb</td>'
-          ,'<td>等待上传</td>'
-          ,'<td>'
-            ,'<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>'
-            ,'<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
-          ,'</td>'
-        ,'</tr>'].join(''));
-        
-        //单个重传
-        tr.find('.demo-reload').on('click', function(){
-          obj.upload(index, file);
-        });
-        
-        //删除
-        tr.find('.demo-delete').on('click', function(){
-          delete files[index]; //删除对应的文件
-          tr.remove();
-          uploadListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
-        });
-        
-        demoListView.append(tr);
-      });
-    }
-    ,done: function(res, index, upload){
-      if(res.code == 0){ //上传成功
-        var tr = demoListView.find('tr#upload-'+ index)
-        ,tds = tr.children();
-        tds.eq(2).html('<span style="color: #5FB878;">上传成功</span>');
-        tds.eq(3).html(''); //清空操作
-        //将附件属性拼接字符串提交至后端
-        var fj=res.data;
-		 //将json串转换为字符串
-		 var str = JSON.stringify(fj);
-	       if(undefined!=fjsx){
-				 fjsx=fjsx+","+str;
-				 $('#fjsx').val(fjsx);
-			 }else{
-				 fjsx=str;
-				 $('#fjsx').val(fjsx);
-			 }
-        return delete this.files[index]; //删除文件队列已经上传成功的文件
-      }
-      this.error(index, upload);
-    }
-    ,error: function(index, upload){
-      var tr = demoListView.find('tr#upload-'+ index)
-      ,tds = tr.children();
-      tds.eq(2).html('<span style="color: #FF5722;">上传失败</span>');
-      tds.eq(3).find('.demo-reload').removeClass('layui-hide'); //显示重传
-    }
-  });
-  allZBFS(form);
-  allUser(form);
-});
-
-
-//ajax实现查询所有的招标方式
-function  allZBFS(form){
-	$.ajax({
-		type : "post",
-		url : "<c:url value='/approveproj/allZBFS.do'/>",
-		async : false,
-		dataType : 'json',
-		error : function() {
-			alert("出错");
-		},
-		success : function(msg) {
-			for (var i = 0; i < msg.length; i++) {
-				$("#bp_Method").append(
-						"<option value='"+msg[i].bp_Method_Id+"'>"+ msg[i].bp_Method_Name +"</option>");
-			}
-			form.render('select');
-		}
+	//多文件列表示例
+	 var fjsx=$('#fjsx').val();
+	  var demoListView = $('#demoList')
+	  ,uploadListIns = upload.render({
+	    elem: '#testList'
+	    ,url: '<c:url value="/xshtdj/upload.do"/>'
+	    ,accept: 'file'
+	    ,multiple: true
+	    ,auto: false
+	    ,bindAction: '#testListAction'
+	    ,choose: function(obj){   
+	      var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
+	      //读取本地文件
+	      obj.preview(function(index, file, result){
+	        var tr = $(['<tr id="upload-'+ index +'">'
+	          ,'<td>'+ file.name +'</td>'
+	          ,'<td>'+ (file.size/1014).toFixed(1) +'kb</td>'
+	          ,'<td>等待上传</td>'
+	          ,'<td>'
+	            ,'<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>'
+	            ,'<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
+	          ,'</td>'
+	        ,'</tr>'].join(''));
+	        
+	        //单个重传
+	        tr.find('.demo-reload').on('click', function(){
+	          obj.upload(index, file);
+	        });
+	        
+	        //删除
+	        tr.find('.demo-delete').on('click', function(){
+	          delete files[index]; //删除对应的文件
+	          tr.remove();
+	          uploadListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+	        });
+	        
+	        demoListView.append(tr);
+	      });
+	    }
+	    ,done: function(res, index, upload){
+	      if(res.code == 0){ //上传成功
+	        var tr = demoListView.find('tr#upload-'+ index)
+	        ,tds = tr.children();
+	        tds.eq(2).html('<span style="color: #5FB878;">上传成功</span>');
+	        tds.eq(3).html(''); //清空操作
+	        //将附件属性拼接字符串提交至后端
+	        var fj=res.data;
+			 //将json串转换为字符串
+			 var str = JSON.stringify(fj);
+		       if(undefined!=fjsx){
+					 fjsx=fjsx+","+str;
+					 $('#fjsx').val(fjsx);
+				 }else{
+					 fjsx=str;
+					 $('#fjsx').val(fjsx);
+				 }
+	        return delete this.files[index]; //删除文件队列已经上传成功的文件
+	      }
+	      this.error(index, upload);
+	    }
+	    ,error: function(index, upload){
+	      var tr = demoListView.find('tr#upload-'+ index)
+	      ,tds = tr.children();
+	      tds.eq(2).html('<span style="color: #FF5722;">上传失败</span>');
+	      tds.eq(3).find('.demo-reload').removeClass('layui-hide'); //显示重传
+	    }
+	  });
+	  allZBFS(form);
+	  allUser(form);
 	});
-}
 
-//ajax实现查询所有的我方负责人
-function  allUser(form){
-	$.ajax({
-		type : "post",
-		url : "<c:url value='/approveproj/allUser.do'/>",
-		async : false,
-		dataType : 'json',
-		error : function() {
-			alert("出错");
-		},
-		success : function(msg) {
-			for (var i = 0; i < msg.length; i++) {
-				$("#user_Id").append(
-						"<option value='"+msg[i].user_id+"'>"+ msg[i].user_name +"</option>");
+
+	//ajax实现查询所有的招标方式
+	function  allZBFS(form){
+		$.ajax({
+			type : "post",
+			url : "<c:url value='/approveproj/allZBFS.do'/>",
+			async : false,
+			dataType : 'json',
+			error : function() {
+				alert("出错");
+			},
+			success : function(msg) {
+				for (var i = 0; i < msg.length; i++) {
+					$("#bp_Method").append(
+							"<option value='"+msg[i].bp_Method_Id+"'>"+ msg[i].bp_Method_Name +"</option>");
+				}
+				form.render('select');
 			}
-			form.render('select');
-		}
-	});
-}
+		});
+	}
 
-function refreshAndClose(){
-	var flag=$('#flag').val();
-	if(flag){
-		window.parent.location.reload();
-		window.close();
+	//ajax实现查询所有的我方负责人
+	function  allUser(form){
+		$.ajax({
+			type : "post",
+			url : "<c:url value='/approveproj/allUser.do'/>",
+			async : false,
+			dataType : 'json',
+			error : function() {
+				alert("出错");
+			},
+			success : function(msg) {
+				for (var i = 0; i < msg.length; i++) {
+					$("#user_Id").append(
+							"<option value='"+msg[i].user_id+"'>"+ msg[i].user_name +"</option>");
+				}
+				form.render('select');
+			}
+		});
+	}
+
+	function refreshAndClose(){
+		var flag=$('#flag').val();
+		if(flag){
+			window.parent.location.reload();
+			window.close();
+		} 
+	}
+
+	//合同金额带两位小数点
+	function htje(){
+		//获得合同金额输入的值
+		var htje=$('#cont_Amount').val()*1;
+		if(htje!=""){
+			var je=htje.toFixed(2); 
+			$('#cont_Amount').val(je);
+		}else{
+			$('#cont_Amount').val("0.00");
+		}
+		//获得字段质保金比例值
+		var zbjbl=$('#qual_Ratio').val();
+		//设置质保金金额
+		var zbjje=(htje*1)*(zbjbl/100);
+		var je=zbjje.toFixed(2);
+		$('#qual_Bonds').val(je);
+	}
+
+	//质保金比例数据改变事件
+	function zbjbl(){
+		//获得字段合同金额元
+		var htje=$('#cont_Amount').val();
+		//获得字段质保金比例值
+		var zbjbl=$('#qual_Ratio').val();
+		//设置质保金金额
+		var zbjje=(htje*1)*(zbjbl/100);
+		var je=zbjje.toFixed(2);
+		$('#qual_Bonds').val(je);
+	}
+
+	//ajax加载所有的已立项的项目
+	function ylxXmXX(form){
+		$.ajax({
+			type : "post",
+			url : "<c:url value='/xshtdj/queryAllYLXXMXX.do'/>",
+			async : false,
+			dataType : 'json',
+			error : function() {
+				alert("出错");
+			},
+			success : function(msg) {
+				for (var i = 0; i < msg.length; i++) {
+					$("#proj_Id").append(
+							"<option value='"+msg[i].proj_Id+"'>"+ msg[i].budget_Name +"</option>");
+				}
+				form.render('select');
+			}
+		});
+	}
+
+
+	//ajax加载所有的未立项的项目
+	function wlxXmXX(form){
+		$.ajax({
+			type : "post",
+			url : "<c:url value='/xshtdj/queryAllWLXXMXX.do'/>",
+			async : false,
+			dataType : 'json',
+			error : function() {
+				alert("出错");
+			},
+			success : function(msg) {
+				for (var i = 0; i < msg.length; i++) {
+					$("#proj_Id").append(
+							"<option value='"+msg[i].proj_Id+"'>"+ msg[i].budget_Name +"</option>");
+				}
+				form.render('select');
+			}
+		});
+	}
+
+	//格式化日期
+	function formatDate(date){
+		var year=date.getFullYear();//年
+		var month=date.getMonth()+1;//月份（月份是从0~11，所以显示时要加1）
+		if(month*1<=9){
+			month="0"+month;
+		}
+		var day=date.getDate();//日期
+		if(day*1<=9){
+			day="0"+day;
+		}
+		var str=year+'-'+month+'-'+day;
+		return str;
+	}
+
+	//表格新增一行
+	var index=0;
+	function addRow(){
+		index++;
+		var tables=$('#hwcpnrs');
+		var addtr = $("<tr>"+
+				"<th scope='row' style='text-align: center;line-height:38px;'>"+index+"</th>"+
+				"<td><input type='text' class='form-control' aria-label='' aria-describedby=''  name='cpmc'></td>"+
+				"<td><input type='text' class='form-control' aria-label='' aria-describedby=''  name='pp'></td>"+
+				"<td><input type='text' class='form-control' aria-label='' aria-describedby=''  name='ggxh'></td>"+
+				"<td><input type='text' class='form-control' aria-label='' aria-describedby=''  name='zypzcs'></td>"+
+				"<td><input type='text' class='form-control' aria-label='' aria-describedby=''  name='dw'></td>"+
+				"<td><input type='text' class='form-control' aria-label='' aria-describedby=''  name='sl' id='sl"+index+"' onchange='jsje("+index+")'></td>"+
+				"<td><input type='text' class='form-control' aria-label='' aria-describedby=''  name='dj' id='dj"+index+"' onchange='jsje("+index+")'></td>"+
+				"<td><input type='text' class='form-control' aria-label='' aria-describedby=''  name='je' id='je"+index+"' readonly='readonly'></td>"+
+				"<td><button type='button' class='layui-btn layui-btn-danger' title='删除一行' onclick='deleteTrRow(this)'><i class='layui-icon'>&#xe640;</i></button></td>"+
+				"</tr>");
+		 addtr.appendTo(tables);     
 	} 
-}
 
-//合同金额带两位小数点
-function htje(){
-	//获得合同金额输入的值
-	var htje=$('#cont_Amount').val()*1;
-	if(htje!=""){
-		var je=htje.toFixed(2); 
-		$('#cont_Amount').val(je);
-	}else{
-		$('#cont_Amount').val("0.00");
+
+	//表格删除一行
+	function deleteTrRow(tr){
+	    $(tr).parent().parent().remove();
+	    index--;
 	}
-	//获得字段质保金比例值
-	var zbjbl=$('#qual_Ratio').val();
-	//设置质保金金额
-	var zbjje=(htje*1)*(zbjbl/100);
-	var je=zbjje.toFixed(2);
-	$('#qual_Bonds').val(je);
-}
 
-//质保金比例数据改变事件
-function zbjbl(){
-	//获得字段合同金额元
-	var htje=$('#cont_Amount').val();
-	//获得字段质保金比例值
-	var zbjbl=$('#qual_Ratio').val();
-	//设置质保金金额
-	var zbjje=(htje*1)*(zbjbl/100);
-	var je=zbjje.toFixed(2);
-	$('#qual_Bonds').val(je);
-}
-
-//ajax加载所有的已立项的项目
-function ylxXmXX(form){
-	$.ajax({
-		type : "post",
-		url : "<c:url value='/xshtdj/queryAllYLXXMXX.do'/>",
-		async : false,
-		dataType : 'json',
-		error : function() {
-			alert("出错");
-		},
-		success : function(msg) {
-			for (var i = 0; i < msg.length; i++) {
-				$("#proj_Id").append(
-						"<option value='"+msg[i].proj_Id+"'>"+ msg[i].budget_Name +"</option>");
-			}
-			form.render('select');
+	//拼接表格提交的数据
+	 function savehwcpnr(){
+		//货物内容
+		var hwnrs=$('#hwnrs').val();
+		//货物当前表格
+		var tables=$('#hwcpnrs');
+		//获得表格所有行
+		var rows=tables[0].rows;
+		//遍历表格
+		for(var i=1;i<rows.length;i++){
+			//产品名称
+			var cpmc=$('input[name="cpmc"]')[i-1].value;
+			//品牌
+			var pp=$('input[name="pp"]')[i-1].value;
+			//规格型号
+			var ggxh=$('input[name="ggxh"]')[i-1].value;
+			//主要配置参数
+			var zypzcs=$('input[name="zypzcs"]')[i-1].value;
+			//单位
+			var dw=$('input[name="dw"]')[i-1].value;
+			//数量
+			var sl=$('input[name="sl"]')[i-1].value;
+			//单价
+			var dj=$('input[name="dj"]')[i-1].value;
+			//金额
+			var je=$('input[name="je"]')[i-1].value;
+			//拼接字符串
+			var str="{"+"cpmc"+":"+cpmc+","+"pp"+":"+pp+","+"ggxh"+":"+ggxh+","+"zypzcs"+":"+zypzcs+","+"dw"+":"+dw+","+"sl"+":"+sl+","+"dj"+":"+dj+","+"je"+":"+je+"}";
+			if(undefined!=hwnrs){
+				hwnrs=hwnrs+"&"+str;
+				 $('#hwnrs').val(hwnrs);
+			 }else{
+				 hwnrs=str;
+				 $('#hwnrs').val(hwnrs);
+			 }
 		}
-	});
-}
+	}
 
-
-//ajax加载所有的未立项的项目
-function wlxXmXX(form){
-	$.ajax({
-		type : "post",
-		url : "<c:url value='/xshtdj/queryAllWLXXMXX.do'/>",
-		async : false,
-		dataType : 'json',
-		error : function() {
-			alert("出错");
-		},
-		success : function(msg) {
-			for (var i = 0; i < msg.length; i++) {
-				$("#proj_Id").append(
-						"<option value='"+msg[i].proj_Id+"'>"+ msg[i].budget_Name +"</option>");
-			}
-			form.render('select');
+	function jsje(index){
+		//获得输入数量的值
+		var sl=$('#sl'+index+'').val()*1;
+		//获得输入单价的值
+		var dj=$('#dj'+index+'').val()*1;
+		$('#dj'+index+'').attr("title",dj);
+		if(dj!=""){
+			var je=dj.toFixed(2); 
+			$('#dj'+index+'').val(je);
 		}
-	});
-}
-
-//格式化日期
-function formatDate(date){
-	var year=date.getFullYear();//年
-	var month=date.getMonth()+1;//月份（月份是从0~11，所以显示时要加1）
-	if(month*1<=9){
-		month="0"+month;
+		//设置金额
+		var je=(sl*1)*(dj*1);
+		var money=je.toFixed(2);
+		$('#je'+index+'').val(money);
+		$('#je'+index+'').attr("title",money);
 	}
-	var day=date.getDate();//日期
-	if(day*1<=9){
-		day="0"+day;
-	}
-	var str=year+'-'+month+'-'+day;
-	return str;
-}
-
-//表格新增一行
-var index=0;
-function addRow(){
-	index++;
-	var tables=$('#hwcpnrs');
-	var addtr = $("<tr>"+
-			"<th scope='row' style='text-align: center;line-height:38px;'>"+index+"</th>"+
-			"<td><input type='text' class='form-control' aria-label='' aria-describedby=''  name='cpmc'></td>"+
-			"<td><input type='text' class='form-control' aria-label='' aria-describedby=''  name='pp'></td>"+
-			"<td><input type='text' class='form-control' aria-label='' aria-describedby=''  name='ggxh'></td>"+
-			"<td><input type='text' class='form-control' aria-label='' aria-describedby=''  name='zypzcs'></td>"+
-			"<td><input type='text' class='form-control' aria-label='' aria-describedby=''  name='dw'></td>"+
-			"<td><input type='text' class='form-control' aria-label='' aria-describedby=''  name='sl' id='sl"+index+"' onchange='jsje("+index+")'></td>"+
-			"<td><input type='text' class='form-control' aria-label='' aria-describedby=''  name='dj' id='dj"+index+"' onchange='jsje("+index+")'></td>"+
-			"<td><input type='text' class='form-control' aria-label='' aria-describedby=''  name='je' id='je"+index+"' readonly='readonly'></td>"+
-			"<td><button type='button' class='layui-btn layui-btn-danger' title='删除一行' onclick='deleteTrRow(this)'><i class='layui-icon'>&#xe640;</i></button></td>"+
-			"</tr>");
-	 addtr.appendTo(tables);     
-} 
-
-
-//表格删除一行
-function deleteTrRow(tr){
-    $(tr).parent().parent().remove();
-    index--;
-}
-
-//拼接表格提交的数据
- function savehwcpnr(){
-	//货物内容
-	var hwnrs=$('#hwnrs').val();
-	//货物当前表格
-	var tables=$('#hwcpnrs');
-	//获得表格所有行
-	var rows=tables[0].rows;
-	//遍历表格
-	for(var i=1;i<rows.length;i++){
-		//产品名称
-		var cpmc=$('input[name="cpmc"]')[i-1].value;
-		//品牌
-		var pp=$('input[name="pp"]')[i-1].value;
-		//规格型号
-		var ggxh=$('input[name="ggxh"]')[i-1].value;
-		//主要配置参数
-		var zypzcs=$('input[name="zypzcs"]')[i-1].value;
-		//单位
-		var dw=$('input[name="dw"]')[i-1].value;
-		//数量
-		var sl=$('input[name="sl"]')[i-1].value;
-		//单价
-		var dj=$('input[name="dj"]')[i-1].value;
-		//金额
-		var je=$('input[name="je"]')[i-1].value;
-		//拼接字符串
-		var str="{"+"cpmc"+":"+cpmc+","+"pp"+":"+pp+","+"ggxh"+":"+ggxh+","+"zypzcs"+":"+zypzcs+","+"dw"+":"+dw+","+"sl"+":"+sl+","+"dj"+":"+dj+","+"je"+":"+je+"}";
-		if(undefined!=hwnrs){
-			hwnrs=hwnrs+"&"+str;
-			 $('#hwnrs').val(hwnrs);
-		 }else{
-			 hwnrs=str;
-			 $('#hwnrs').val(hwnrs);
-		 }
-	}
-}
-
-function jsje(index){
-	//获得输入数量的值
-	var sl=$('#sl'+index+'').val()*1;
-	//获得输入单价的值
-	var dj=$('#dj'+index+'').val()*1;
-	$('#dj'+index+'').attr("title",dj);
-	if(dj!=""){
-		var je=dj.toFixed(2); 
-		$('#dj'+index+'').val(je);
-	}
-	//设置金额
-	var je=(sl*1)*(dj*1);
-	var money=je.toFixed(2);
-	$('#je'+index+'').val(money);
-	$('#je'+index+'').attr("title",money);
-	
-	
-}
-
-
-
 </script>
 </body>
 </html>

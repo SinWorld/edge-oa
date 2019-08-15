@@ -11,15 +11,6 @@
 <title>添加角色</title>
 <link rel="stylesheet" href="../layui-v2.4.5/layui/css/layui.css">
 <script src="../jquery/jquery-3.3.1.js"></script>
-<style>
-.close {
-	float: right;
-	position: relative;
-	top: -28px;
-	right: 26%;
-	cursor: pointer;
-}
-</style>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
 <%@page isELIgnored="false" %>
 </head>
@@ -28,14 +19,13 @@
 		style="margin-top: 70px; margin-left: auto; margin-right: auto; width: auto;">
 		<form class="layui-form" action="<c:url value='/role/saveRole.do'/>"
 			method="post">
-			<div class="layui-form-item" style="margin-bottom: 0px;">
+			<div class="layui-form-item" style="margin-bottom: 15px;">
 				<input type="hidden" id="flag" value="${flag}">
 				<label class="layui-form-label" style="width: 125px;">角色名称</label>
 				<div class="layui-input-block">
 					<input type="text" name="role_name" lay-verify="username"
 						autocomplete="off" class="layui-input" style="width: 56.5%"
-						id="userName" placeholder="请输入角色名称"> <span id="clearUserName" class="close"><i
-						class="layui-icon layui-icon-close-fill"></i></span>
+						id="userName" placeholder="请输入角色名称">
 				</div>
 			</div>
 
@@ -73,11 +63,6 @@ layui.use(['form', 'layedit', 'laydate'], function(){
     })
     return true;
   });
-	
- 	//用户名清除
-   	$('#clearUserName').click(function(){
-   		$('#userName').val("");
-   	});
    	
    	form.verify({
 		  username: function(value, item){ //value：表单的值、item：表单的DOM对象
@@ -91,15 +76,13 @@ layui.use(['form', 'layedit', 'laydate'], function(){
 		      return '角色名不能全为数字';
 		    }
 		  } 
-		 
 		   ,role_infor: function(value){
 		     if(value==""){
 		     	 return '角色说明不能为空';
 		     }
 		   }
 	}); 
-}
-);
+});
 
 function refreshAndClose(){
 	var flag=$('#flag').val();

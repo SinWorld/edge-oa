@@ -46,22 +46,22 @@
 				 <div class="layui-inline" style="left: 29px;">
 				      <label class="layui-form-label" style="width: 71px;">应发工资</label>
 				      <div class="layui-input-inline">
-					     <input type="text" name="jinE1" lay-verify="jinE1"autocomplete="off" class="layui-input" style="width: 85px;"id="jinE1" onchange="formatJE1()">
+					     <input type="text" name="jinE1" lay-verify="jinE1"autocomplete="off" class="layui-input" placeholder="￥" style="width: 85px;"id="jinE1" onchange="formatJE1()">
 					  </div>
 			       	  <i class="u-date_line" style="margin-left: -115px;line-height: 35px;">—</i>
 					      <div class="layui-input-inline" style="left: -85px;">
-					     <input type="text" name="jinE2" lay-verify="jinE2"autocomplete="off" class="layui-input" style="width: 85px;"id="jinE2" onchange="formatJE2()">
+					     <input type="text" name="jinE2" lay-verify="jinE2"autocomplete="off" class="layui-input" placeholder="￥" style="width: 85px;"id="jinE2" onchange="formatJE2()">
 				      </div>
 				 </div>
 				 
 				 <div class="layui-inline" style="left:-165px;">
 				      <label class="layui-form-label" style="width: 71px;">实发工资</label>
 				      <div class="layui-input-inline">
-					     <input type="text" name="jinE3" lay-verify="jinE3"autocomplete="off" class="layui-input" style="width: 85px;"id="jinE3" onchange="formatJE3()">
+					     <input type="text" name="jinE3" lay-verify="jinE3"autocomplete="off" class="layui-input"  placeholder="￥" style="width: 85px;"id="jinE3" onchange="formatJE3()">
 					  </div>
 			       	  <i class="u-date_line" style="margin-left: -115px;line-height: 35px;">—</i>
 					      <div class="layui-input-inline" style="left: -85px;">
-					     <input type="text" name="jinE4" lay-verify="jinE4"autocomplete="off" class="layui-input" style="width: 85px;"id="jinE4" onchange="formatJE4()">
+					     <input type="text" name="jinE4" lay-verify="jinE4"autocomplete="off" class="layui-input"  placeholder="￥" style="width: 85px;"id="jinE4" onchange="formatJE4()">
 				      </div>
 				 </div>
 				 

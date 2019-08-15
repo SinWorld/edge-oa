@@ -207,24 +207,26 @@ layui.use(['form', 'layedit', 'laydate'], function(){
 	//ajax对用户名进行验证
 	function checkLoginName() {
 		var loginName=$('#user_login_name').val();
-		$.ajax({
-			type : "post",
-			url : "<c:url value='/user/checkLoginName.do'/>",
-			async : false,
-			dataType : 'json',
-			data :{"loginName":loginName},
-			error : function() {
-				alert("出错");
-			},
-			success : function(msg) {
-				if(msg.flag){
-					layer.alert("当前登录名可用",{icon:1});
-				}else{
-					layer.alert("当前登录名已存在,不可用",{icon:2});
-					$('#user_login_name').val("");
+		if(loginName!=""){
+			$.ajax({
+				type : "post",
+				url : "<c:url value='/user/checkLoginName.do'/>",
+				async : false,
+				dataType : 'json',
+				data :{"loginName":loginName},
+				error : function() {
+					alert("出错");
+				},
+				success : function(msg) {
+					if(msg.flag){
+						layer.alert("当前登录名可用",{icon:1});
+					}else{
+						layer.alert("当前登录名已存在,不可用",{icon:2});
+						$('#user_login_name').val("");
+					}
 				}
-			}
-		});
+			});
+		}
 	}
 </script>
 </body>

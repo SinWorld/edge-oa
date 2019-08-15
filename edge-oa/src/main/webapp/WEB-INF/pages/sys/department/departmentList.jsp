@@ -70,12 +70,12 @@ layui.use(['table','tree','form'], function(){
     	 layer.open({
       	  	type:2,
       	  	title:'新增部门',
-      	  	area: ['50%','60%'],
+      	  	area: ['50%','70%'],
       		shadeClose: false,
       		resize:false,
       	    anim: 1,
       	  	content:[url+"department/initSaveDepartment.do",'yes']
-    	  	});
+    	});
     }
   });
   
@@ -115,7 +115,7 @@ layui.use(['table','tree','form'], function(){
     	layer.open({
      	  	type:2,
      	  	title:'编辑部门',
-     	  	area: ['50%','60%'],
+     	  	area: ['50%','70%'],
      		shadeClose: false,
       		resize:false,
       	    anim: 1,

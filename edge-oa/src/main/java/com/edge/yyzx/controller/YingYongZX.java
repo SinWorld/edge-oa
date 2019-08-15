@@ -77,4 +77,10 @@ public class YingYongZX {
 	public String shxmList() {
 		return "yyzx/shxm/shxmList";
 	}
+
+	// 跳转至需求单列表页面
+	@RequestMapping(value = "/xqdList.do")
+	public String xqdList() {
+		return "yyzx/xqd/xqdList";
+	}
 }

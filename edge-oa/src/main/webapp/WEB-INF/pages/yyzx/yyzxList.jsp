@@ -89,6 +89,21 @@
 			var layer = layui.layer;
 			var url = $('#url').val();
 			
+			//需求单
+			$('#xqd').click(function() {
+				var layer = layui.layer;
+   				layer.open({
+   					type : 2,
+   					title : '需求单',
+   					area : [ '100%', '100%' ],
+   					shadeClose : false,
+   					resize : false,
+   					anim : 1,
+   					content : [ url + "yyzx/xqdList.do", 'yes' ]
+   				});
+			});
+			
+			
 			//客户
 			$('#kh').click(function() {
 				var layer = layui.layer;

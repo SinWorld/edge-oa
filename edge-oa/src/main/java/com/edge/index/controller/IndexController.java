@@ -110,7 +110,9 @@ public class IndexController {
 		HttpSession session = request.getSession();
 		String user_name = (String) session.getAttribute("userName");
 		Integer dbCount = indexService.myTaskCount(user_name);
+		Integer ywcCount = indexService.TaskYWCCount();
 		model.addAttribute("dbCount", dbCount);
+		model.addAttribute("ywcCount", ywcCount);
 		return "index/headPage";
 	}
 

@@ -3,29 +3,29 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta charset="UTF-8">
-<meta name="renderer" content="webkit">
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<meta name="viewport"
-	content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>项目立项查看页</title>
-<link rel="stylesheet" href="../layui-v2.4.5/layui/css/layui.css">
-<link rel="stylesheet" href="../login/css/static.css">
-<script src="../jquery/jquery-3.3.1.js"></script>
-<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
-<%@page isELIgnored="false" %>
-<style>
-  .bj{background-color: #F0F0F0}
- </style>
+	<meta charset="UTF-8">
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1, maximum-scale=1">
+	<title>项目立项查看页</title>
+	<link rel="stylesheet" href="../layui-v2.4.5/layui/css/layui.css">
+	<link rel="stylesheet" href="../login/css/static.css">
+	<script src="../jquery/jquery-3.3.1.js"></script>
+	<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
+	<%@page isELIgnored="false" %>
+	<style>
+	  .bj{background-color: #F0F0F0}
+	</style>
 </head>
 <body style="width:100%;padding:0px; margin:0px;text-align: center;">
-<div class="layui-tab">
-	  <ul class="layui-tab-title">
-	    <li class="layui-this">基本信息</li>
-	    <li>评审意见</li>
-	    <li>任务附件</li>
-	    <li>流程检视</li>
-	  </ul>
+	<div class="layui-tab">
+		  <ul class="layui-tab-title">
+		    <li class="layui-this">基本信息</li>
+		    <li>评审意见</li>
+		    <li>任务附件</li>
+		    <li>流程检视</li>
+		  </ul>
 		<div class="layui-tab-content">
 			<div class="layui-tab-item layui-show">
 				<div style="width:1280px;height:auto;padding:0px; margin:0 auto;" id="main">
@@ -154,7 +154,8 @@
 									审批结果:<span style="color: green">${r.result }</span> <br>
 									审批意见:<span style="color: green">${r.advise }</span>
 								</p>
-							</div></li>
+							</div>
+						</li>
 					</c:forEach>
 				</ul>
 			</div>
@@ -287,8 +288,6 @@ layui.use(['form', 'layedit', 'laydate','element','table'], function(){
     	}
   });
   
-  
-  
   lct();
 
 });
@@ -339,13 +338,14 @@ $("#myMenu").draggable();
 		 }
 		 
 	 });
-function lct(){
- 	var img=$('#lct');
- 	var deploymentId=$('#depId').val();
- 	var imageName=$('#imgName').val();
- 	var url=$('#url').val();
- 	img.attr("src",url+"index/viewImage.do?deploymentId="+deploymentId+"&imageName="+imageName)
- }
+	 
+	function lct(){
+	 	var img=$('#lct');
+	 	var deploymentId=$('#depId').val();
+	 	var imageName=$('#imgName').val();
+	 	var url=$('#url').val();
+	 	img.attr("src",url+"index/viewImage.do?deploymentId="+deploymentId+"&imageName="+imageName)
+	 }
  
 
 </script>
