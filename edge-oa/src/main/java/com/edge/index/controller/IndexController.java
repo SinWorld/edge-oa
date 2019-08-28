@@ -83,7 +83,7 @@ public class IndexController {
 			List<Privilege> ejChildrenList = indexService.ejChildrenList(userId, privilege.getPrivilege_id());
 			// 遍历二级子权限集合 将二级子权限添加到权限对象的set集合中
 			for (Privilege ej : ejChildrenList) {
-				if(ej.getIs_yc()==false) {
+				if (ej.getIs_yc() == false) {
 					privilege.setChildren(ej);
 				}
 				// 得到用户二级下所有的三级权限
@@ -106,7 +106,7 @@ public class IndexController {
 
 	// 跳转至首页显示代办、已办、已完成
 	@RequestMapping(value = "/headPage.do")
-	public String headPage(HttpServletRequest request,Model model) {
+	public String headPage(HttpServletRequest request, Model model) {
 		HttpSession session = request.getSession();
 		String user_name = (String) session.getAttribute("userName");
 		Integer dbCount = indexService.myTaskCount(user_name);
@@ -172,13 +172,15 @@ public class IndexController {
 				// 获得Reimbursement对象
 				Reimbursement reimbursement = reportService.queryReimbursementById(Integer.parseInt(id));
 				// 获得任务描述 设置待办任务描述
-				String taskDecription = "【" + myTask.getNAME_() + "】" + "  " + "【" + "任务名称:" + reimbursement.getDb_ms() + "】";
+				String taskDecription = "【" + myTask.getNAME_() + "】" + "  " + "【" + "任务名称:" + reimbursement.getDb_ms()
+						+ "】";
 				myTask.setTaskDecription(taskDecription);
-			}else if ("WagePerformance".equals(object)) {// 表示工资填报
+			} else if ("WagePerformance".equals(object)) {// 表示工资填报
 				// 获得WagePerformance对象
 				WagePerformance wagePerformance = wagePerService.queryWageById(Integer.parseInt(id));
 				// 获得任务描述 设置待办任务描述
-				String taskDecription = "【" + myTask.getNAME_() + "】" + "  " + "【" + "任务名称:" + wagePerformance.getDb_Ms() + "】";
+				String taskDecription = "【" + myTask.getNAME_() + "】" + "  " + "【" + "任务名称:"
+						+ wagePerformance.getDb_Ms() + "】";
 				myTask.setTaskDecription(taskDecription);
 			}
 		}
@@ -253,17 +255,19 @@ public class IndexController {
 				// 获得任务描述 设置待办任务描述
 				String taskDecription = "【" + ywc.getNAME_() + "】" + "  " + "【" + "任务名称:" + xsht.getDb_MS() + "】";
 				ywc.setTaskDecription(taskDecription);
-			}else if ("Reimbursement".equals(object)) {// 表示报销申请
+			} else if ("Reimbursement".equals(object)) {// 表示报销申请
 				// 获得Reimbursement对象
 				Reimbursement reimbursement = reportService.queryReimbursementById(Integer.parseInt(id));
 				// 获得任务描述 设置待办任务描述
-				String taskDecription = "【" + ywc.getNAME_() + "】" + "  " + "【" + "任务名称:" + reimbursement.getDb_ms() + "】";
+				String taskDecription = "【" + ywc.getNAME_() + "】" + "  " + "【" + "任务名称:" + reimbursement.getDb_ms()
+						+ "】";
 				ywc.setTaskDecription(taskDecription);
-			}else if ("WagePerformance".equals(object)) {// 表示工资填报
+			} else if ("WagePerformance".equals(object)) {// 表示工资填报
 				// 获得WagePerformance对象
 				WagePerformance wagePerformance = wagePerService.queryWageById(Integer.parseInt(id));
 				// 获得任务描述 设置待办任务描述
-				String taskDecription = "【" + ywc.getNAME_() + "】" + "  " + "【" + "任务名称:" + wagePerformance.getDb_Ms() + "】";
+				String taskDecription = "【" + ywc.getNAME_() + "】" + "  " + "【" + "任务名称:" + wagePerformance.getDb_Ms()
+						+ "】";
 				ywc.setTaskDecription(taskDecription);
 			}
 		}

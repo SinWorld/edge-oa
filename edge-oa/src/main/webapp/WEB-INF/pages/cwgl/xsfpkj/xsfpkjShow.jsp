@@ -24,7 +24,7 @@
              </span>
          	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
              <label for="" class="oim-field_label u-f13">合同金额</label>
-              <span class="u-num" id="_heTongJE" style="color:#666;">${xsht.cont_Amount}</span>
+              <span class="u-num" id="_heTongJE" style="color:#666;">${htje}</span>
               <span class="u-rmb">元</span>
              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
              <label for="" class="oim-field_label u-f13">累计开票</label>

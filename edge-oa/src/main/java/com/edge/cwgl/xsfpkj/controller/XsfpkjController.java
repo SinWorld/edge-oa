@@ -55,6 +55,7 @@ public class XsfpkjController {
 		XiaoShouHT xsht = xiaoShouHTDJService.queryXSHTById(xshtdm);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");// 设置日期格式
 		DecimalFormat df = new DecimalFormat("#0.00");
+		String htje = df.format(xsht.getCont_Amount());
 		Foll_up_Proj xmxx = null;
 		String qdrq = null;
 		Double ljkpje = 0.d;
@@ -84,6 +85,7 @@ public class XsfpkjController {
 		model.addAttribute("ljkpje", ljkpje);
 		model.addAttribute("jebl", jebl);
 		model.addAttribute("sykpje", sykpje);
+		model.addAttribute("htje", htje);
 		return "cwgl/xsfpkj/xsfpkjAppend";
 	}
 
@@ -341,6 +343,8 @@ public class XsfpkjController {
 	public String xshtkpShowByuuid(@RequestParam String uuid, Integer xshtdm, Model model) {
 		// 根据xshtdm 查询所属销售合同
 		XiaoShouHT xsht = xiaoShouHTDJService.queryXSHTById(xshtdm);
+		DecimalFormat df = new DecimalFormat("#0.00");
+		String htje = df.format(xsht.getCont_Amount());
 		Foll_up_Proj xmxx = null;
 		Double ljkpje = 0.d;
 		Double jebl = 0.d;
@@ -367,6 +371,7 @@ public class XsfpkjController {
 		model.addAttribute("jebl", jebl);
 		model.addAttribute("uuid", uuid);
 		model.addAttribute("sykpje", sykpje);
+		model.addAttribute("htje", htje);
 		return "cwgl/xsfpkj/xsfpkjShow";
 	}
 
